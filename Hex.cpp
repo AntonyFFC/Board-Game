@@ -1,7 +1,8 @@
 #include "Hex.h"
 #include <SFML/Graphics.hpp>
+#include <cmath>
 
-Hex::Hex(int inx, int iny, int inz, float inxPos, float inyPos, bool inIsRock, bool inIsBase, bool inIsWall)
+Hex::Hex(int inx, int iny, int inz, float inxPos, float inyPos, bool inIsRock, bool inIsBase, bool inIsWall, float inScale, float inXOffset, float inYOffset)
 {
 	x = inx;
 	y = iny;
@@ -11,9 +12,22 @@ Hex::Hex(int inx, int iny, int inz, float inxPos, float inyPos, bool inIsRock, b
     isRock = inIsRock;
     isBase = inIsBase;
     isWall = inIsWall;
+    scale = inScale;
+    xOffset = inXOffset;
+    yOffset = inYOffset;
+
+    shape = getShape();
+    if (x || y) {
+        setCoords(x, y);
+    }
+    else if (xPos || yPos) {
+        setPos(xPos, yPos);
+    }
+
+    setScl(scale);
 }
 
-sf::ConvexShape Hex::getHexShape()
+sf::ConvexShape Hex::getShape()
 {
     sf::Color brown(165, 42, 42);
     sf::Color green(37, 142, 37);
@@ -30,4 +44,27 @@ sf::ConvexShape Hex::getHexShape()
     hexTile.setOutlineThickness(2.5f);
     hexTile.setFillColor(green);
     return hexTile;
+}
+
+void Hex::setPos(float inx, float iny)
+{
+    int midx = 10;
+    int midy = 6;
+    xPos = inx;
+    yPos = iny;
+    x = (xPos - xOffset - midx * 75.f * scale) / (75.f * scale);
+    y = -((xPos - xOffset - midx * 75.f * scale) - (yPos - yOffset - midy * 86.6 * scale)*pow(3, 0.5)) / (75.f * scale);
+    z = (-(xPos - xOffset - midx * 75.f * scale) - (yPos - yOffset - midy * 86.6 * scale) * pow(3, 0.5)) / (75.f * scale);
+
+    shape.setPosition(xPos, yPos);
+}
+
+void Hex::setCoords(int inx, int iny)
+{
+
+}
+
+void Hex::setScl(float inS)
+{
+    shape.setScale(inS, inS);
 }
