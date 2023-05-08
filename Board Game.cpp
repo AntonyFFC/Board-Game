@@ -27,7 +27,7 @@ int main()
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
                 sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
-                for (Hex hexagon : grid.hexagons) {
+                for (Hex& hexagon : grid.hexagons) {
                     if (hexagon.shape.getGlobalBounds().contains(mousePosition.x, mousePosition.y)) {
                         hexagon.shape.setFillColor(picked);
                         hexagon.shape.setOutlineColor(sf::Color::Yellow);

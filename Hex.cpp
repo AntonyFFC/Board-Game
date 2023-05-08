@@ -50,11 +50,13 @@ void Hex::setPos(float inx, float iny)
 {
     int midx = 10;
     int midy = 6;
+    const float vertSpacing = 86.6f;
+    const float horizSpacing = 75.f;
     xPos = inx;
     yPos = iny;
-    x = (xPos - xOffset - midx * 75.f * scale) / (75.f * scale);
-    y = -((xPos - xOffset - midx * 75.f * scale) - (yPos - yOffset - midy * 86.6 * scale)*pow(3, 0.5)) / (75.f * scale);
-    z = (-(xPos - xOffset - midx * 75.f * scale) - (yPos - yOffset - midy * 86.6 * scale) * pow(3, 0.5)) / (75.f * scale);
+    x = std::round((xPos - xOffset - midx * horizSpacing * scale) / (horizSpacing * scale));
+    y = std::round(((xOffset + midx * horizSpacing * scale - xPos) - (yOffset + midy * vertSpacing * scale - yPos) * sqrt(3)) / (2 * horizSpacing * scale));
+    z = std::round(((yOffset + midy * vertSpacing * scale - yPos) * sqrt(3) - (xPos - xOffset - midx * horizSpacing * scale)) / (2 * horizSpacing * scale));
 
     shape.setPosition(xPos, yPos);
 }
