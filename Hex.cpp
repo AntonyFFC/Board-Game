@@ -2,11 +2,13 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 
-Hex::Hex(int inx, int iny, int inz, float inxPos, float inyPos, bool inIsRock, bool inIsBase, bool inIsWall, float inScale, float inXOffset, float inYOffset)
+Hex::Hex(std::tuple<int, int, int> inCoords, float inxPos, float inyPos, bool inIsRock, bool inIsBase, bool inIsWall, 
+    float inScale, float inXOffset, float inYOffset, sf::Color inNormalFill, sf::Color inNormalOut, sf::Color inHighFill, sf::Color inHighOut)
 {
-	x = inx;
+    cubeCoords = inCoords;
+	/*x = inx;
 	y = iny;
-	z = inz;
+	z = inz;*/
 	xPos = inxPos;
 	yPos = inyPos;
     isRock = inIsRock;
@@ -16,9 +18,14 @@ Hex::Hex(int inx, int iny, int inz, float inxPos, float inyPos, bool inIsRock, b
     xOffset = inXOffset;
     yOffset = inYOffset;
 
+    normalFill = inNormalFill;
+    normalOut = inNormalOut;
+    highFill = inHighFill;
+    highOut = inHighOut;
+
     shape = getShape();
-    if (x || y) {
-        setCoords(x, y);
+    if (std::get<0>(cubeCoords) || std::get<1>(cubeCoords) || std::get<2>(cubeCoords)) {
+        setCoords(std::get<0>(cubeCoords), std::get<1>(cubeCoords), std::get<2>(cubeCoords));
     }
     else if (xPos || yPos) {
         setPos(xPos, yPos);
@@ -29,8 +36,6 @@ Hex::Hex(int inx, int iny, int inz, float inxPos, float inyPos, bool inIsRock, b
 
 sf::ConvexShape Hex::getShape()
 {
-    sf::Color brown(165, 42, 42);
-    sf::Color green(37, 142, 37);
 
     sf::ConvexShape hexTile(6);
     hexTile.setPoint(0, sf::Vector2f(0, 0));
@@ -40,9 +45,9 @@ sf::ConvexShape Hex::getShape()
     hexTile.setPoint(4, sf::Vector2f(0, 86.6));
     hexTile.setPoint(5, sf::Vector2f(-25, 43.3));
     hexTile.setPosition(sf::Vector2f(100, 100));
-    hexTile.setOutlineColor(brown);
+    hexTile.setOutlineColor(normalOut);
     hexTile.setOutlineThickness(2.5f);
-    hexTile.setFillColor(green);
+    hexTile.setFillColor(normalFill);
     return hexTile;
 }
 
@@ -54,14 +59,14 @@ void Hex::setPos(float inx, float iny)
     const float horizSpacing = 75.f;
     xPos = inx;
     yPos = iny;
-    x = std::round((xPos - xOffset - midx * horizSpacing * scale) / (horizSpacing * scale));
-    y = std::round(((xOffset + midx * horizSpacing * scale - xPos) - (yOffset + midy * vertSpacing * scale - yPos) * sqrt(3)) / (2 * horizSpacing * scale));
-    z = std::round(((yOffset + midy * vertSpacing * scale - yPos) * sqrt(3) - (xPos - xOffset - midx * horizSpacing * scale)) / (2 * horizSpacing * scale));
+    std::get<0>(cubeCoords) = std::round((xPos - xOffset - midx * horizSpacing * scale) / (horizSpacing * scale));
+    std::get<1>(cubeCoords) = std::round(((xOffset + midx * horizSpacing * scale - xPos) - (yOffset + midy * vertSpacing * scale - yPos) * sqrt(3)) / (2 * horizSpacing * scale));
+    std::get<2>(cubeCoords) = std::round(((yOffset + midy * vertSpacing * scale - yPos) * sqrt(3) - (xPos - xOffset - midx * horizSpacing * scale)) / (2 * horizSpacing * scale));
 
     shape.setPosition(xPos, yPos);
 }
 
-void Hex::setCoords(int inx, int iny)
+void Hex::setCoords(int inx, int iny, int inz)
 {
 
 }
@@ -69,4 +74,18 @@ void Hex::setCoords(int inx, int iny)
 void Hex::setScl(float inS)
 {
     shape.setScale(inS, inS);
+}
+
+void Hex::disableHighlight()
+{
+    highlight = false;
+    shape.setFillColor(normalFill);
+    shape.setOutlineColor(normalOut);
+}
+
+void Hex::enableHighlight()
+{
+    highlight = true;
+    shape.setFillColor(highFill);
+    shape.setOutlineColor(highOut);
 }
