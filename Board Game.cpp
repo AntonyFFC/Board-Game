@@ -1,9 +1,11 @@
 
 #include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 #include <iostream>
 #include "Board.h"
 #include "Hex.h"
-#include <tuple>
+
+#include <cmath>
 
 int main()
 {
@@ -12,7 +14,7 @@ int main()
 
     sf::RenderWindow window(sf::VideoMode(screenWidth, screenHeight), "Hex Board");
 
-    std::vector< std::tuple<int, int, int>> neighbours = std::vector< std::tuple<int, int, int>>();
+    std::vector< sf::Vector3i> neighbours = std::vector<sf::Vector3i>();
     Board grid(13, 21, 0.8f);
 
     while (window.isOpen())
@@ -30,24 +32,32 @@ int main()
             if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
                 sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
                 for (auto& pair : grid.hexDict) {
-                    Hex& hexagon = pair.second;                 
+                    Hex& hexagon = pair.second;
+
+                    /*const float hexRadius = hexagon.getRadius();
+                    sf::Vector2f hexOrigin = hexagon.getOrigin();
+                    float distance = std::sqrt(
+                        std::pow(mousePosition.x - hexOrigin.x, 2) +
+                        std::pow(mousePosition.y - hexOrigin.y, 2)
+                    );*/
+
                     if (hexagon.shape.getGlobalBounds().contains(mousePosition.x, mousePosition.y)) {
 
                         hexagon.highlight = false;
 
-                        for (std::tuple<int, int, int> neighbour : neighbours)
+                        for (sf::Vector3i neighbour : neighbours)
                         {
                             grid.hexDict[neighbour].disableHighlight();
                         }
 
                         neighbours = grid.GetNeighbours(hexagon.cubeCoords);
 
-                        for (std::tuple<int, int, int> neighbour : neighbours)
+                        for (sf::Vector3i neighbour : neighbours)
                         {
                             grid.hexDict[neighbour].enableHighlight();
                         }
 
-                        std::cout << "q: " << std::get<0>(hexagon.cubeCoords) << " r: " << std::get<1>(hexagon.cubeCoords) << " s: " << std::get<2>(hexagon.cubeCoords) << "\n";
+                        std::cout << "q: " << hexagon.cubeCoords.x << " r: " << hexagon.cubeCoords.y << " s: " << hexagon.cubeCoords.z << "\n";
                     }
 
                     

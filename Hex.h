@@ -1,10 +1,10 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <tuple>
+
 class Hex
 {
 public:
-	std::tuple<int, int, int> cubeCoords;
+	sf::Vector3i cubeCoords;
 	/*int x;
 	int y;
 	int z;*/
@@ -25,7 +25,7 @@ public:
 
 	sf::ConvexShape shape;
 
-	Hex(std::tuple<int, int, int> inCoords = { 0,0,0 }, float inxPos = 0.f, float inyPos = 0.f, bool inIsRock = false, bool inIsBase = false, bool inIsWall = false, 
+	Hex(sf::Vector3i inCoords = sf::Vector3i( 0,0,0 ), float inxPos = 0.f, float inyPos = 0.f, bool inIsRock = false, bool inIsBase = false, bool inIsWall = false,
 		float inScale = 0.8f, float inXOffset = 30.f, float inYOffset = 20.f, sf::Color inNormalFill = sf::Color(37, 142, 37), sf::Color inNormalOut = sf::Color(165, 42, 42), 
 		sf::Color inHighFill = sf::Color(102, 255, 153), sf::Color inHighOut = sf::Color(225, 245, 5));
 
@@ -40,6 +40,10 @@ public:
 	void disableHighlight();
 
 	void enableHighlight();
+
+	float getRadius();
+
+	sf::Vector2f getOrigin();
 
 	
 private:

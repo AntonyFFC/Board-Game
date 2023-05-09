@@ -1,8 +1,9 @@
 #include "Hex.h"
 #include <SFML/Graphics.hpp>
 #include <cmath>
+#include <SFML/System.hpp>
 
-Hex::Hex(std::tuple<int, int, int> inCoords, float inxPos, float inyPos, bool inIsRock, bool inIsBase, bool inIsWall, 
+Hex::Hex(sf::Vector3i inCoords, float inxPos, float inyPos, bool inIsRock, bool inIsBase, bool inIsWall,
     float inScale, float inXOffset, float inYOffset, sf::Color inNormalFill, sf::Color inNormalOut, sf::Color inHighFill, sf::Color inHighOut)
 {
     cubeCoords = inCoords;
@@ -24,8 +25,8 @@ Hex::Hex(std::tuple<int, int, int> inCoords, float inxPos, float inyPos, bool in
     highOut = inHighOut;
 
     shape = getShape();
-    if (std::get<0>(cubeCoords) || std::get<1>(cubeCoords) || std::get<2>(cubeCoords)) {
-        setCoords(std::get<0>(cubeCoords), std::get<1>(cubeCoords), std::get<2>(cubeCoords));
+    if (cubeCoords.x || cubeCoords.y || cubeCoords.z) {
+        setCoords(cubeCoords.x, cubeCoords.y, cubeCoords.z);
     }
     else if (xPos || yPos) {
         setPos(xPos, yPos);
@@ -59,16 +60,16 @@ void Hex::setPos(float inx, float iny)
     const float horizSpacing = 75.f;
     xPos = inx;
     yPos = iny;
-    std::get<0>(cubeCoords) = std::round((xPos - xOffset - midx * horizSpacing * scale) / (horizSpacing * scale));
-    std::get<1>(cubeCoords) = std::round(((xOffset + midx * horizSpacing * scale - xPos) - (yOffset + midy * vertSpacing * scale - yPos) * sqrt(3)) / (2 * horizSpacing * scale));
-    std::get<2>(cubeCoords) = std::round(((yOffset + midy * vertSpacing * scale - yPos) * sqrt(3) - (xPos - xOffset - midx * horizSpacing * scale)) / (2 * horizSpacing * scale));
+    cubeCoords.x = std::round((xPos - xOffset - midx * horizSpacing * scale) / (horizSpacing * scale));
+    cubeCoords.y = std::round(((xOffset + midx * horizSpacing * scale - xPos) - (yOffset + midy * vertSpacing * scale - yPos) * sqrt(3)) / (2 * horizSpacing * scale));
+    cubeCoords.z = std::round(((yOffset + midy * vertSpacing * scale - yPos) * sqrt(3) - (xPos - xOffset - midx * horizSpacing * scale)) / (2 * horizSpacing * scale));
 
     shape.setPosition(xPos, yPos);
 }
 
 void Hex::setCoords(int inx, int iny, int inz)
 {
-
+    //TO DO
 }
 
 void Hex::setScl(float inS)
@@ -88,4 +89,15 @@ void Hex::enableHighlight()
     highlight = true;
     shape.setFillColor(highFill);
     shape.setOutlineColor(highOut);
+}
+
+float Hex::getRadius()
+{
+    const float vertSpacing = 86.6f;
+    return scale * vertSpacing / 2;
+}
+
+sf::Vector2f Hex::getOrigin()
+{
+    return shape.getOrigin();
 }
