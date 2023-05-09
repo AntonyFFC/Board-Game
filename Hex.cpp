@@ -3,15 +3,15 @@
 #include <cmath>
 #include <SFML/System.hpp>
 
-Hex::Hex(sf::Vector3i inCoords, float inxPos, float inyPos, bool inIsRock, bool inIsBase, bool inIsWall,
+Hex::Hex(std::tuple<int, int, int> inCoords, float inxPos, float inyPos, bool inIsRock, bool inIsBase, bool inIsWall,
     float inScale, float inXOffset, float inYOffset, sf::Color inNormalFill, sf::Color inNormalOut, sf::Color inHighFill, sf::Color inHighOut)
 {
     cubeCoords = inCoords;
-	/*x = inx;
-	y = iny;
-	z = inz;*/
-	xPos = inxPos;
-	yPos = inyPos;
+    /*x = inx;
+    y = iny;
+    z = inz;*/
+    xPos = inxPos;
+    yPos = inyPos;
     isRock = inIsRock;
     isBase = inIsBase;
     isWall = inIsWall;
@@ -25,8 +25,8 @@ Hex::Hex(sf::Vector3i inCoords, float inxPos, float inyPos, bool inIsRock, bool 
     highOut = inHighOut;
 
     shape = getShape();
-    if (cubeCoords.x || cubeCoords.y || cubeCoords.z) {
-        setCoords(cubeCoords.x, cubeCoords.y, cubeCoords.z);
+    if (std::get<0>(cubeCoords) || std::get<1>(cubeCoords) || std::get<2>(cubeCoords)) {
+        setCoords(std::get<0>(cubeCoords), std::get<1>(cubeCoords), std::get<2>(cubeCoords));
     }
     else if (xPos || yPos) {
         setPos(xPos, yPos);
@@ -60,9 +60,9 @@ void Hex::setPos(float inx, float iny)
     const float horizSpacing = 75.f;
     xPos = inx;
     yPos = iny;
-    cubeCoords.x = std::round((xPos - xOffset - midx * horizSpacing * scale) / (horizSpacing * scale));
-    cubeCoords.y = std::round(((xOffset + midx * horizSpacing * scale - xPos) - (yOffset + midy * vertSpacing * scale - yPos) * sqrt(3)) / (2 * horizSpacing * scale));
-    cubeCoords.z = std::round(((yOffset + midy * vertSpacing * scale - yPos) * sqrt(3) - (xPos - xOffset - midx * horizSpacing * scale)) / (2 * horizSpacing * scale));
+    std::get<0>(cubeCoords) = std::round((xPos - xOffset - midx * horizSpacing * scale) / (horizSpacing * scale));
+    std::get<1>(cubeCoords) = std::round(((xOffset + midx * horizSpacing * scale - xPos) - (yOffset + midy * vertSpacing * scale - yPos) * sqrt(3)) / (2 * horizSpacing * scale));
+    std::get<2>(cubeCoords) = std::round(((yOffset + midy * vertSpacing * scale - yPos) * sqrt(3) - (xPos - xOffset - midx * horizSpacing * scale)) / (2 * horizSpacing * scale));
 
     shape.setPosition(xPos, yPos);
 }
@@ -99,5 +99,13 @@ float Hex::getRadius()
 
 sf::Vector2f Hex::getOrigin()
 {
-    return shape.getOrigin();
+    // Get the local position of the middle point (i.e., the average of all vertices)
+    sf::Vector2f middlePoint(0, 0);
+    for (unsigned int i = 0; i < shape.getPointCount(); i++) {
+        middlePoint += shape.getPoint(i);
+    }
+    middlePoint /= static_cast<float>(shape.getPointCount());
+
+    // Apply the current transformation matrix to obtain the global position
+    return shape.getTransform().transformPoint(middlePoint);
 }
