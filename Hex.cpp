@@ -15,6 +15,7 @@ Hex::Hex(std::tuple<int, int, int> inCoords, float inxPos, float inyPos, bool in
     isRock = inIsRock;
     isBase = inIsBase;
     isWall = inIsWall;
+    highlight = false;
     scale = inScale;
     xOffset = inXOffset;
     yOffset = inYOffset;
@@ -25,6 +26,8 @@ Hex::Hex(std::tuple<int, int, int> inCoords, float inxPos, float inyPos, bool in
     highOut = inHighOut;
 
     shape = getShape();
+    /*rockShape = getRockShape();*/
+
     if (std::get<0>(cubeCoords) || std::get<1>(cubeCoords) || std::get<2>(cubeCoords)) {
         setCoords(std::get<0>(cubeCoords), std::get<1>(cubeCoords), std::get<2>(cubeCoords));
     }
@@ -52,9 +55,27 @@ sf::ConvexShape Hex::getShape()
     return hexTile;
 }
 
+//sf::ConvexShape Hex::getRockShape()
+//{
+//
+//    sf::ConvexShape rockTile(7);
+//    rockTile.setPoint(0, sf::Vector2f(11, 13.7));
+//    rockTile.setPoint(1, sf::Vector2f(53, 30));
+//    rockTile.setPoint(2, sf::Vector2f(50.8, 53.5));
+//    rockTile.setPoint(3, sf::Vector2f(24.5, 72.5));
+//    rockTile.setPoint(4, sf::Vector2f(-5.3, 62));
+//    rockTile.setPoint(5, sf::Vector2f(-3.6, 29.4));
+//    rockTile.setPoint(6, sf::Vector2f(18.4, 28.3));
+//    rockTile.setPosition(shape.getPosition());
+//    rockTile.setOutlineColor(normalFill);
+//    rockTile.setOutlineThickness(2.5f);
+//    rockTile.setFillColor(normalFill);
+//    return rockTile;
+//}
+
 void Hex::setPos(float inx, float iny)
 {
-    int midx = 10;
+    int midx = 8;
     int midy = 6;
     const float vertSpacing = 86.6f;
     const float horizSpacing = 75.f;
@@ -65,30 +86,56 @@ void Hex::setPos(float inx, float iny)
     std::get<2>(cubeCoords) = std::round(((yOffset + midy * vertSpacing * scale - yPos) * sqrt(3) - (xPos - xOffset - midx * horizSpacing * scale)) / (2 * horizSpacing * scale));
 
     shape.setPosition(xPos, yPos);
+    /*rockShape.setPosition(xPos, yPos);*/
 }
 
 void Hex::setCoords(int inx, int iny, int inz)
 {
-    //TO DO
+    int midx = 8;
+    int midy = 6;
+    const float vertSpacing = 86.6f;
+    const float horizSpacing = 75.f;
+    cubeCoords = { inx, iny, inz };
+    xPos = std::get<0>(cubeCoords) * (horizSpacing * scale) + midx * horizSpacing * scale + xOffset;
+    yPos = (std::get<1>(cubeCoords) * (2 * horizSpacing * scale) - (xOffset + midx * horizSpacing * scale - xPos)) / sqrt(3) - yOffset + midy * vertSpacing * scale;
+
+    shape.setPosition(xPos, yPos);
+    /*rockShape.setPosition(xPos, yPos);*/
 }
 
 void Hex::setScl(float inS)
 {
     shape.setScale(inS, inS);
+    /*rockShape.setScale(inS, inS);*/
 }
 
 void Hex::disableHighlight()
 {
+    if (!highlight)
+        return;
     highlight = false;
     shape.setFillColor(normalFill);
     shape.setOutlineColor(normalOut);
+    if (isRock)
+        setRock();
 }
 
 void Hex::enableHighlight()
 {
+    if (highlight)
+        return;
     highlight = true;
-    shape.setFillColor(highFill);
-    shape.setOutlineColor(highOut);
+    sf::Color Fill = highFill;
+    sf::Color Out = highOut;
+
+    if (isRock)
+    {
+        return;
+        /*Fill = sf::Color(90, 143, 93);
+        Out = sf::Color(22, 36, 23);*/
+    }
+    shape.setFillColor(Fill);
+    shape.setOutlineColor(Out);
 }
 
 float Hex::getRadius()
@@ -99,13 +146,75 @@ float Hex::getRadius()
 
 sf::Vector2f Hex::getOrigin()
 {
-    // Get the local position of the middle point (i.e., the average of all vertices)
     sf::Vector2f middlePoint(0, 0);
     for (unsigned int i = 0; i < shape.getPointCount(); i++) {
         middlePoint += shape.getPoint(i);
     }
     middlePoint /= static_cast<float>(shape.getPointCount());
 
-    // Apply the current transformation matrix to obtain the global position
     return shape.getTransform().transformPoint(middlePoint);
+}
+
+void Hex::setRock()
+{
+    sf::Color rockFill = sf::Color(115, 115, 115);
+    sf::Color rockOut = sf::Color(0, 0, 0);
+    isRock = true;
+    shape.setFillColor(rockFill);
+    shape.setOutlineColor(rockOut);
+
+}
+
+void Hex::setWall()
+{
+    sf::Color wallFill = sf::Color(140, 62, 34);
+    sf::Color wallOut = sf::Color(71, 31, 16);
+    isWall = true;
+    shape.setFillColor(wallFill);
+    shape.setOutlineColor(wallOut);
+
+}
+
+void Hex::setBase()
+{
+    sf::Color baseFill = sf::Color(104, 176, 163);
+    sf::Color baseOut = sf::Color(104, 176, 163);
+    isBase = true;
+    shape.setFillColor(baseFill);
+    shape.setOutlineColor(baseOut);
+
+}
+
+void Hex::setGrass()
+{
+    isRock = false;
+    isWall = false;
+    isBase = false;
+    isStart = false;
+    isDeleted = false;
+    shape.setOutlineColor(normalOut);
+    shape.setOutlineThickness(2.5f);
+    shape.setFillColor(normalFill);
+}
+
+void Hex::deleteHex()
+{
+    if (isDeleted)
+        return;
+    sf::Color black = sf::Color(0, 0, 0);
+    isDeleted = true;
+    shape.setFillColor(black);
+    shape.setOutlineColor(black);
+
+}
+
+void Hex::setStart()
+{
+    if (isStart)
+        return;
+    sf::Color startColour = sf::Color(134, 179, 0);
+    isStart = true;
+    shape.setFillColor(startColour);
+    shape.setOutlineColor(normalOut);
+
 }

@@ -13,4 +13,11 @@ public:
 	std::map<std::tuple<int, int, int>, std::vector<std::tuple<int, int, int>>> hexNeighboursDict; // stores all neighbours of each hex
 
 	std::vector < std::tuple<int, int, int>> GetNeighbours(std::tuple<int, int, int> hexCoordinates);
+
+	void deleteHexagons();
+	void setStart();
+	void setRocks();
+	void setBases();
+	void boardPreperation();
+
 };
