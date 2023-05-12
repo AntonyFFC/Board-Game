@@ -5,32 +5,16 @@
 
 Board::Board(int Rows, int Columns, float HSize)
 {
+    numRows = Rows;
+    numCols = Columns;
+    numHexagons = numRows * numCols;
+    hexSize = HSize;
+    vertSpacing = 86.6f;
+    horizSpacing = 75.f;
+    xOffset = 30.f;
+    yOffset = 20.f;
 
-    // Create the grid of hexagons
-    const int numRows = Rows;
-    const int numCols = Columns;
-    const int numHexagons = numRows * numCols;
-    const float hexSize = HSize;
-    const float vertSpacing = 86.6f;
-    const float horizSpacing = 75.f;
-    float xOffset = 30.f;
-    float yOffset = 20.f;
-
-    for (int i = 0; i < numRows; i++) {
-        for (int j = 0; j < numCols; j++) {
-            Hex hexagon;
-
-            float x = j * horizSpacing * hexSize + xOffset;
-            float y = i * vertSpacing * hexSize + yOffset + (j % 2) * vertSpacing * hexSize / 2;
-
-            hexagon.setPos(x, y);
-            /*std::cout << "x:" << x << " y:" << y << "\n";
-            std::cout << "Hx:" << hexagon.x << " Hy:" << hexagon.y << " Hz:" << hexagon.z << "\n";*/
-
-            hexDict[hexagon.cubeCoords] = hexagon;
-        }
-        boardPreperation();
-    }
+    boardPreperation();
 
 }
 
@@ -156,6 +140,20 @@ void Board::setBases()
 
 void Board::boardPreperation()
 {
+    for (int i = 0; i < numRows; i++) {
+        for (int j = 0; j < numCols; j++) {
+            Hex hexagon;
+
+            float x = j * horizSpacing * hexSize + xOffset;
+            float y = i * vertSpacing * hexSize + yOffset + (j % 2) * vertSpacing * hexSize / 2;
+
+            hexagon.setPos(x, y);
+            /*std::cout << "x:" << x << " y:" << y << "\n";
+            std::cout << "Hx:" << hexagon.x << " Hy:" << hexagon.y << " Hz:" << hexagon.z << "\n";*/
+
+            hexDict[hexagon.cubeCoords] = hexagon;
+        }
+    }
     deleteHexagons();
     setStart();
     setRocks();

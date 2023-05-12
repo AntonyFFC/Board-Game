@@ -19,5 +19,13 @@ public:
 	void setRocks();
 	void setBases();
 	void boardPreperation();
-
+private:
+	int numRows;
+	int numCols;
+	float hexSize;
+	int numHexagons;
+	float vertSpacing;
+	float horizSpacing;
+	float xOffset;
+	float yOffset;
 };
