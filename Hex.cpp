@@ -118,6 +118,12 @@ void Hex::disableHighlight()
     shape.setOutlineColor(normalOut);
     if (isRock)
         setRock();
+    else if (isWall)
+        setWall();
+    else if (isStart)
+        setStart();
+    else if (isBase)
+        setBase();
 }
 
 void Hex::enableHighlight()
@@ -128,11 +134,21 @@ void Hex::enableHighlight()
     sf::Color Fill = highFill;
     sf::Color Out = highOut;
 
-    if (isRock)
+    if (isRock || isWall)
     {
         return;
         /*Fill = sf::Color(90, 143, 93);
         Out = sf::Color(22, 36, 23);*/
+    }
+    else if(isStart)
+    {
+        Fill = sf::Color(185, 224, 67);
+        Out = highOut;
+    }
+    else if (isBase)
+    {
+        Fill = sf::Color(159, 227, 215);
+        Out = highOut;
     }
     shape.setFillColor(Fill);
     shape.setOutlineColor(Out);
@@ -191,27 +207,13 @@ void Hex::setGrass()
     isWall = false;
     isBase = false;
     isStart = false;
-    isDeleted = false;
     shape.setOutlineColor(normalOut);
     shape.setOutlineThickness(2.5f);
     shape.setFillColor(normalFill);
 }
 
-void Hex::deleteHex()
-{
-    if (isDeleted)
-        return;
-    sf::Color black = sf::Color(0, 0, 0);
-    isDeleted = true;
-    shape.setFillColor(black);
-    shape.setOutlineColor(black);
-
-}
-
 void Hex::setStart()
 {
-    if (isStart)
-        return;
     sf::Color startColour = sf::Color(134, 179, 0);
     isStart = true;
     shape.setFillColor(startColour);

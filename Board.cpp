@@ -1,6 +1,7 @@
 #include "Board.h"
 #include "Hex.h"
 #include <SFML/Graphics.hpp>
+#include <random>
 //#include <iostream>
 
 Board::Board(int Rows, int Columns, float HSize)
@@ -61,12 +62,16 @@ std::vector <std::tuple<int, int, int>> Board::GetNeighbours(std::tuple<int, int
 
 class ObjectCoordinates {
 public:
-    static std::vector<std::tuple<int, int, int>> rockCoordinates;
+    static std::vector < std::vector<std::tuple<int, int, int>>> rockCoordinates;
     static std::vector<std::tuple<int, int, int>> deleteCoordinates;
     static std::vector<std::tuple<int, int, int>> startCoordinates;
 
     static std::vector<std::tuple<int, int, int>> getRockCoordinates() {
-        return rockCoordinates;
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dis(0, rockCoordinates.size() - 1);
+        int random_index = dis(gen);
+        return rockCoordinates[random_index];
     }
 
     static std::vector<std::tuple<int, int, int>> getdeleteCoordinates() {
@@ -78,9 +83,17 @@ public:
     }
 };
 
-std::vector<std::tuple<int, int, int>> ObjectCoordinates::rockCoordinates = {
-    {1, 0, -1}, {1, -1, 0}, {0, -1, 1},
-    {-1, 0, 1}, {-1, 1, 0}, {0, 1, -1}
+std::vector<std::vector<std::tuple<int, int, int>>> ObjectCoordinates::rockCoordinates = {
+    {{1, -1, 0}, {1, 0, -1}, {-1, -1, 2}, {0, -2, 2}, {2, -3, 1}, {3, -3, 0}, {3, 0, -3}, {2, 1, -3}, {0, 2, -2}, {-1, 2, -1}, {-2, -3, 5}, {4, -6, 2}, {4, 2, -6}, {-2, 5, -3}},
+    {{-2, 0, 2}, {-1, -2, 3}, {0, -2, 2}, {1, -4, 3}, {2, -4, 2}, {2, -3, 1}, {3, -3, 0}, {-1, 2, -1}, {0, 2, -2}, {0, 3, -3}, {1, 3, -4}, {2, 1, -3}, {3, 1, -4}, {4, -1, -3}},
+    {{-2, -1, 3}, {-1, -1, 2}, {-2, 3, -1}, {-1, 2, -1}, {0, 1, -1}, {1, 2, -3}, {1, 3, -4}, {3, 0, -3}, {4, 0, -4}, {2, -2, 0}, {3, -3, 0}, {4, -4, 0}, {1, -3, 2}, {1, -4, 3}},
+    {{-4, -1, 5}, {-2, -3, 5}, {-4, 5, -1}, {-2, 5, -3}, {-1, 3, -2}, {1, 3, -4}, {3, 1, -4}, {4, 2, -6}, {6, 0, -6}, {-1, -2, 3}, {1, -4, 3}, {3, -4, 1}, {4, -6, 2}, {6, -6, 0}},
+    {{-1, 0, 1}, {-1, 1, 0}, {-1, -2, 3}, {0, -2, 2}, {-1, 3, -2}, {0, 2, -2}, {1, 3, -4}, {2, 1, -3}, {3, 1, -4}, {3, -1, -2}, {3, -2, -1}, {2, -3, 1}, {3, -4, 1}, {1, -4, 3}},
+    {{-1, -1, 2}, {-1, -2, 3}, {-1, 2, -1}, {-1, 3, -2}, {-2, -3, 5}, {-2, 5, -3}, {1, 3, -4}, {1, -4, 3}, {3, -4, 1}, {3, -3, 0}, {4, -6, 2}, {3, 0, -3}, {3, 1, -4}, {4, 2, -6}},
+    {{-2, -1, 3}, {-2, 2, 0}, {-1, 2, -1}, {-1, 1, 0}, {1, 2, -3}, {1, 3, -4}, {2, 2, -4}, {0, -1, 1}, {1, -1, 0}, {1, -2, 1}, {3, -4, 1}, {3, -2, -1}, {3, -1, -2}, {4, -2, -2}},
+    {{-2, -3, 5}, {0, -3, 3}, {0, -2, 2}, {2, -4, 2}, {2, -3, 1}, {1, -1, 0}, {1, 0, -1}, {0, 2, -2}, {0, 3, -3}, {2, 1, -3}, {2, 2, -4}, {4, 2, -6}, {-2, 5, -3}, {4, -6, 2}},
+    {{1, 3, -4}, {1, 2, -3}, {-1, 1, 0}, {3, -1, -2}, {4, -2, -2}, {3, -2, -1}, {2, -2, 0}, {-2, 1, 1}, {-1, 0, 1}, {0, -1, 1}, {0, -3, 3}, {-1, -3, 4}, {2, -4, 2}, {3, -5, 2}},
+    {{-2, 0, 2}, {-1, 0, 1}, {-1, 1, 0}, {-1, 3, -2}, {1, 1, -2}, {2, 1, -3}, {3, 1, -4}, {4, -1, -3}, {3, -1, -2}, {3, -2, -1}, {3, -4, 1}, {1, -2, 1}, {0, -2, 2}, {-1, -2, 3}}
 };
 std::vector<std::tuple<int, int, int>> ObjectCoordinates::deleteCoordinates = {
     {-8, -2, 10}, {-8, -1, 9}, {-8, 0, 8}, {-8, 7, 1}, {-8, 1, 7}, {-8, 8, 0}, 
@@ -107,7 +120,7 @@ void Board::deleteHexagons()
 
     for (const auto& coordinates : ObjectCoordinates::getdeleteCoordinates())
     {
-        hexDict[coordinates].deleteHex();
+        hexDict.erase(coordinates);
     }
 }
 
