@@ -5,11 +5,9 @@
 //#include <iostream>
 
 Board::Board(int Rows, int Columns, float HSize)
+    :numRows(Rows), numCols(Columns), hexSize(HSize)
 {
-    numRows = Rows;
-    numCols = Columns;
     numHexagons = numRows * numCols;
-    hexSize = HSize;
     vertSpacing = 86.6f;
     horizSpacing = 75.f;
     xOffset = 30.f;

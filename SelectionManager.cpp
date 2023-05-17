@@ -20,7 +20,7 @@ void selectionManager::handleClick(Board &grid, sf::Vector2i mousePosition)
 
         if (distance < hexRadius) {
 
-            hexagon.highlight = false;
+            hexagon.disableHighlight();
             //hexagon.setRock();
 
             for (std::tuple<int, int, int> neighbour : neighbours)

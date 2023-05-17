@@ -14,16 +14,10 @@ public:
 	bool isBase;
 	bool isStart = false;
 
-	bool highlight;
-
 	float scale;
 	float xOffset;
 	float yOffset;
 
-	sf::Color normalFill;
-	sf::Color normalOut;
-	sf::Color highFill;
-	sf::Color highOut;
 
 	sf::ConvexShape shape;
 	/*sf::ConvexShape rockShape;*/
@@ -58,6 +52,13 @@ public:
 
 
 private:
+	bool highlight;
+
 	float xPos;
 	float yPos;
+
+	sf::Color normalFill;
+	sf::Color normalOut;
+	sf::Color highFill;
+	sf::Color highOut;
 };
