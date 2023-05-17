@@ -1,9 +1,10 @@
 #include "Pawn.h"
 #include "Equipment.h"
 
-Pawn::Pawn(const std::string& name, int teamNumber, int maxActions, int healthPoints, int maxEquipment)
-    : name(name), teamNumber(teamNumber), remainingActions(maxActions), HP(healthPoints), maxEquipment(maxEquipment) 
+Pawn::Pawn(const std::string& name, int teamNumber, Side* side, int maxActions, int healthPoints, int maxEquipment, int price)
+    : name(name), teamNumber(teamNumber), side(side),maxActions(maxActions), remainingActions(maxActions), HP(healthPoints), maxEquipment(maxEquipment), price(price)
 {
+    initializeImage();
     initializePawn();
 }
 
@@ -18,9 +19,26 @@ Pawn::~Pawn() {
     equipment.clear();
 }
 
-void initializePawn()
-{
 
+void Pawn::initializeImage()
+{
+    
+    if (!texture.loadFromFile("assets/sword.png"))
+    {
+        return;
+    }
+    image.setTexture(texture);
+
+    image.setPosition(500.f, 200.0f);
+    float scaleFactor = 0.2f;
+    image.setScale(scaleFactor, scaleFactor);
+    float rotationAngle = 90.0f;
+    image.setRotation(rotationAngle);
+}
+
+void Pawn::initializePawn()
+{
+    return;
 }
 
 // Getter methods
@@ -31,6 +49,10 @@ std::string Pawn::getName() const {
 
 int Pawn::getTeamNumber() const {
     return teamNumber;
+}
+
+Side* Pawn::getSide() const {
+    return side;
 }
 
 int Pawn::getRemainingActions() const {
@@ -60,6 +82,14 @@ Equipment* Pawn::getEquipment(int index) const {
     return nullptr;
 }
 
+int Pawn::getPrice() const {
+    return price;
+}
+
+sf::Sprite Pawn::getImage() const {
+    return image;
+}
+
 // Setter methods
 
 void Pawn::setName(const std::string& name) {
@@ -68,6 +98,10 @@ void Pawn::setName(const std::string& name) {
 
 void Pawn::setTeamNumber(int teamNumber) {
     this->teamNumber = teamNumber;
+}
+
+void Pawn::setSide(Side* side) {
+    this->side = side;
 }
 
 void Pawn::setRemainingActions(int actions) {
@@ -106,6 +140,17 @@ void Pawn::reduceActions(int amount) {
     }
 }
 
+void Pawn::reduceHP(int amount) {
+    HP -= amount;
+    if (!isAlive())
+        dead();
+}
+
 bool Pawn::isAlive() const {
     return HP > 0;
+}
+
+void Pawn::dead()
+{
+
 }

@@ -6,6 +6,7 @@
 #include <iostream>
 #include "Board.h"
 #include "Hex.h"
+#include "Pawn.h"
 #include <tuple>
 #include <cmath>
 #include "SelectionManager.h"
@@ -22,5 +23,5 @@ private:
     sf::RenderWindow* window;
     selectionManager sM;
     Board grid;
-
+    Pawn p1;
 };

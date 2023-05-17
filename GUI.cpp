@@ -6,6 +6,11 @@ Gui::Gui(const int screenWidth, const int screenHeight)
 	window = new sf::RenderWindow(sf::VideoMode(screenWidth, screenHeight), "Hex Board");
 	sM = selectionManager();
 	grid = Board(13, 19, 0.8f);
+    Red red;
+    std::string Name = "Mirmi³";
+    p1 = Pawn(Name, 1, &red, 5, 4, 4, 7);
+    
+
 }
 
 Gui::~Gui()
@@ -14,6 +19,19 @@ Gui::~Gui()
 }
 
 void Gui::start() {
+    sf::Texture texture;
+    sf::Sprite image;
+    if (!texture.loadFromFile("assets/sword.png"))
+    {
+        return;
+    }
+    image.setTexture(texture);
+
+    image.setPosition(500.f, 200.0f);
+    float scaleFactor = 0.2f;
+    image.setScale(scaleFactor, scaleFactor);
+    float rotationAngle = 90.0f;
+    image.setRotation(rotationAngle);
     while (window->isOpen())
     {
 
@@ -23,6 +41,7 @@ void Gui::start() {
             window->draw(hexagon.shape);
             /*window.draw(hexagon.rockShape);*/
         }
+        window->draw(image);
         window->display();
 
         sf::Event event;
