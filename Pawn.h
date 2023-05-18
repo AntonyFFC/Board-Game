@@ -4,6 +4,7 @@
 #include <vector>
 #include "Equipment.h"
 #include <SFML/Graphics.hpp>
+#include <Windows.h>
 
 class Side {
 public:
@@ -24,12 +25,11 @@ public:
     Pawn() : name(""), teamNumber(0), side(nullptr), maxActions(0), remainingActions(0), HP(0), maxEquipment(0), price(0) {
         initializeImage();
         initializePawn();
+        initializespriteMap();
     }
     Pawn(const std::string& name, int teamNumber, Side* side, int maxActions, int healthPoints, int maxEquipment, int price);
     ~Pawn();
 
-    void initializeImage();
-    void initializePawn();
 
     // Getter methods
     std::string getName() const;
@@ -62,8 +62,12 @@ public:
 
     void dead();
 
-    
+    std::map<std::string, sf::Sprite> spriteMap;
 private:
+    void initializeImage();
+    void initializePawn();
+    void initializespriteMap();
+
     std::string name;
     int teamNumber;
     Side* side;
@@ -73,8 +77,9 @@ private:
     int maxEquipment;
     int price;
     std::vector<Equipment*> equipment;
-    sf::Sprite image;
-    sf::Texture *pawnTexture;
     
+    sf::Sprite *combinedSprite;
+    sf::Texture *combinedTexture;
+    sf::RenderTexture *renderTexture;
     
 };

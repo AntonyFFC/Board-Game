@@ -30,6 +30,11 @@ void Gui::start() {
             /*window.draw(hexagon.rockShape);*/
         }
         window->draw(p1.getImage());
+        window->draw(p1.spriteMap["blue"]);
+        /*for (const auto& pair : p1.spriteMap)
+        {
+            window->draw(pair.second);
+        }*/
         window->display();
 
         sf::Event event;

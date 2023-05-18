@@ -6,6 +6,7 @@ Pawn::Pawn(const std::string& name, int teamNumber, Side* side, int maxActions, 
 {
     initializeImage();
     initializePawn();
+    initializespriteMap();
 }
 
 Pawn::~Pawn() {
@@ -22,18 +23,103 @@ Pawn::~Pawn() {
 
 void Pawn::initializeImage()
 {
-    pawnTexture = new sf::Texture;
-    if (!(pawnTexture->loadFromFile("assets/helmetRed.png")))
+    sf::Texture* pawnTexture1;
+    sf::Texture* pawnTexture2;
+    pawnTexture1 = new sf::Texture;
+    pawnTexture2 = new sf::Texture;
+    if (!(pawnTexture1->loadFromFile("assets/helmetRed.png")))
     {
         return;
     }
-    image.setTexture(*pawnTexture);
+    if (!(pawnTexture2->loadFromFile("assets/sword.png")))
+    {
+        return;
+    }
+    sf::Sprite image;
+    sf::Sprite image2;
+    image.setTexture(*pawnTexture1);
+    image2.setTexture(*pawnTexture2);
 
-    image.setPosition(500.f, 180.0f);
-    float scaleFactor = 0.05f;
+
+    float scaleFactor = 1;
     image.setScale(scaleFactor, scaleFactor);
     float rotationAngle = 90.0f;
-    image.setRotation(rotationAngle);
+    //image.setRotation(rotationAngle);
+
+
+    image2.setScale(scaleFactor, scaleFactor);
+    //image2.setRotation(rotationAngle);
+
+    renderTexture = new sf::RenderTexture;
+    renderTexture->create(1400, 1400);
+
+    renderTexture->clear(sf::Color::Transparent);
+
+    // Draw the sprites onto the render texture
+    renderTexture->draw(image);
+    renderTexture->draw(image2);
+    renderTexture->display();
+    combinedTexture = new sf::Texture(renderTexture->getTexture());
+    combinedTexture->copyToImage().saveToFile("assets/combined.png");
+    combinedSprite = new sf::Sprite(*combinedTexture);
+    combinedSprite->setPosition(500.f, 180.0f);
+    combinedSprite->setScale(scaleFactor, scaleFactor);
+    combinedSprite->setRotation(rotationAngle);
+}
+
+void Pawn::initializespriteMap()
+{
+    std::string folderPath = "assets/";
+    std::string searchPattern = folderPath + "*.png";
+    WIN32_FIND_DATAA findData;
+    HANDLE findHandle = FindFirstFileA(searchPattern.c_str(), &findData);
+
+    if (findHandle != INVALID_HANDLE_VALUE)
+    {
+        do
+        {
+            std::string fileName = findData.cFileName;
+            std::string filePath = folderPath + fileName;
+
+            // Load the texture
+            sf::Texture texture;
+            if (!texture.loadFromFile(filePath))
+            {
+                // Handle error loading texture
+                continue;
+            }
+
+            // Create the sprite and add it to the map
+            sf::Sprite sprite(texture);
+            sprite.setPosition(800.f, 180.0f);
+            spriteMap[fileName] = sprite;
+
+        } while (FindNextFileA(findHandle, &findData));
+
+        FindClose(findHandle);
+    }
+    else
+    {
+        // Handle error opening directory
+        return;
+    }
+
+    //std::vector<sf::Texture*> textures;
+    //textures.push_back(new sf::Texture);
+    //if (!(textures[0]->loadFromFile("assets/red.png")))
+    //{
+    //    return;
+    //}
+    //sf::Sprite image;
+    //image.setTexture(*textures[0]);
+    //spriteMap["red"] = image;
+    ///*if (!(texture->loadFromFile("assets/sword.png")))
+    //{
+    //    return;
+    //}
+    //sf::Sprite image2;
+
+    //image2.setTexture(*pawnTexture2);*/
 }
 
 void Pawn::initializePawn()
@@ -87,7 +173,7 @@ int Pawn::getPrice() const {
 }
 
 sf::Sprite Pawn::getImage() const {
-    return image;
+    return *combinedSprite;
 }
 
 // Setter methods

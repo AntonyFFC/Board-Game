@@ -3,7 +3,7 @@
 
 int main()
 {
-    Gui interface;
-    interface.start();
+    Gui interface1;
+    interface1.start();
     return 0;
 }
