@@ -1,12 +1,17 @@
 #include "Pawn.h"
 #include "Equipment.h"
 
-Pawn::Pawn(const std::string& name, int teamNumber, Side* side, int maxActions, int healthPoints, int maxEquipment, int price)
+Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions, int healthPoints, int maxEquipment, int price)
     : name(name), teamNumber(teamNumber), side(side),maxActions(maxActions), remainingActions(maxActions), HP(healthPoints), maxEquipment(maxEquipment), price(price)
 {
-    initializeImage();
+    scaleFactor = 0.05f;
+    rotationAngle = 90.0f;
+    if (side == 0)
+        elementsSet = { "red" };
+    else if (side == 1)
+        elementsSet = { "blue" };
     initializePawn();
-    initializespriteMap();
+    
 }
 
 Pawn::~Pawn() {
@@ -21,53 +26,28 @@ Pawn::~Pawn() {
 }
 
 
-void Pawn::initializeImage()
+void Pawn::createImage(std::unordered_set<std::string> fileNames)
 {
-    sf::Texture* pawnTexture1;
-    sf::Texture* pawnTexture2;
-    pawnTexture1 = new sf::Texture;
-    pawnTexture2 = new sf::Texture;
-    if (!(pawnTexture1->loadFromFile("assets/helmetRed.png")))
-    {
-        return;
-    }
-    if (!(pawnTexture2->loadFromFile("assets/sword.png")))
-    {
-        return;
-    }
-    sf::Sprite image;
-    sf::Sprite image2;
-    image.setTexture(*pawnTexture1);
-    image2.setTexture(*pawnTexture2);
-
-
-    float scaleFactor = 1;
-    image.setScale(scaleFactor, scaleFactor);
-    float rotationAngle = 90.0f;
-    //image.setRotation(rotationAngle);
-
-
-    image2.setScale(scaleFactor, scaleFactor);
-    //image2.setRotation(rotationAngle);
 
     renderTexture = new sf::RenderTexture;
     renderTexture->create(1400, 1400);
 
     renderTexture->clear(sf::Color::Transparent);
-
-    // Draw the sprites onto the render texture
-    renderTexture->draw(image);
-    renderTexture->draw(image2);
+    for (const auto& name : fileNames)
+    {
+        renderTexture->draw(spriteMap[name]);
+    }
     renderTexture->display();
+
     combinedTexture = new sf::Texture(renderTexture->getTexture());
-    combinedTexture->copyToImage().saveToFile("assets/combined.png");
+    /*combinedTexture->copyToImage().saveToFile("assets/combined.png");*/
     combinedSprite = new sf::Sprite(*combinedTexture);
-    combinedSprite->setPosition(500.f, 180.0f);
+    combinedSprite->setPosition(84.f, 504.0f);
     combinedSprite->setScale(scaleFactor, scaleFactor);
     combinedSprite->setRotation(rotationAngle);
 }
 
-void Pawn::initializespriteMap()
+void Pawn::initializeSpriteMap()
 {
     std::string folderPath = "assets/";
     std::string searchPattern = folderPath + "*.png";
@@ -82,17 +62,15 @@ void Pawn::initializespriteMap()
             std::string filePath = folderPath + fileName;
 
             // Load the texture
-            sf::Texture texture;
-            if (!texture.loadFromFile(filePath))
+            sf::Texture* texture;
+            texture = new sf::Texture;
+            if (!texture->loadFromFile(filePath))
             {
                 // Handle error loading texture
                 continue;
             }
-
-            // Create the sprite and add it to the map
-            sf::Sprite sprite(texture);
-            sprite.setPosition(800.f, 180.0f);
-            spriteMap[fileName] = sprite;
+            sf::Sprite sprite(*texture);
+            spriteMap[fileName.substr(0,fileName.length()-4)] = sprite;
 
         } while (FindNextFileA(findHandle, &findData));
 
@@ -103,28 +81,12 @@ void Pawn::initializespriteMap()
         // Handle error opening directory
         return;
     }
-
-    //std::vector<sf::Texture*> textures;
-    //textures.push_back(new sf::Texture);
-    //if (!(textures[0]->loadFromFile("assets/red.png")))
-    //{
-    //    return;
-    //}
-    //sf::Sprite image;
-    //image.setTexture(*textures[0]);
-    //spriteMap["red"] = image;
-    ///*if (!(texture->loadFromFile("assets/sword.png")))
-    //{
-    //    return;
-    //}
-    //sf::Sprite image2;
-
-    //image2.setTexture(*pawnTexture2);*/
 }
 
 void Pawn::initializePawn()
 {
-    return;
+    initializeSpriteMap();
+    createImage(elementsSet);
 }
 
 // Getter methods
@@ -137,7 +99,7 @@ int Pawn::getTeamNumber() const {
     return teamNumber;
 }
 
-Side* Pawn::getSide() const {
+int Pawn::getSide() const {
     return side;
 }
 
@@ -186,7 +148,7 @@ void Pawn::setTeamNumber(int teamNumber) {
     this->teamNumber = teamNumber;
 }
 
-void Pawn::setSide(Side* side) {
+void Pawn::setSide(int side) {
     this->side = side;
 }
 

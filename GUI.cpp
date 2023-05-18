@@ -6,9 +6,8 @@ Gui::Gui(const int screenWidth, const int screenHeight)
 	window = new sf::RenderWindow(sf::VideoMode(screenWidth, screenHeight), "Hex Board");
 	sM = selectionManager();
 	grid = Board(13, 19, 0.8f);
-    Red red;
     std::string Name = "Mirmi³";
-    p1 = Pawn(Name, 1, &red, 5, 4, 4, 7);
+    p1 = Pawn(Name, 1, 0, 5, 4, 4, 7);
     
 
 }
@@ -27,14 +26,8 @@ void Gui::start() {
         for (auto& pair : grid.hexDict) {
             Hex& hexagon = pair.second;
             window->draw(hexagon.shape);
-            /*window.draw(hexagon.rockShape);*/
         }
         window->draw(p1.getImage());
-        window->draw(p1.spriteMap["blue"]);
-        /*for (const auto& pair : p1.spriteMap)
-        {
-            window->draw(pair.second);
-        }*/
         window->display();
 
         sf::Event event;
