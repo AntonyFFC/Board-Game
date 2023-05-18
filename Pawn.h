@@ -62,7 +62,7 @@ public:
 
     void dead();
 
-    sf::Sprite image;
+    
 private:
     std::string name;
     int teamNumber;
@@ -73,7 +73,8 @@ private:
     int maxEquipment;
     int price;
     std::vector<Equipment*> equipment;
-    sf::Texture texture;
+    sf::Sprite image;
+    sf::Texture *pawnTexture;
     
     
 };

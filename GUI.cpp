@@ -19,19 +19,7 @@ Gui::~Gui()
 }
 
 void Gui::start() {
-    sf::Texture texture;
-    sf::Sprite image;
-    if (!texture.loadFromFile("assets/sword.png"))
-    {
-        return;
-    }
-    image.setTexture(texture);
-
-    image.setPosition(500.f, 200.0f);
-    float scaleFactor = 0.2f;
-    image.setScale(scaleFactor, scaleFactor);
-    float rotationAngle = 90.0f;
-    image.setRotation(rotationAngle);
+    
     while (window->isOpen())
     {
 
@@ -41,7 +29,7 @@ void Gui::start() {
             window->draw(hexagon.shape);
             /*window.draw(hexagon.rockShape);*/
         }
-        window->draw(image);
+        window->draw(p1.getImage());
         window->display();
 
         sf::Event event;

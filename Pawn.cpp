@@ -22,15 +22,15 @@ Pawn::~Pawn() {
 
 void Pawn::initializeImage()
 {
-    
-    if (!texture.loadFromFile("assets/sword.png"))
+    pawnTexture = new sf::Texture;
+    if (!(pawnTexture->loadFromFile("assets/helmetRed.png")))
     {
         return;
     }
-    image.setTexture(texture);
+    image.setTexture(*pawnTexture);
 
-    image.setPosition(500.f, 200.0f);
-    float scaleFactor = 0.2f;
+    image.setPosition(500.f, 180.0f);
+    float scaleFactor = 0.05f;
     image.setScale(scaleFactor, scaleFactor);
     float rotationAngle = 90.0f;
     image.setRotation(rotationAngle);
