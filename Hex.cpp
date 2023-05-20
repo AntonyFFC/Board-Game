@@ -24,6 +24,7 @@ Hex::Hex(std::tuple<int, int, int> inCoords, float inxPos, float inyPos, bool in
     normalOut = inNormalOut;
     highFill = inHighFill;
     highOut = inHighOut;
+    pawn = nullptr;
 
     shape = getShape();
     /*rockShape = getRockShape();*/
@@ -219,4 +220,9 @@ void Hex::setStart()
     shape.setFillColor(startColour);
     shape.setOutlineColor(normalOut);
 
+}
+
+void Hex::setPawn()
+{
+    pawn = new Pawn();
 }

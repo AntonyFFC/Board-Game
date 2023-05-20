@@ -7,7 +7,7 @@ Gui::Gui(const int screenWidth, const int screenHeight)
 	sM = selectionManager();
 	grid = Board(13, 19, 0.8f);
     std::string Name = "Mirmi³";
-    p1 = Pawn(Name, 1, 0, 5, 4, 4, 7);
+    p1 = Pawn(Name, 1, 0, 5, 4, 4, 7, 84.f, 504.0f);
     
 
 }

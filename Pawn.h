@@ -6,14 +6,15 @@
 #include <SFML/Graphics.hpp>
 #include <Windows.h>
 #include <unordered_set>
+#include "Board.h"
 
 
 class Pawn {
 public:
-    Pawn() : name(""), teamNumber(0), side(1), maxActions(0), remainingActions(0), HP(0), maxEquipment(0), price(0) {
+    Pawn() : name(""), teamNumber(0), side(1), maxActions(0), remainingActions(0), HP(0), maxEquipment(0), price(0), xPos(84.f), yPos(504.0f) {
         initializePawn();
     }
-    Pawn(const std::string& name, int teamNumber, int side, int maxActions, int healthPoints, int maxEquipment, int price);
+    Pawn(const std::string& name, int teamNumber, int side, int maxActions, int healthPoints, int maxEquipment, int price, float xPos, float yPos);
     ~Pawn();
 
 
@@ -46,6 +47,7 @@ public:
     void reduceHP(int amount);
     bool isAlive() const;
 
+    void changePos(float x, float y);
     void dead();
 
     std::map<std::string, sf::Sprite> spriteMap;
@@ -71,5 +73,7 @@ private:
     sf::RenderTexture *renderTexture;
 
     std::unordered_set<std::string> elementsSet;
+    float xPos;
+    float yPos;
     
 };

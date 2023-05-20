@@ -1,6 +1,9 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <tuple>
+#include "Pawn.h"
+
+
 class Hex
 {
 public:
@@ -50,8 +53,11 @@ public:
 	void setGrass();
 	void setStart();
 
+	void setPawn();
+
 
 private:
+	Pawn* pawn;
 	bool highlight;
 
 	float xPos;

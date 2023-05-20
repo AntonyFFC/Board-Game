@@ -1,8 +1,8 @@
 #include "Pawn.h"
 #include "Equipment.h"
 
-Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions, int healthPoints, int maxEquipment, int price)
-    : name(name), teamNumber(teamNumber), side(side),maxActions(maxActions), remainingActions(maxActions), HP(healthPoints), maxEquipment(maxEquipment), price(price)
+Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions, int healthPoints, int maxEquipment, int price, float xPos, float yPos)
+    : name(name), teamNumber(teamNumber), side(side),maxActions(maxActions), remainingActions(maxActions), HP(healthPoints), maxEquipment(maxEquipment), price(price), xPos(xPos), yPos(yPos)
 {
     scaleFactor = 0.05f;
     rotationAngle = 90.0f;
@@ -42,7 +42,7 @@ void Pawn::createImage(std::unordered_set<std::string> fileNames)
     combinedTexture = new sf::Texture(renderTexture->getTexture());
     /*combinedTexture->copyToImage().saveToFile("assets/combined.png");*/
     combinedSprite = new sf::Sprite(*combinedTexture);
-    combinedSprite->setPosition(84.f, 504.0f);
+    combinedSprite->setPosition(xPos, yPos);
     combinedSprite->setScale(scaleFactor, scaleFactor);
     combinedSprite->setRotation(rotationAngle);
 }
@@ -87,6 +87,7 @@ void Pawn::initializePawn()
 {
     initializeSpriteMap();
     createImage(elementsSet);
+
 }
 
 // Getter methods
@@ -196,6 +197,12 @@ void Pawn::reduceHP(int amount) {
 
 bool Pawn::isAlive() const {
     return HP > 0;
+}
+
+void Pawn::changePos(float x, float y) {
+    xPos = x;
+    yPos = y;
+    combinedSprite->setPosition(xPos, yPos);
 }
 
 void Pawn::dead()
