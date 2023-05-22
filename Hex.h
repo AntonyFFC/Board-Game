@@ -23,11 +23,11 @@ public:
 
 
 	sf::ConvexShape shape;
-	/*sf::ConvexShape rockShape;*/
 
 	Hex(std::tuple<int, int, int> inCoords = { 0,0,0 }, float inxPos = 0.f, float inyPos = 0.f, bool inIsRock = false, bool inIsBase = false, bool inIsWall = false,
 		float inScale = 0.8f, float inXOffset = 30.f, float inYOffset = 20.f, sf::Color inNormalFill = sf::Color(37, 142, 37), sf::Color inNormalOut = sf::Color(40, 66, 42),
-		sf::Color inHighFill = sf::Color(89, 207, 89), sf::Color inHighOut = sf::Color(225, 245, 5));
+		sf::Color inHighFill = sf::Color(89, 207, 89), sf::Color inHighOut = sf::Color(225, 245, 5), Pawn* inPawn = nullptr);
+	~Hex();
 
 	void setPos(float inx = 0, float iny = 0);
 
@@ -35,7 +35,6 @@ public:
 
 	sf::ConvexShape getShape();
 
-	/*sf::ConvexShape getRockShape();*/
 
 	void setScl(float inS = 0.8);
 

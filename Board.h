@@ -3,6 +3,7 @@
 #include "Hex.h"
 #include <map>
 #include <tuple>
+#include "Pawn.h"
 class Board {
 public:
 	Board(int Rows = 10, int Columns = 10, float HSize = 1.f);

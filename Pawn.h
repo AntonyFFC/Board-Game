@@ -6,8 +6,6 @@
 #include <SFML/Graphics.hpp>
 #include <Windows.h>
 #include <unordered_set>
-#include "Board.h"
-
 
 class Pawn {
 public:

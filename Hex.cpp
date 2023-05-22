@@ -4,7 +4,8 @@
 #include <SFML/System.hpp>
 
 Hex::Hex(std::tuple<int, int, int> inCoords, float inxPos, float inyPos, bool inIsRock, bool inIsBase, bool inIsWall,
-    float inScale, float inXOffset, float inYOffset, sf::Color inNormalFill, sf::Color inNormalOut, sf::Color inHighFill, sf::Color inHighOut)
+    float inScale, float inXOffset, float inYOffset, sf::Color inNormalFill, sf::Color inNormalOut, sf::Color inHighFill, sf::Color inHighOut,
+    Pawn* inPawn)
 {
     cubeCoords = inCoords;
     /*x = inx;
@@ -24,7 +25,7 @@ Hex::Hex(std::tuple<int, int, int> inCoords, float inxPos, float inyPos, bool in
     normalOut = inNormalOut;
     highFill = inHighFill;
     highOut = inHighOut;
-    pawn = nullptr;
+    pawn = inPawn;
 
     shape = getShape();
     /*rockShape = getRockShape();*/
@@ -37,6 +38,10 @@ Hex::Hex(std::tuple<int, int, int> inCoords, float inxPos, float inyPos, bool in
     }
 
     setScl(scale);
+}
+
+Hex::~Hex() {
+   delete pawn;
 }
 
 sf::ConvexShape Hex::getShape()
