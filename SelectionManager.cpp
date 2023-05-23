@@ -11,14 +11,7 @@ void selectionManager::handleClick(Board &grid, sf::Vector2i mousePosition)
     for (auto& pair : grid.hexDict) {
         Hex* hexagon = pair.second;
 
-        const float hexRadius = hexagon->getRadius();
-        sf::Vector2f hexOrigin = hexagon->getOrigin();
-        float distance = std::sqrt(
-            std::pow(mousePosition.x - hexOrigin.x, 2) +
-            std::pow(mousePosition.y - hexOrigin.y, 2)
-        );
-
-        if (distance < hexRadius) {
+        if (hexagon->isClicked(mousePosition)){
 
             hexagon->setHighlight(false);
             //hexagon.setRock();

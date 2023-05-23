@@ -17,14 +17,6 @@ Hex::Hex(std::tuple<int, int, int> inCoords, float inxPos, float inyPos)
     base = sf::Color(104, 176, 163);
     startHigh = sf::Color(185, 224, 67);
     baseHigh = sf::Color(159, 227, 215);
-    shape = initShape();
-    if (std::get<0>(cubeCoords)!=-99 && std::get<1>(cubeCoords)!=-99 && std::get<2>(cubeCoords)!=-99) {
-        setCoords(std::get<0>(cubeCoords), std::get<1>(cubeCoords), std::get<2>(cubeCoords));
-    }
-    else if (xPos || yPos) {
-        setPos(xPos, yPos);
-    }
-    setScl(scale);
 }
 
 Hex::~Hex() {
@@ -110,12 +102,6 @@ void Hex::setWall(bool boolean)
 
 void Hex::setBase(bool boolean)
 {
-    if (boolean) {
-        currentFill = base;
-        currentOut = base;
-        currentHighFill = baseHigh;
-    }
-    setColour();
     isBase_ = boolean;
 }
 
@@ -126,24 +112,8 @@ void Hex::setGrass(bool boolean)
 
 void Hex::setStart(bool boolean)
 {
-    if (boolean) {
-        currentFill = startColor;
-        currentHighFill = startHigh;
-    }
-    setColour();
     isStart_ = boolean;
 
-}
-
-void Hex::clearHex(bool boolean) {
-    if (boolean) {
-        currentFill = fill;
-        currentOut = out;
-        currentHighFill = highFill;
-        setStart(isStart());
-        setBase(isBase());
-    }
-    setColour();
 }
 
 void Hex::setPawn(bool boolean)
@@ -154,10 +124,10 @@ void Hex::setPawn(bool boolean)
         delete pawn;
 }
 
-void Hex::setColour()
+void Hex::setColour(sf::Color inFill, sf::Color inOut)
 {
-    shape.setFillColor(currentFill);
-    shape.setOutlineColor(currentOut);
+    shape.setFillColor(inFill);
+    shape.setOutlineColor(inOut);
 }
 
 bool Hex::isRock() const {
@@ -184,12 +154,12 @@ bool Hex::isPawn() const {
     return isPawn_;
 }
 
-std::tuple<int, int, int> Hex::getCubeCoords() {
-    return cubeCoords;
+bool Hex::isHigh() const {
+    return highlight;
 }
 
-sf::ConvexShape Hex::getShape() const {
-    return shape;
+std::tuple<int, int, int> Hex::getCubeCoords() {
+    return cubeCoords;
 }
 
 float Hex::getXpos() const {
@@ -200,6 +170,21 @@ float Hex::getYpos() const {
     return yPos;
 }
 
+void Hex::setHighlight(bool boolean)
+{
+    highlight = boolean;
+}
+
+bool Hex::isClicked(sf::Vector2i mousePosition) const {
+    const float hexRadius = getRadius();
+    sf::Vector2f hexOrigin = getOrigin();
+    float distance = std::sqrt(
+        std::pow(mousePosition.x - hexOrigin.x, 2) +
+        std::pow(mousePosition.y - hexOrigin.y, 2)
+    );
+    return distance < hexRadius;
+}
+
 Grass::Grass(std::tuple<int, int, int> inCoords, float inxPos, float inyPos)
     :Hex(inCoords, inxPos, inyPos)
 {
@@ -208,20 +193,40 @@ Grass::Grass(std::tuple<int, int, int> inCoords, float inxPos, float inyPos)
     highFill = sf::Color(89, 207, 89);
     highOut = sf::Color(225, 245, 5);
     setGrass(true);
-    clearHex(true);
 }
 
-void Grass :: setHighlight(bool boolean)
-{
-    if (boolean)
+sf::ConvexShape Grass::getShape() {
+    sf::Color currentFill = fill;
+    sf::Color currentOut = out;
+    shape = initShape();
+    setCoords(std::get<0>(cubeCoords), std::get<1>(cubeCoords), std::get<2>(cubeCoords));
+    if (isStart()) {
+        if (isHigh()) {
+            currentFill = startHigh;
+            currentOut = highOut;
+        }
+        else
+            currentFill = startColor;
+    }
+    else if (isBase())
     {
-        currentFill = currentHighFill;
+        if (isHigh()) {
+            currentFill = baseHigh;
+            currentOut = highOut;
+        }
+        else {
+            currentFill = base;
+            currentOut = base;
+        }
+    }
+    else if (isHigh()) {
+        currentFill = highFill;
         currentOut = highOut;
     }
-    clearHex(!boolean);
-    highlight = boolean;
+    setColour(currentFill, currentOut);
+    setScl(scale);
+    return shape;
 }
-
 
 Rock::Rock(std::tuple<int, int, int> inCoords, float inxPos, float inyPos)
     :Hex(inCoords, inxPos, inyPos)
@@ -229,12 +234,21 @@ Rock::Rock(std::tuple<int, int, int> inCoords, float inxPos, float inyPos)
     fill = sf::Color(115, 115, 115);
     out = sf::Color(0, 0, 0);
     setRock(true);
-    clearHex(true);
 }
 
 void Rock::setHighlight(bool boolean)
 {
     return;
+}
+
+sf::ConvexShape Rock::getShape() {
+    sf::Color currentFill = fill;
+    sf::Color currentOut = out;
+    shape = initShape();
+    setCoords(std::get<0>(cubeCoords), std::get<1>(cubeCoords), std::get<2>(cubeCoords));
+    setColour(currentFill, currentOut);
+    setScl(scale);
+    return shape;
 }
 
 Wall::Wall(std::tuple<int, int, int> inCoords, float inxPos, float inyPos)
@@ -245,16 +259,18 @@ Wall::Wall(std::tuple<int, int, int> inCoords, float inxPos, float inyPos)
     highFill = sf::Color(36, 8, 5);
     highOut = sf::Color(225, 245, 5);
     setWall(true);
-    clearHex(true);
 }
 
-void Wall::setHighlight(bool boolean)
-{
-    if (boolean)
-    {
-        currentFill = currentHighFill;
+sf::ConvexShape Wall::getShape() {
+    sf::Color currentFill = fill;
+    sf::Color currentOut = out;
+    shape = initShape();
+    setCoords(std::get<0>(cubeCoords), std::get<1>(cubeCoords), std::get<2>(cubeCoords));
+    if (isHigh()) {
+        currentFill = highFill;
         currentOut = highOut;
     }
-    clearHex(!boolean);
-    highlight = boolean;
+    setColour(fill, out);
+    setScl(scale);
+    return shape;
 }

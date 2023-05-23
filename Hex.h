@@ -22,25 +22,27 @@ public:
 	void setScl(float inS = 0.8);
 	void setPos(float inx = 0, float iny = 0);
 	void setCoords(int inx = 0, int iny = 0, int inz = 0);
-	void setColour();
+	void setColour(sf::Color inFill, sf::Color inOut);
 	bool isRock() const;
 	bool isWall() const;
 	bool isBase() const;
 	bool isGrass() const;
 	bool isStart() const;
 	bool isPawn() const;
+	bool isHigh() const;
 	sf::Vector2f getOrigin() const;
-	float getRadius() const;
-	sf::ConvexShape initShape() const;
-	virtual void setHighlight(bool boolean) = 0;
-	void clearHex(bool boolean);
+	virtual void setHighlight(bool boolean);
 	std::tuple<int, int, int> getCubeCoords();
-	sf::ConvexShape getShape() const;
+	virtual sf::ConvexShape getShape() = 0;
 	float getXpos() const;
 	float getYpos() const;
+	bool isClicked(sf::Vector2i mousePosition) const;
 	
 
 private:
+	sf::ConvexShape initShape() const;
+	float getRadius() const;
+
 	sf::ConvexShape shape;
 	std::tuple<int, int, int> cubeCoords;
 	float xPos;
@@ -64,9 +66,6 @@ private:
 	sf::Color base;
 	sf::Color startHigh;
 	sf::Color baseHigh;
-	sf::Color currentFill;
-	sf::Color currentOut;
-	sf::Color currentHighFill;
 
 };
 
@@ -74,7 +73,7 @@ class Grass : public Hex
 {
 public:
 	Grass(std::tuple<int, int, int> inCoords = { 0, 0, 0 }, float inxPos = 0.f, float inyPos = 0.f);
-	void setHighlight(bool boolean) override;
+	sf::ConvexShape getShape() override;
 
 };
 
@@ -83,11 +82,12 @@ class Rock : public Hex
 public:
 	Rock(std::tuple<int, int, int> inCoords = { 0, 0, 0 }, float inxPos = 0.f, float inyPos = 0.f);
 	void setHighlight(bool boolean) override;
+	sf::ConvexShape getShape() override;
 };
 
 class Wall : public Hex
 {
 public:
 	Wall(std::tuple<int, int, int> inCoords = { 0, 0, 0 }, float inxPos = 0.f, float inyPos = 0.f);
-	void setHighlight(bool boolean) override;
+	sf::ConvexShape getShape() override;
 };
