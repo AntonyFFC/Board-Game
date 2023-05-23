@@ -22,6 +22,6 @@ private:
     int screenHeight;
     sf::RenderWindow* window;
     selectionManager sM;
-    Board grid;
+    Board* grid;
     Pawn p1;
 };

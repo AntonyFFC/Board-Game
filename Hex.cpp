@@ -18,7 +18,7 @@ Hex::Hex(std::tuple<int, int, int> inCoords, float inxPos, float inyPos)
     startHigh = sf::Color(185, 224, 67);
     baseHigh = sf::Color(159, 227, 215);
     shape = initShape();
-    if (std::get<0>(cubeCoords) || std::get<1>(cubeCoords) || std::get<2>(cubeCoords)) {
+    if (std::get<0>(cubeCoords)!=-99 && std::get<1>(cubeCoords)!=-99 && std::get<2>(cubeCoords)!=-99) {
         setCoords(std::get<0>(cubeCoords), std::get<1>(cubeCoords), std::get<2>(cubeCoords));
     }
     else if (xPos || yPos) {
@@ -71,7 +71,7 @@ void Hex::setCoords(int inx, int iny, int inz)
     const float horizSpacing = 75.f;
     cubeCoords = { inx, iny, inz };
     xPos = std::get<0>(cubeCoords) * (horizSpacing * scale) + midx * horizSpacing * scale + xOffset;
-    yPos = (std::get<1>(cubeCoords) * (2 * horizSpacing * scale) - (xOffset + midx * horizSpacing * scale - xPos)) / sqrt(3) - yOffset + midy * vertSpacing * scale;
+    yPos = (std::get<1>(cubeCoords) * (2 * horizSpacing * scale) - (xOffset + midx * horizSpacing * scale - xPos)) / sqrt(3) + yOffset + midy * vertSpacing * scale;
 
     shape.setPosition(xPos, yPos);
 }
@@ -140,6 +140,8 @@ void Hex::clearHex(bool boolean) {
         currentFill = fill;
         currentOut = out;
         currentHighFill = highFill;
+        setStart(isStart());
+        setBase(isBase());
     }
     setColour();
 }

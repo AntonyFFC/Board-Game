@@ -11,7 +11,7 @@ public:
 	friend class Rock;
 	friend class Wall;
 
-	Hex(std::tuple<int, int, int> inCoords = { 0, 0, 0 }, float inxPos = 0.f, float inyPos = 0.f);
+	Hex(std::tuple<int, int, int> inCoords = { -99, -99, -99 }, float inxPos = 0.f, float inyPos = 0.f);
 	~Hex();
 	void setRock(bool boolean);
 	void setWall(bool boolean);
