@@ -9,10 +9,10 @@ void selectionManager::handleClick(Board &grid, sf::Vector2i mousePosition)
 {
 
     for (auto& pair : grid.hexDict) {
-        Hex& hexagon = pair.second;
+        Hex* hexagon = pair.second;
 
-        const float hexRadius = hexagon.getRadius();
-        sf::Vector2f hexOrigin = hexagon.getOrigin();
+        const float hexRadius = hexagon->getRadius();
+        sf::Vector2f hexOrigin = hexagon->getOrigin();
         float distance = std::sqrt(
             std::pow(mousePosition.x - hexOrigin.x, 2) +
             std::pow(mousePosition.y - hexOrigin.y, 2)
@@ -20,22 +20,22 @@ void selectionManager::handleClick(Board &grid, sf::Vector2i mousePosition)
 
         if (distance < hexRadius) {
 
-            hexagon.disableHighlight();
+            hexagon->setHighlight(false);
             //hexagon.setRock();
 
             for (std::tuple<int, int, int> neighbour : neighbours)
             {
-                grid.hexDict[neighbour].disableHighlight();
+                grid.hexDict[neighbour]->setHighlight(false);
             }
 
-            neighbours = grid.GetNeighbours(hexagon.cubeCoords);
+            neighbours = grid.GetNeighbours(hexagon->getCubeCoords());
 
             for (std::tuple<int, int, int> neighbour : neighbours)
             {
-                grid.hexDict[neighbour].enableHighlight();             
+                grid.hexDict[neighbour]->setHighlight(true);             
             }
 
-            std::cout << "{" << std::get<0>(hexagon.cubeCoords) << ", " << std::get<1>(hexagon.cubeCoords) << ", " << std::get<2>(hexagon.cubeCoords) << "}, ";
+            std::cout << "{" << std::get<0>(hexagon->getCubeCoords()) << ", " << std::get<1>(hexagon->getCubeCoords()) << ", " << std::get<2>(hexagon->getCubeCoords()) << "}, ";
         }
 
 

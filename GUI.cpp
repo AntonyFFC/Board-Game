@@ -24,8 +24,7 @@ void Gui::start() {
 
         window->clear();
         for (auto& pair : grid.hexDict) {
-            Hex& hexagon = pair.second;
-            window->draw(hexagon.shape);
+            window->draw(pair.second->getShape());
         }
         window->draw(p1.getImage());
         window->display();

@@ -127,7 +127,7 @@ void Board::setStart()
 
     for (const auto& coordinates : ObjectCoordinates::getStartCoordinates())
     {
-        hexDict[coordinates].setStart();
+        hexDict[coordinates]->setStart(true);
     }
 }
 
@@ -136,7 +136,7 @@ void Board::setRocks()
 
     for (const auto& coordinates : ObjectCoordinates::getRockCoordinates())
     {
-        hexDict[coordinates].setRock();
+        hexDict[coordinates] = new Rock(coordinates);
     }
 }
 
@@ -145,15 +145,15 @@ void Board::setBases()
     std::tuple<int, int, int> base1 = {-4,2,2};
     std::tuple<int, int, int> base2 = { 6,-3,-3};
     
-    hexDict[base1].setBase();
-    hexDict[base2].setBase();
+    hexDict[base1]->setBase(true);
+    hexDict[base2]->setBase(true);
 }
 
 void Board::boardPreperation()
 {
     for (int i = 0; i < numRows; i++) {
         for (int j = 0; j < numCols; j++) {
-            Hex hexagon;
+            Grass hexagon;
 
             float x = j * horizSpacing * hexSize + xOffset;
             float y = i * vertSpacing * hexSize + yOffset + (j % 2) * vertSpacing * hexSize / 2;
@@ -162,7 +162,7 @@ void Board::boardPreperation()
             /*std::cout << "x:" << x << " y:" << y << "\n";
             std::cout << "Hx:" << hexagon.x << " Hy:" << hexagon.y << " Hz:" << hexagon.z << "\n";*/
 
-            hexDict[hexagon.cubeCoords] = hexagon;
+            hexDict[hexagon.getCubeCoords()] = new Grass(hexagon.getCubeCoords());
         }
     }
     deleteHexagons();
