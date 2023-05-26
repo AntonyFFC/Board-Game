@@ -18,11 +18,9 @@ public:
 	void setBase(bool boolean);
 	void setGrass(bool boolean);
 	void setStart(bool boolean);
-	void setPawn(bool boolean);
-	void setScl(float inS = 0.8);
+	void setPawn(bool boolean, Pawn* inPawn = nullptr);
 	void setPos(float inx = 0, float iny = 0);
 	void setCoords(int inx = 0, int iny = 0, int inz = 0);
-	void setColour(sf::Color inFill, sf::Color inOut);
 	bool isRock() const;
 	bool isWall() const;
 	bool isBase() const;
@@ -37,11 +35,13 @@ public:
 	float getXpos() const;
 	float getYpos() const;
 	bool isClicked(sf::Vector2i mousePosition) const;
-	
+	void draw(sf::RenderTarget& target);
+	void setScl(float inS = 0.8);	
 
 private:
 	sf::ConvexShape initShape() const;
 	float getRadius() const;
+	void setColour(sf::Color inFill, sf::Color inOut);
 
 	sf::ConvexShape shape;
 	std::tuple<int, int, int> cubeCoords;

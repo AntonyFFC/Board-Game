@@ -7,7 +7,7 @@ Gui::Gui(const int screenWidth, const int screenHeight)
 	sM = selectionManager();
 	grid = new Board(13, 19, 0.8f);
     std::string Name = "Mirmi³";
-    p1 = Pawn(Name, 1, 0, 5, 4, 4, 7, 510.f, 504.0f);
+    p1 = new Pawn(Name, 1, 0, 5, 4, 4, 7, 510.f, 504.0f);
     
 
 }
@@ -23,10 +23,8 @@ void Gui::start() {
     {
 
         window->clear();
-        for (auto& pair : grid->hexDict) {
-            window->draw(pair.second->getShape());
-        }
-        window->draw(p1.getImage());
+        grid->drawBoard(*window);
+        window->draw(p1->getSprite());
         window->display();
 
         sf::Event event;

@@ -13,6 +13,7 @@ Hex::Hex(std::tuple<int, int, int> inCoords, float inxPos, float inyPos)
     xOffset = 30.f;
     yOffset = 20.f;
     pawn = nullptr;
+    setPawn(false);
     startColor = sf::Color(134, 179, 0);
     base = sf::Color(104, 176, 163);
     startHigh = sf::Color(185, 224, 67);
@@ -116,12 +117,13 @@ void Hex::setStart(bool boolean)
 
 }
 
-void Hex::setPawn(bool boolean)
+void Hex::setPawn(bool boolean, Pawn* inPawn)
 {
     if (boolean)
-        pawn = new Pawn();
+        pawn = inPawn;
     else
         delete pawn;
+    isPawn_ = boolean;
 }
 
 void Hex::setColour(sf::Color inFill, sf::Color inOut)
@@ -183,6 +185,13 @@ bool Hex::isClicked(sf::Vector2i mousePosition) const {
         std::pow(mousePosition.y - hexOrigin.y, 2)
     );
     return distance < hexRadius;
+}
+
+void Hex::draw(sf::RenderTarget& target) {
+    target.draw(getShape());
+    if (isPawn()) {
+        target.draw(pawn->getSprite());
+    }
 }
 
 Grass::Grass(std::tuple<int, int, int> inCoords, float inxPos, float inyPos)

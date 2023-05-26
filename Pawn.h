@@ -9,14 +9,12 @@
 
 class Pawn {
 public:
-    Pawn() : name(""), teamNumber(0), side(1), maxActions(0), remainingActions(0), HP(0), maxEquipment(0), price(0), xPos(84.f), yPos(504.0f) {
-        initializePawn();
-    }
     Pawn(const std::string& name, int teamNumber, int side, int maxActions, int healthPoints, int maxEquipment, int price, float xPos, float yPos);
     ~Pawn();
 
 
     // Getter methods
+    void setupPawn();
     std::string getName() const;
     int getTeamNumber() const;
     int getSide() const;
@@ -27,7 +25,7 @@ public:
     int getEquipmentCount() const;
     Equipment* getEquipment(int index) const;
     int getPrice() const;
-    sf::Sprite getImage() const;
+    sf::Sprite getSprite();
 
     // Setter methods
     void setName(const std::string& name);
@@ -35,6 +33,7 @@ public:
     void setSide(int side);
     void setRemainingActions(int actions);
     void setHP(int healthPoints);
+    void setRotationAngle(float angle);
 
     // Equipment-related methods
     bool addEquipment(Equipment* weapon);
@@ -50,8 +49,8 @@ public:
 
     std::map<std::string, sf::Sprite> spriteMap;
 private:
-    void createImage(std::unordered_set<std::string> fileNames);
-    void initializePawn();
+    std::unordered_set<std::string> getSet();
+    void createSprite();
     void initializeSpriteMap();
 
     std::string name;
@@ -65,12 +64,7 @@ private:
     std::vector<Equipment*> equipment;
     float scaleFactor;
     float rotationAngle;
-    
-    sf::Sprite *combinedSprite;
-    sf::Texture *combinedTexture;
-    sf::RenderTexture *renderTexture;
-
-    std::unordered_set<std::string> elementsSet;
+    mutable sf::Sprite *combinedSprite;
     float xPos;
     float yPos;
     

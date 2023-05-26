@@ -2,16 +2,11 @@
 #include "Equipment.h"
 
 Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions, int healthPoints, int maxEquipment, int price, float xPos, float yPos)
-    : name(name), teamNumber(teamNumber), side(side),maxActions(maxActions), remainingActions(maxActions), HP(healthPoints), maxEquipment(maxEquipment), price(price), xPos(xPos), yPos(yPos)
+    : name(name), teamNumber(teamNumber), side(side),maxActions(maxActions), remainingActions(maxActions), HP(healthPoints), maxEquipment(maxEquipment), price(price), xPos(xPos), yPos(yPos), combinedSprite()
 {
     scaleFactor = 0.05f;
     rotationAngle = 90.0f;
-    if (side == 0)
-        elementsSet = { "red" };
-    else if (side == 1)
-        elementsSet = { "blue" };
-    initializePawn();
-    
+    setupPawn();
 }
 
 Pawn::~Pawn() {
@@ -23,23 +18,42 @@ Pawn::~Pawn() {
         delete weapon;
     }
     equipment.clear();
+    delete combinedSprite;
+}
+
+void Pawn::setupPawn() {
+    initializeSpriteMap();
+    createSprite();
+}
+
+std::unordered_set<std::string> Pawn::getSet() {
+    std::unordered_set<std::string> nameSet;
+    if (side == 0)
+        nameSet.insert("red");
+    else
+        nameSet.insert("blue");
+
+    for (const auto& obj : equipment) {
+        std::string name = obj->getName();
+        nameSet.insert(name);
+    }
+    return nameSet;
 }
 
 
-void Pawn::createImage(std::unordered_set<std::string> fileNames)
+void Pawn::createSprite()
 {
-
-    renderTexture = new sf::RenderTexture;
+    sf::RenderTexture* renderTexture = new sf::RenderTexture;
     renderTexture->create(1400, 1400);
 
     renderTexture->clear(sf::Color::Transparent);
-    for (const auto& name : fileNames)
+    for (const auto& pair : spriteMap)
     {
-        renderTexture->draw(spriteMap[name]);
+        renderTexture->draw(pair.second);
     }
     renderTexture->display();
 
-    combinedTexture = new sf::Texture(renderTexture->getTexture());
+    sf::Texture *combinedTexture = new sf::Texture(renderTexture->getTexture());
     /*combinedTexture->copyToImage().saveToFile("assets/combined.png");*/
     combinedSprite = new sf::Sprite(*combinedTexture);
     combinedSprite->setPosition(xPos, yPos);
@@ -49,6 +63,7 @@ void Pawn::createImage(std::unordered_set<std::string> fileNames)
 
 void Pawn::initializeSpriteMap()
 {
+    std::unordered_set<std::string> fileNames = getSet();
     std::string folderPath = "assets/";
     std::string searchPattern = folderPath + "*.png";
     WIN32_FIND_DATAA findData;
@@ -59,7 +74,11 @@ void Pawn::initializeSpriteMap()
         do
         {
             std::string fileName = findData.cFileName;
-            std::string filePath = folderPath + fileName;
+            fileName = fileName.substr(0, fileName.length() - 4);
+            if (fileNames.find(fileName) == fileNames.end() || spriteMap.find(fileName) != spriteMap.end()) {
+                continue; // Skip this file
+            }
+            std::string filePath = folderPath + fileName + ".png";
 
             // Load the texture
             sf::Texture* texture;
@@ -70,7 +89,7 @@ void Pawn::initializeSpriteMap()
                 continue;
             }
             sf::Sprite sprite(*texture);
-            spriteMap[fileName.substr(0,fileName.length()-4)] = sprite;
+            spriteMap[fileName] = sprite;
 
         } while (FindNextFileA(findHandle, &findData));
 
@@ -83,11 +102,8 @@ void Pawn::initializeSpriteMap()
     }
 }
 
-void Pawn::initializePawn()
-{
-    initializeSpriteMap();
-    createImage(elementsSet);
-
+sf::Sprite Pawn::getSprite() {
+    return *combinedSprite;
 }
 
 // Getter methods
@@ -135,10 +151,6 @@ int Pawn::getPrice() const {
     return price;
 }
 
-sf::Sprite Pawn::getImage() const {
-    return *combinedSprite;
-}
-
 // Setter methods
 
 void Pawn::setName(const std::string& name) {
@@ -154,11 +166,15 @@ void Pawn::setSide(int side) {
 }
 
 void Pawn::setRemainingActions(int actions) {
-    remainingActions = actions;
+    this->remainingActions = actions;
 }
 
 void Pawn::setHP(int healthPoints) {
     this->HP = healthPoints;
+}
+
+void Pawn::setRotationAngle(float angle) {
+    this->rotationAngle = angle;
 }
 
 // Equipment-related methods

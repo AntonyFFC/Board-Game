@@ -15,6 +15,7 @@ public:
 
 	std::vector < std::tuple<int, int, int>> GetNeighbours(std::tuple<int, int, int> hexCoordinates);
 
+	void drawBoard(sf::RenderTarget& target);
 	void deleteHexagons();
 	void setStart();
 	void setRocks();
