@@ -32,8 +32,7 @@ public:
 	virtual void setHighlight(bool boolean);
 	std::tuple<int, int, int> getCubeCoords();
 	virtual sf::ConvexShape getShape() = 0;
-	float getXpos() const;
-	float getYpos() const;
+	sf::Vector2f getPos() const;
 	bool isClicked(sf::Vector2i mousePosition) const;
 	void draw(sf::RenderTarget& target);
 	void setScl(float inS = 0.8);	

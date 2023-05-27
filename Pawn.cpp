@@ -56,8 +56,9 @@ void Pawn::createSprite()
     sf::Texture *combinedTexture = new sf::Texture(renderTexture->getTexture());
     /*combinedTexture->copyToImage().saveToFile("assets/combined.png");*/
     combinedSprite = new sf::Sprite(*combinedTexture);
-    combinedSprite->setPosition(xPos, yPos);
     combinedSprite->setScale(scaleFactor, scaleFactor);
+    sf::Vector2f finalPos(xPos + combinedSprite->getGlobalBounds().width / 2.0f, yPos - combinedSprite->getGlobalBounds().height / 2.0f);
+    combinedSprite->setPosition(finalPos.x, finalPos.y);
     combinedSprite->setRotation(rotationAngle);
 }
 
@@ -103,6 +104,7 @@ void Pawn::initializeSpriteMap()
 }
 
 sf::Sprite Pawn::getSprite() {
+    setupPawn();
     return *combinedSprite;
 }
 
@@ -175,6 +177,11 @@ void Pawn::setHP(int healthPoints) {
 
 void Pawn::setRotationAngle(float angle) {
     this->rotationAngle = angle;
+}
+
+void Pawn::setPosition(float inx, float iny) {
+    xPos = inx;
+    yPos = iny;
 }
 
 // Equipment-related methods

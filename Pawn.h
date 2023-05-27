@@ -34,6 +34,7 @@ public:
     void setRemainingActions(int actions);
     void setHP(int healthPoints);
     void setRotationAngle(float angle);
+    void setPosition(float inx, float iny);
 
     // Equipment-related methods
     bool addEquipment(Equipment* weapon);

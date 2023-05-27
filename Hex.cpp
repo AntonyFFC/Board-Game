@@ -164,12 +164,8 @@ std::tuple<int, int, int> Hex::getCubeCoords() {
     return cubeCoords;
 }
 
-float Hex::getXpos() const {
-    return xPos;
-}
-
-float Hex::getYpos() const {
-    return yPos;
+sf::Vector2f Hex::getPos() const {
+    return sf::Vector2f(xPos,yPos);
 }
 
 void Hex::setHighlight(bool boolean)
@@ -190,6 +186,7 @@ bool Hex::isClicked(sf::Vector2i mousePosition) const {
 void Hex::draw(sf::RenderTarget& target) {
     target.draw(getShape());
     if (isPawn()) {
+        pawn->setPosition(getOrigin().x,getOrigin().y);
         target.draw(pawn->getSprite());
     }
 }
