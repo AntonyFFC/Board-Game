@@ -23,5 +23,4 @@ private:
     sf::RenderWindow* window;
     selectionManager sM;
     Board* grid;
-    Pawn* p1;
 };

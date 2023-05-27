@@ -7,7 +7,20 @@
 
 void selectionManager::handleClick(Board &grid, sf::Vector2i mousePosition)
 {
-
+    std::string Name = "Mirmi³";
+    std::vector<Pawn*> pawns;
+    Pawn* p1 = new Pawn(Name, 1, 0, 5, 4, 4, 7, 510.f, 504.0f);
+    pawns.push_back(p1);
+    Pawn* p2 = new Pawn(Name, 1, 0, 5, 4, 4, 7, 510.f, 504.0f);
+    pawns.push_back(p2);
+    Pawn* p3 = new Pawn(Name, 1, 0, 5, 4, 4, 7, 510.f, 504.0f);
+    pawns.push_back(p3);
+    Pawn* p4 = new Pawn(Name, 1, 0, 5, 4, 4, 7, 510.f, 504.0f);
+    pawns.push_back(p4);
+    Pawn* p5 = new Pawn(Name, 1, 0, 5, 4, 4, 7, 510.f, 504.0f);
+    pawns.push_back(p5);
+    Pawn* p6 = new Pawn(Name, 1, 0, 5, 4, 4, 7, 510.f, 504.0f);
+    pawns.push_back(p6);
     for (auto& pair : grid.hexDict) {
         Hex* hexagon = pair.second;
 
@@ -18,14 +31,18 @@ void selectionManager::handleClick(Board &grid, sf::Vector2i mousePosition)
 
             for (std::tuple<int, int, int> neighbour : neighbours)
             {
+                grid.hexDict[neighbour]->setPawn(false);
                 grid.hexDict[neighbour]->setHighlight(false);
             }
 
             neighbours = grid.GetNeighbours(hexagon->getCubeCoords());
 
+            int i = 0;
             for (std::tuple<int, int, int> neighbour : neighbours)
             {
-                grid.hexDict[neighbour]->setHighlight(true);             
+                grid.hexDict[neighbour]->setPawn(true, pawns[i]);
+                grid.hexDict[neighbour]->setHighlight(true); 
+                i++;
             }
 
             std::cout << "{" << std::get<0>(hexagon->getCubeCoords()) << ", " << std::get<1>(hexagon->getCubeCoords()) << ", " << std::get<2>(hexagon->getCubeCoords()) << "}, ";

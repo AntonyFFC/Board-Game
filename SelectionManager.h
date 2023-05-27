@@ -2,6 +2,7 @@
 #include "Hex.h"
 #include "Board.h"
 #include <SFML/Graphics.hpp>
+#include "Pawn.h"
 
 class selectionManager {
 private:
