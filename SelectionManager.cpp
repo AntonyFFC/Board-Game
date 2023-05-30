@@ -11,13 +11,13 @@ void selectionManager::handleClick(Board &grid, sf::Vector2i mousePosition)
     std::vector<Pawn*> pawns;
     Pawn* p1 = new Pawn(Name, 1, 0, 5, 4, 4, 7, 510.f, 504.0f);
     pawns.push_back(p1);
-    Pawn* p2 = new Pawn(Name, 1, 0, 5, 4, 4, 7, 510.f, 504.0f);
+    Pawn* p2 = new Pawn(Name, 0, 1, 5, 4, 4, 7, 510.f, 504.0f);
     pawns.push_back(p2);
-    Pawn* p3 = new Pawn(Name, 1, 0, 5, 4, 4, 7, 510.f, 504.0f);
+    Pawn* p3 = new Pawn(Name, 1, 1, 5, 4, 4, 7, 510.f, 504.0f);
     pawns.push_back(p3);
-    Pawn* p4 = new Pawn(Name, 1, 0, 5, 4, 4, 7, 510.f, 504.0f);
+    Pawn* p4 = new Pawn(Name, 0, 0, 5, 4, 4, 7, 510.f, 504.0f);
     pawns.push_back(p4);
-    Pawn* p5 = new Pawn(Name, 1, 0, 5, 4, 4, 7, 510.f, 504.0f);
+    Pawn* p5 = new Pawn(Name, 1, 1, 5, 4, 4, 7, 510.f, 504.0f);
     pawns.push_back(p5);
     Pawn* p6 = new Pawn(Name, 1, 0, 5, 4, 4, 7, 510.f, 504.0f);
     pawns.push_back(p6);

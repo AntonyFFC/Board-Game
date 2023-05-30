@@ -154,14 +154,17 @@
     <ClCompile Include="Board Game.cpp" />
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Equipment.cpp" />
+    <ClCompile Include="EquipmentManager.cpp" />
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="Hex.cpp" />
     <ClCompile Include="Pawn.cpp" />
     <ClCompile Include="SelectionManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\Downloads\json.hpp" />
     <ClInclude Include="Board.h" />
     <ClInclude Include="Equipment.h" />
+    <ClInclude Include="EquipmentManager.h" />
     <ClInclude Include="GUI.h" />
     <ClInclude Include="Hex.h" />
     <ClInclude Include="Pawn.h" />

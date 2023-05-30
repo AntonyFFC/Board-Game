@@ -1,7 +1,7 @@
 #include "Equipment.h"
 
 Equipment::Equipment(const std::string& name, int range, int spaceOccupied, int attackValue,
-    int attackActions, Type* type, int price,
+    int attackActions,const std::string& type, int price,
     const std::string& additionalCapabilities)
     : name(name), range(range), spaceOccupied(spaceOccupied), attackValue(attackValue),
     attackActions(attackActions), type(type), price(price),
@@ -27,7 +27,7 @@ int Equipment::getAttackActions() const {
     return attackActions;
 }
 
-Type* Equipment::getType() const {
+std::string Equipment::getType() const {
     return type;
 }
 

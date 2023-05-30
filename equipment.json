@@ -1,0 +1,32 @@
+[
+    {
+        "additionalCapabilities": "",
+        "attackActions": 1,
+        "attackValue": 1,
+        "name": "Sword",
+        "price": 5,
+        "range": 1,
+        "spaceOccupied": 1,
+        "type": "Weapon"
+    },
+    {
+        "additionalCapabilities": "2 attack with shield",
+        "attackActions": 2,
+        "attackValue": 1,
+        "name": "Flail",
+        "price": 3,
+        "range": 1,
+        "spaceOccupied": 1,
+        "type": "Weapon"
+    },
+    {
+        "additionalCapabilities": "2 range with peasant",
+        "attackActions": 2,
+        "attackValue": 1,
+        "name": "Fork",
+        "price": 3,
+        "range": 1,
+        "spaceOccupied": 1,
+        "type": "Weapon"
+    }
+]
