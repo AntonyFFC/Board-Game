@@ -59,10 +59,10 @@
     <ClInclude Include="Equipment.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Downloads\json.hpp">
+    <ClInclude Include="EquipmentManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EquipmentManager.h">
+    <ClInclude Include="json.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

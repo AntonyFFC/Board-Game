@@ -161,12 +161,12 @@
     <ClCompile Include="SelectionManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\Downloads\json.hpp" />
     <ClInclude Include="Board.h" />
     <ClInclude Include="Equipment.h" />
     <ClInclude Include="EquipmentManager.h" />
     <ClInclude Include="GUI.h" />
     <ClInclude Include="Hex.h" />
+    <ClInclude Include="json.hpp" />
     <ClInclude Include="Pawn.h" />
     <ClInclude Include="SelectionManager.h" />
   </ItemGroup>
