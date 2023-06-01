@@ -13,6 +13,7 @@ public:
 
 	Hex(std::tuple<int, int, int> inCoords = { -99, -99, -99 }, float inxPos = 0.f, float inyPos = 0.f);
 	~Hex();
+	// setters
 	void setRock(bool boolean);
 	void setWall(bool boolean);
 	void setBase(bool boolean);
@@ -21,6 +22,12 @@ public:
 	void setPawn(bool boolean, Pawn* inPawn = nullptr);
 	void setPos(float inx = 0, float iny = 0);
 	void setCoords(int inx = 0, int iny = 0, int inz = 0);
+	sf::Vector2f getOrigin() const;
+	std::tuple<int, int, int> getCubeCoords();
+	virtual sf::ConvexShape getShape() = 0;
+	sf::Vector2f getPos() const;
+
+	// bools
 	bool isRock() const;
 	bool isWall() const;
 	bool isBase() const;
@@ -28,12 +35,9 @@ public:
 	bool isStart() const;
 	bool isPawn() const;
 	bool isHigh() const;
-	sf::Vector2f getOrigin() const;
-	virtual void setHighlight(bool boolean);
-	std::tuple<int, int, int> getCubeCoords();
-	virtual sf::ConvexShape getShape() = 0;
-	sf::Vector2f getPos() const;
 	bool isClicked(sf::Vector2i mousePosition) const;
+
+	virtual void setHighlight(bool boolean);
 	void draw(sf::RenderTarget& target);
 	void setScl(float inS = 0.8);	
 

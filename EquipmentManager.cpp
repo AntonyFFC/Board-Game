@@ -12,7 +12,10 @@ bool EquipmentManager::saveEquipmentToJson(const std::vector<Equipment>& equipme
             nlohmann::json itemData;
             itemData["name"] = item.getName();
             itemData["range"] = item.getRange();
-            itemData["spaceOccupied"] = item.getSpaceOccupied();
+            nlohmann::json space;
+                space["numSpaces"] = item.getSpaceOccupied().numSpaces;
+                space["spaceType"] = item.getSpaceOccupied().spaceType;
+            itemData["spaceOccupied"] = space;
             itemData["attackValue"] = item.getAttackValue();
             itemData["attackActions"] = item.getAttackActions();
             itemData["type"] = item.getType();
@@ -43,7 +46,11 @@ std::vector<Equipment> EquipmentManager::loadEquipmentFromJson(const std::string
         for (const auto& item : jsonData) {
             std::string name = item["name"];
             int range = item["range"];
-            int spaceOccupied = item["spaceOccupied"];
+            int numSpaces = item["spaceOccupied"]["numSpaces"];
+            std::string spaceType = item["spaceOccupied"]["spaceType"];
+            Equipment::SpaceOccupied spaceOccupied;
+            spaceOccupied.numSpaces = numSpaces;
+            spaceOccupied.spaceType = spaceType;
             int attackValue = item["attackValue"];
             int attackActions = item["attackActions"];
             std::string type = item["type"];

@@ -1,11 +1,12 @@
 #include "Pawn.h"
 #include "Equipment.h"
 
-Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions, int healthPoints, int maxEquipment, int price, float xPos, float yPos)
-    : name(name), teamNumber(teamNumber), side(side),maxActions(maxActions), remainingActions(maxActions), HP(healthPoints), maxEquipment(maxEquipment), price(price), xPos(xPos), yPos(yPos), combinedSprite()
+Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions, int healthPoints, SpaceInventory space, int price, float xPos, float yPos)
+    : name(name), teamNumber(teamNumber), side(side),maxActions(maxActions), remainingActions(maxActions), HP(healthPoints), space(space), price(price), xPos(xPos), yPos(yPos), combinedSprite()
 {
     scaleFactor = 0.05f;
     rotationAngle = 90.0f;
+    changed = true;
     setupPawn();
 }
 
@@ -22,8 +23,11 @@ Pawn::~Pawn() {
 }
 
 void Pawn::setupPawn() {
-    initializeSpriteMap();
-    createSprite();
+    if (changed){
+        initializeSpriteMap();
+        createSprite();
+        changed = false;
+    }
 }
 
 std::unordered_set<std::string> Pawn::getSet() {
@@ -91,9 +95,7 @@ void Pawn::initializeSpriteMap()
             }
             sf::Sprite sprite(*texture);
             spriteMap[fileName] = sprite;
-
         } while (FindNextFileA(findHandle, &findData));
-
         FindClose(findHandle);
     }
     else
@@ -134,8 +136,8 @@ int Pawn::getHP() const {
     return HP;
 }
 
-int Pawn::getMaxEquipment() const {
-    return maxEquipment;
+Pawn::SpaceInventory Pawn::getSpace() const {
+    return space;
 }
 
 int Pawn::getEquipmentCount() const {
@@ -165,6 +167,7 @@ void Pawn::setTeamNumber(int teamNumber) {
 
 void Pawn::setSide(int side) {
     this->side = side;
+    changed = true;
 }
 
 void Pawn::setRemainingActions(int actions) {
@@ -177,27 +180,56 @@ void Pawn::setHP(int healthPoints) {
 
 void Pawn::setRotationAngle(float angle) {
     this->rotationAngle = angle;
+    changed = true;
 }
 
 void Pawn::setPosition(float inx, float iny) {
     xPos = inx;
     yPos = iny;
+    changed = true;
 }
 
 // Equipment-related methods
 
-bool Pawn::addEquipment(Equipment* weapon) {
-    if (equipment.size() < maxEquipment) {
-        equipment.push_back(weapon);
-        return true;
+bool Pawn::addEquipment(Equipment* item) {
+    if (equipment.size() < space.hands+space.extras) {
+        if (item->getSpaceOccupied().spaceType == "hands")
+        {
+            if (item->getSpaceOccupied().numSpaces < remainingSpace.hands)
+            {
+                equipment.push_back(item);
+                remainingSpace.hands -= item->getSpaceOccupied().numSpaces;
+                changed = true;
+                return true;
+            }
+        }
+        else
+        {
+            if (item->getSpaceOccupied().numSpaces < remainingSpace.extras)
+            {
+                equipment.push_back(item);
+                remainingSpace.extras -= item->getSpaceOccupied().numSpaces;
+                changed = true;
+                return true;
+            }
+        }   
     }
     return false;
 }
 
 bool Pawn::removeEquipment(int index) {
     if (index >= 0 && index < equipment.size()) {
+        if (equipment[index]->getSpaceOccupied().spaceType == "hands")
+        {
+            remainingSpace.hands += equipment[index]->getSpaceOccupied().numSpaces;
+        }
+        else
+        {
+            remainingSpace.extras += equipment[index]->getSpaceOccupied().numSpaces;
+        }
         delete equipment[index];
         equipment.erase(equipment.begin() + index);
+        changed = true;
         return true;
     }
     return false;
@@ -225,7 +257,7 @@ bool Pawn::isAlive() const {
 void Pawn::changePos(float x, float y) {
     xPos = x;
     yPos = y;
-    combinedSprite->setPosition(xPos, yPos);
+    changed = true;
 }
 
 void Pawn::dead()

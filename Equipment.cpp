@@ -1,6 +1,6 @@
 #include "Equipment.h"
 
-Equipment::Equipment(const std::string& name, int range, int spaceOccupied, int attackValue,
+Equipment::Equipment(const std::string& name, int range, const SpaceOccupied& spaceOccupied, int attackValue,
     int attackActions,const std::string& type, int price,
     const std::string& additionalCapabilities)
     : name(name), range(range), spaceOccupied(spaceOccupied), attackValue(attackValue),
@@ -15,7 +15,7 @@ int Equipment::getRange() const {
     return range;
 }
 
-int Equipment::getSpaceOccupied() const {
+Equipment::SpaceOccupied Equipment::getSpaceOccupied() const {
     return spaceOccupied;
 }
 

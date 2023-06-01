@@ -3,12 +3,18 @@
 
 class Equipment {
 public:
-    Equipment(const std::string& name, int range, int spaceOccupied, int attackValue,
+    struct SpaceOccupied {
+        int numSpaces;
+        std::string spaceType;
+    };
+
+    Equipment(const std::string& name, int range, const SpaceOccupied& spaceOccupied, int attackValue,
         int attackActions,const std::string& type, int price, const std::string& additionalCapabilities);
 
+    // getters
     std::string getName() const;
     int getRange() const;
-    int getSpaceOccupied() const;
+    SpaceOccupied getSpaceOccupied() const;
     int getAttackValue() const;
     int getAttackActions() const;
     std::string getType() const;
@@ -18,7 +24,7 @@ public:
 private:
     std::string name;
     int range;
-    int spaceOccupied;
+    SpaceOccupied spaceOccupied;
     int attackValue;
     int attackActions;
     std::string type;

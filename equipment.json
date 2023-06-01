@@ -6,7 +6,10 @@
         "name": "Sword",
         "price": 5,
         "range": 1,
-        "spaceOccupied": 1,
+        "spaceOccupied": {
+            "numSpaces": 1,
+            "spaceType": "hands"
+        },
         "type": "Weapon"
     },
     {
@@ -16,7 +19,10 @@
         "name": "Flail",
         "price": 3,
         "range": 1,
-        "spaceOccupied": 1,
+        "spaceOccupied": {
+            "numSpaces": 1,
+            "spaceType": "hands"
+        },
         "type": "Weapon"
     },
     {
@@ -26,7 +32,10 @@
         "name": "Fork",
         "price": 3,
         "range": 1,
-        "spaceOccupied": 1,
+        "spaceOccupied": {
+            "numSpaces": 1,
+            "spaceType": "hands"
+        },
         "type": "Weapon"
     }
 ]

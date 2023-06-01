@@ -9,7 +9,12 @@
 
 class Pawn {
 public:
-    Pawn(const std::string& name, int teamNumber, int side, int maxActions, int healthPoints, int maxEquipment, int price, float xPos, float yPos);
+    struct SpaceInventory {
+        int hands;
+        int extras;
+    };
+
+    Pawn(const std::string& name, int teamNumber, int side, int maxActions, int healthPoints, SpaceInventory space, int price, float xPos, float yPos);
     ~Pawn();
 
 
@@ -21,7 +26,7 @@ public:
     int getRemainingActions() const;
     int getMaxActions() const;
     int getHP() const;
-    int getMaxEquipment() const;
+    SpaceInventory getSpace() const;
     int getEquipmentCount() const;
     Equipment* getEquipment(int index) const;
     int getPrice() const;
@@ -37,7 +42,7 @@ public:
     void setPosition(float inx, float iny);
 
     // Equipment-related methods
-    bool addEquipment(Equipment* weapon);
+    bool addEquipment(Equipment* item);
     bool removeEquipment(int index);
 
     // Other methods
@@ -60,7 +65,8 @@ private:
     int remainingActions;
     int maxActions;
     int HP;
-    int maxEquipment;
+    SpaceInventory space;
+    SpaceInventory remainingSpace;
     int price;
     std::vector<Equipment*> equipment;
     float scaleFactor;
@@ -68,5 +74,5 @@ private:
     mutable sf::Sprite *combinedSprite;
     float xPos;
     float yPos;
-    
+    bool changed;
 };
