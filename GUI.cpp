@@ -20,7 +20,6 @@ void Gui::start() {
 
         window->clear();
         grid->drawBoard(*window);
-        //window->draw(p1->getSprite());
         window->display();
 
         sf::Event event;

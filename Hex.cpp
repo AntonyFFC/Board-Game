@@ -223,7 +223,6 @@ sf::ConvexShape Grass::getShape() {
         }
         else {
             currentFill = base;
-            currentOut = base;
         }
     }
     else if (isHigh()) {
