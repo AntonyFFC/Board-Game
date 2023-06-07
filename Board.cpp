@@ -58,6 +58,25 @@ std::vector <std::tuple<int, int, int>> Board::GetNeighbours(std::tuple<int, int
     return hexNeighboursDict[hexCoordinates];
 }
 
+std::vector < std::tuple<int, int, int>> Board::GetNeighboursIn(std::tuple<int, int, int> hexCoordinates, int distance)
+{
+    if (!hexDict.count(hexCoordinates))
+        return std::vector<std::tuple<int, int, int>>();
+
+    if (distance == 0)
+        return std::vector<std::tuple<int, int, int>>{hexCoordinates};
+    distance -= 1;
+
+    std::vector < std::tuple<int, int, int>> Neighbours = GetNeighbours(hexCoordinates);
+    std::vector < std::tuple<int, int, int>> thisNeighbours = Neighbours;
+    for (std::tuple<int, int, int> neighbour : thisNeighbours)
+    {
+        std::vector < std::tuple<int, int, int>> newNeighbours = GetNeighboursIn(neighbour, distance);
+        Neighbours.insert(Neighbours.end(), newNeighbours.begin(), newNeighbours.end());
+    }
+    return Neighbours;
+}
+
 class ObjectCoordinates {
 public:
     static std::vector < std::vector<std::tuple<int, int, int>>> rockCoordinates;
