@@ -35,7 +35,7 @@ void selectionManager::handleClick(Board &grid, sf::Vector2i mousePosition)
                 grid.hexDict[neighbour]->setHighlight(false);
             }
 
-            neighbours = grid.GetNeighboursIn(hexagon->getCubeCoords(),4);
+            neighbours = grid.GetNeighboursIn(hexagon->getCubeCoords(),4,3);
 
             int i = 0;
             for (std::tuple<int, int, int> neighbour : neighbours)

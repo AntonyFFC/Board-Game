@@ -58,23 +58,34 @@ std::vector <std::tuple<int, int, int>> Board::GetNeighbours(std::tuple<int, int
     return hexNeighboursDict[hexCoordinates];
 }
 
-std::vector < std::tuple<int, int, int>> Board::GetNeighboursIn(std::tuple<int, int, int> hexCoordinates, int distance)
+std::vector < std::tuple<int, int, int>> GetNeighboursBetween(Board* board, std::tuple<int, int, int> hexCoordinates, int distance)
 {
-    if (!hexDict.count(hexCoordinates))
+    if (!board->hexDict.count(hexCoordinates))
         return std::vector<std::tuple<int, int, int>>();
 
     if (distance == 0)
         return std::vector<std::tuple<int, int, int>>{hexCoordinates};
     distance -= 1;
 
-    std::vector < std::tuple<int, int, int>> Neighbours = GetNeighbours(hexCoordinates);
+    std::vector < std::tuple<int, int, int>> Neighbours = board->GetNeighbours(hexCoordinates);
     std::vector < std::tuple<int, int, int>> thisNeighbours = Neighbours;
     for (std::tuple<int, int, int> neighbour : thisNeighbours)
     {
-        std::vector < std::tuple<int, int, int>> newNeighbours = GetNeighboursIn(neighbour, distance);
+        std::vector < std::tuple<int, int, int>> newNeighbours = GetNeighboursBetween(board,neighbour, distance);
         Neighbours.insert(Neighbours.end(), newNeighbours.begin(), newNeighbours.end());
     }
     return Neighbours;
+}
+
+std::vector < std::tuple<int, int, int>> Board::GetNeighboursIn(std::tuple<int, int, int> hexCoordinates, int distance, int minDistance)
+{
+    std::vector < std::tuple<int, int, int>> hexes =  GetNeighboursBetween(this, hexCoordinates, distance);
+    std::vector < std::tuple<int, int, int>> hexesToRemove = GetNeighboursBetween(this, hexCoordinates, minDistance-1);
+    for (std::tuple<int, int, int> hex : hexesToRemove)
+    {
+        hexes.erase(std::remove(hexes.begin(), hexes.end(), hex), hexes.end());
+    }
+    return hexes;
 }
 
 class ObjectCoordinates {

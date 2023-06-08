@@ -14,7 +14,7 @@ public:
 	std::map<std::tuple<int, int, int>, std::vector<std::tuple<int, int, int>>> hexNeighboursDict; // stores all neighbours of each hex
 
 	std::vector < std::tuple<int, int, int>> GetNeighbours(std::tuple<int, int, int> hexCoordinates);
-	std::vector < std::tuple<int, int, int>> GetNeighboursIn(std::tuple<int, int, int> hexCoordinates, int distance);
+	std::vector < std::tuple<int, int, int>> GetNeighboursIn(std::tuple<int, int, int> hexCoordinates, int distance =1,int minDistance = 1);
 
 	void drawBoard(sf::RenderTarget& target);
 	void deleteHexagons();
