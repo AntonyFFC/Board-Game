@@ -21,6 +21,5 @@ private:
     int screenWidth;
     int screenHeight;
     sf::RenderWindow* window;
-    selectionManager sM;
     Board* grid;
 };

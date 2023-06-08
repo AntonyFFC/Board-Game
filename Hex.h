@@ -40,6 +40,7 @@ public:
 	virtual void setHighlight(bool boolean);
 	void draw(sf::RenderTarget& target);
 	void setScl(float inS = 0.8);	
+	Pawn* pawn;
 
 private:
 	sf::ConvexShape initShape() const;
@@ -59,7 +60,6 @@ private:
 	bool isGrass_ = false;
 	bool isStart_ = false;
 	bool isPawn_ = false;
-	Pawn* pawn;
 	bool highlight;
 	sf::Color fill;
 	sf::Color out;

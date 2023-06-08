@@ -22,6 +22,7 @@ public:
 	void setRocks();
 	void setBases();
 	void boardPreperation();
+	void handleClick(sf::Vector2i mousePosition);
 private:
 	int numRows;
 	int numCols;
@@ -31,4 +32,6 @@ private:
 	float horizSpacing;
 	float xOffset;
 	float yOffset;
+	std::vector< std::tuple<int, int, int>> highlighted = std::vector< std::tuple<int, int, int>>();
+	std::tuple<int, int, int> clicked = std::tuple<int, int, int>();
 };

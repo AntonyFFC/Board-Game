@@ -89,7 +89,7 @@ std::vector < std::tuple<int, int, int>> Board::GetNeighboursIn(std::tuple<int, 
 }
 
 class ObjectCoordinates {
-public:
+public: 
     static std::vector < std::vector<std::tuple<int, int, int>>> rockCoordinates;
     static std::vector<std::tuple<int, int, int>> deleteCoordinates;
     static std::vector<std::tuple<int, int, int>> startCoordinates;
@@ -206,4 +206,53 @@ void Board::boardPreperation()
     setStart();
     setRocks();
     setBases();
+}
+
+std::tuple<int, int, int> subtract(std::tuple<int, int, int> a, std::tuple<int, int, int> b)
+{
+    return { std::get<0>(a) - std::get<0>(b) ,std::get<1>(a) - std::get<1>(b), std::get<2>(a) - std::get<2>(b) };
+}
+
+int distance(std::tuple<int, int, int> a, std::tuple<int, int, int> b)
+{
+    std::tuple<int, int, int> vec = subtract(a, b);
+    return (abs(std::get<0>(vec)) + abs(std::get<1>(vec)) + abs(std::get<2>(vec))) / 2;
+}
+
+void Board::handleClick(sf::Vector2i mousePosition)
+{
+    for (auto& pair : hexDict) {
+        std::tuple<int, int, int> hexagon = pair.first;
+
+        if (hexDict[hexagon]->isClicked(mousePosition)) {
+            for (std::tuple<int, int, int> hex : highlighted)
+            {
+                hexDict[hex]->setHighlight(false);
+            }
+
+            auto it = std::find(highlighted.begin(), highlighted.end(), hexagon);
+
+            if (hexDict[hexagon]->isPawn() || it != highlighted.end())
+            {
+                if (it != highlighted.end())
+                {
+                    Pawn* pawn = hexDict[clicked]->pawn;
+                    hexDict[clicked]->setPawn(false);
+                    pawn->reduceActions(distance(hexagon, clicked));
+                    hexDict[hexagon]->setPawn(true, pawn);
+                }
+                highlighted = GetNeighboursIn(hexDict[hexagon]->getCubeCoords(), hexDict[hexagon]->pawn->getRemainingActions());
+                int i = 0;
+                for (std::tuple<int, int, int> hex : highlighted)
+                {
+                    hexDict[hex]->setHighlight(true);
+                    i++;
+                }
+            }
+            clicked = hexDict[hexagon]->getCubeCoords();
+
+            hexDict[hexagon]->setHighlight(false);
+            break;
+        }
+    }
 }

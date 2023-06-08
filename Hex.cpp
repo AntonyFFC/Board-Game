@@ -121,7 +121,6 @@ void Hex::setPawn(bool boolean, Pawn* inPawn)
     if (boolean)
         pawn = inPawn;
     else if (pawn != nullptr) {
-        delete pawn;
         pawn = nullptr;
     }
     isPawn_ = boolean;
