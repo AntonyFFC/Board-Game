@@ -9,7 +9,6 @@
 #include "Pawn.h"
 #include <tuple>
 #include <cmath>
-#include "SelectionManager.h"
 
 class Gui {
 public:
