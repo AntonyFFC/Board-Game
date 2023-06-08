@@ -158,7 +158,6 @@
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="Hex.cpp" />
     <ClCompile Include="Pawn.cpp" />
-    <ClCompile Include="SelectionManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />
@@ -168,7 +167,6 @@
     <ClInclude Include="Hex.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="Pawn.h" />
-    <ClInclude Include="SelectionManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
