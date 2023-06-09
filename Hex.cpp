@@ -124,6 +124,12 @@ void Hex::setPawn(bool boolean, Pawn* inPawn)
         pawn = nullptr;
     }
     isPawn_ = boolean;
+    isBlocking_ = boolean;
+}
+
+void Hex::setBlocking(bool boolean)
+{
+    isBlocking_ = boolean;
 }
 
 void Hex::setColour(sf::Color inFill, sf::Color inOut)
@@ -154,6 +160,10 @@ bool Hex::isStart() const {
 
 bool Hex::isPawn() const {
     return isPawn_;
+}
+
+bool Hex::isBlocking() const {
+    return isBlocking_;
 }
 
 bool Hex::isHigh() const {
@@ -239,6 +249,7 @@ Rock::Rock(std::tuple<int, int, int> inCoords, float inxPos, float inyPos)
     fill = sf::Color(115, 115, 115);
     out = sf::Color(0, 0, 0);
     setRock(true);
+    setBlocking(true);
 }
 
 void Rock::setHighlight(bool boolean)
@@ -264,6 +275,7 @@ Wall::Wall(std::tuple<int, int, int> inCoords, float inxPos, float inyPos)
     highFill = sf::Color(36, 8, 5);
     highOut = sf::Color(225, 245, 5);
     setWall(true);
+    setBlocking(true);
 }
 
 sf::ConvexShape Wall::getShape() {

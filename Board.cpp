@@ -4,6 +4,31 @@
 #include <random>
 //#include <iostream>
 
+std::tuple<int, int, int> add(std::tuple<int, int, int> a, std::tuple<int, int, int> b)
+{
+    return { std::get<0>(a) + std::get<0>(b) ,std::get<1>(a) + std::get<1>(b), std::get<2>(a) + std::get<2>(b) };
+}
+
+std::tuple<int, int, int> subtract(std::tuple<int, int, int> a, std::tuple<int, int, int> b)
+{
+    return { std::get<0>(a) - std::get<0>(b) ,std::get<1>(a) - std::get<1>(b), std::get<2>(a) - std::get<2>(b) };
+}
+
+int distance(std::tuple<int, int, int> a, std::tuple<int, int, int> b)
+{
+    std::tuple<int, int, int> vec = subtract(a, b);
+    return (abs(std::get<0>(vec)) + abs(std::get<1>(vec)) + abs(std::get<2>(vec))) / 2;
+}
+
+bool isTupleInVector(const std::vector<std::tuple<int, int, int>>& vec, const std::tuple<int, int, int>& targetTuple) {
+    for (std::tuple<int, int, int > tuple : vec) {
+        if (tuple == targetTuple) {
+            return true;
+        }
+    }
+    return false;
+}
+
 Board::Board(int Rows, int Columns, float HSize)
     :numRows(Rows), numCols(Columns), hexSize(HSize)
 {
@@ -31,14 +56,7 @@ std::vector<std::tuple<int, int, int>> DirectionVectors::directionVectors = {
     {-1, 0, 1}, {-1, 1, 0}, {0, 1, -1}
 };
 
-std::tuple<int, int, int> AddTuples(const std::tuple<int, int, int>& tuple1, const std::tuple<int, int, int>& tuple2) {
-    int x1, y1, z1, x2, y2, z2;
-    std::tie(x1, y1, z1) = tuple1;
-    std::tie(x2, y2, z2) = tuple2;
-    return std::make_tuple(x1 + x2, y1 + y2, z1 + z2);
-}
-
-std::vector <std::tuple<int, int, int>> Board::GetNeighbours(std::tuple<int, int, int> hexCoordinates)
+std::vector <std::tuple<int, int, int>> Board::getNeighbours(std::tuple<int, int, int> hexCoordinates)
 {
     if (!hexDict.count(hexCoordinates))
         return std::vector<std::tuple<int, int, int>>();
@@ -49,43 +67,65 @@ std::vector <std::tuple<int, int, int>> Board::GetNeighbours(std::tuple<int, int
     hexNeighboursDict[hexCoordinates] = std::vector<std::tuple<int, int, int>>();
     for (const auto& direction : DirectionVectors::GetDirectionList()) //this adds the neighbours of the new hex to the dictionary
     {
-        if (hexDict.count(AddTuples(hexCoordinates, direction)))
+        if (hexDict.count(add(hexCoordinates, direction)))
         {
-            hexNeighboursDict[hexCoordinates].push_back(AddTuples(hexCoordinates, direction));
+            hexNeighboursDict[hexCoordinates].push_back(add(hexCoordinates, direction));
         }
     }
 
     return hexNeighboursDict[hexCoordinates];
 }
 
-std::vector < std::tuple<int, int, int>> GetNeighboursBetween(Board* board, std::tuple<int, int, int> hexCoordinates, int distance)
+std::vector < std::tuple<int, int, int>> Board::getInRange(std::tuple<int, int, int> hexCoordinates, int dist, int minDistance)
 {
-    if (!board->hexDict.count(hexCoordinates))
-        return std::vector<std::tuple<int, int, int>>();
-
-    if (distance == 0)
-        return std::vector<std::tuple<int, int, int>>{hexCoordinates};
-    distance -= 1;
-
-    std::vector < std::tuple<int, int, int>> Neighbours = board->GetNeighbours(hexCoordinates);
-    std::vector < std::tuple<int, int, int>> thisNeighbours = Neighbours;
-    for (std::tuple<int, int, int> neighbour : thisNeighbours)
+    std::vector < std::tuple<int, int, int>> hexes;     
+    if (dist == 1) // for efficiency I used the neighbours method with 1 distances
     {
-        std::vector < std::tuple<int, int, int>> newNeighbours = GetNeighboursBetween(board,neighbour, distance);
-        Neighbours.insert(Neighbours.end(), newNeighbours.begin(), newNeighbours.end());
+        if (minDistance==0)
+            hexes.push_back(hexCoordinates);
+        std::vector<std::tuple<int, int, int>> neighbours = getNeighbours(hexCoordinates);
+        hexes.insert(hexes.end(), neighbours.begin(), neighbours.end());
+        return hexes;
     }
-    return Neighbours;
-}
 
-std::vector < std::tuple<int, int, int>> Board::GetNeighboursIn(std::tuple<int, int, int> hexCoordinates, int distance, int minDistance)
-{
-    std::vector < std::tuple<int, int, int>> hexes =  GetNeighboursBetween(this, hexCoordinates, distance);
-    std::vector < std::tuple<int, int, int>> hexesToRemove = GetNeighboursBetween(this, hexCoordinates, minDistance-1);
-    for (std::tuple<int, int, int> hex : hexesToRemove)
+    for (int x = -dist; x <= dist; x++)
     {
-        hexes.erase(std::remove(hexes.begin(), hexes.end(), hex), hexes.end());
+        for (int y = std::max(-dist, -x - dist); y <= std::min(dist, dist - x); y++)
+        {
+            int z = -x - y;
+            std::tuple<int, int, int> newPos = add(hexCoordinates, { x, y, z });
+            if (distance(hexCoordinates, newPos) < minDistance)
+                continue;
+            hexes.push_back(newPos);
+        }
     }
     return hexes;
+}
+
+std::vector < std::tuple<int, int, int>> Board::getReachable(std::tuple<int, int, int> start, int movement)
+{
+    std::vector < std::tuple<int, int, int>> visited;
+    std::vector<std::vector < std::tuple<int, int, int>>> fringes;
+    fringes.push_back(std::vector< std::tuple<int, int, int>>());
+    fringes[0].push_back(start);
+
+    for (int k = 1; k <= movement; k++)
+    {
+        fringes.push_back(std::vector< std::tuple<int, int, int>>());
+        for (std::tuple<int, int, int> coordinates : fringes[k - 1])
+        {
+            std::vector < std::tuple<int, int, int>> neighbours = getNeighbours(coordinates);
+            for (std::tuple<int, int, int> neighbour : neighbours)
+            {
+                if (!hexDict[neighbour]->isBlocking() && !isTupleInVector(visited, neighbour) && neighbour != start)
+                {
+                    visited.push_back(neighbour);
+                    fringes[k].push_back(neighbour);
+                }
+            }
+        }
+    }
+    return visited;
 }
 
 class ObjectCoordinates {
@@ -152,7 +192,6 @@ void Board::drawBoard(sf::RenderTarget& target)
 
 void Board::deleteHexagons()
 {
-
     for (const auto& coordinates : ObjectCoordinates::getdeleteCoordinates())
     {
         hexDict.erase(coordinates);
@@ -161,7 +200,6 @@ void Board::deleteHexagons()
 
 void Board::setStart()
 {
-
     for (const auto& coordinates : ObjectCoordinates::getStartCoordinates())
     {
         hexDict[coordinates]->setStart(true);
@@ -170,7 +208,6 @@ void Board::setStart()
 
 void Board::setRocks()
 {
-
     for (const auto& coordinates : ObjectCoordinates::getRockCoordinates())
     {
         hexDict[coordinates] = new Rock(coordinates);
@@ -208,17 +245,6 @@ void Board::boardPreperation()
     setBases();
 }
 
-std::tuple<int, int, int> subtract(std::tuple<int, int, int> a, std::tuple<int, int, int> b)
-{
-    return { std::get<0>(a) - std::get<0>(b) ,std::get<1>(a) - std::get<1>(b), std::get<2>(a) - std::get<2>(b) };
-}
-
-int distance(std::tuple<int, int, int> a, std::tuple<int, int, int> b)
-{
-    std::tuple<int, int, int> vec = subtract(a, b);
-    return (abs(std::get<0>(vec)) + abs(std::get<1>(vec)) + abs(std::get<2>(vec))) / 2;
-}
-
 void Board::handleClick(sf::Vector2i mousePosition)
 {
     for (auto& pair : hexDict) {
@@ -238,10 +264,11 @@ void Board::handleClick(sf::Vector2i mousePosition)
                 {
                     Pawn* pawn = hexDict[clicked]->pawn;
                     hexDict[clicked]->setPawn(false);
-                    pawn->reduceActions(distance(hexagon, clicked));
+                    pawn->reduceActions(distance(hexagon, clicked));//change so reduces actions correctly
                     hexDict[hexagon]->setPawn(true, pawn);
                 }
-                highlighted = GetNeighboursIn(hexDict[hexagon]->getCubeCoords(), hexDict[hexagon]->pawn->getRemainingActions());
+                //highlighted = getInRange(hexDict[hexagon]->getCubeCoords(), 1,0);
+                highlighted = getReachable(hexDict[hexagon]->getCubeCoords(), hexDict[hexagon]->pawn->getRemainingActions());
                 int i = 0;
                 for (std::tuple<int, int, int> hex : highlighted)
                 {
@@ -250,8 +277,6 @@ void Board::handleClick(sf::Vector2i mousePosition)
                 }
             }
             clicked = hexDict[hexagon]->getCubeCoords();
-
-            hexDict[hexagon]->setHighlight(false);
             break;
         }
     }

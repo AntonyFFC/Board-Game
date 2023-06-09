@@ -20,6 +20,7 @@ public:
 	void setGrass(bool boolean);
 	void setStart(bool boolean);
 	void setPawn(bool boolean, Pawn* inPawn = nullptr);
+	void setBlocking(bool boolean);
 	void setPos(float inx = 0, float iny = 0);
 	void setCoords(int inx = 0, int iny = 0, int inz = 0);
 	sf::Vector2f getOrigin() const;
@@ -34,6 +35,7 @@ public:
 	bool isGrass() const;
 	bool isStart() const;
 	bool isPawn() const;
+	bool isBlocking() const;
 	bool isHigh() const;
 	bool isClicked(sf::Vector2i mousePosition) const;
 
@@ -61,6 +63,7 @@ private:
 	bool isStart_ = false;
 	bool isPawn_ = false;
 	bool highlight;
+	bool isBlocking_ = false;
 	sf::Color fill;
 	sf::Color out;
 	sf::Color highFill;
