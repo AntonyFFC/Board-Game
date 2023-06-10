@@ -74,5 +74,4 @@ private:
     mutable sf::Sprite *combinedSprite;
     float xPos;
     float yPos;
-    bool changed;
 };

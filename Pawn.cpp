@@ -6,7 +6,6 @@ Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions, in
 {
     scaleFactor = 0.05f;
     rotationAngle = 90.0f;
-    changed = true;
     setupPawn();
 }
 
@@ -23,11 +22,8 @@ Pawn::~Pawn() {
 }
 
 void Pawn::setupPawn() {
-    if (changed){
-        initializeSpriteMap();
-        createSprite();
-        changed = false;
-    }
+    initializeSpriteMap();
+    createSprite();
 }
 
 std::unordered_set<std::string> Pawn::getSet() {
@@ -167,7 +163,6 @@ void Pawn::setTeamNumber(int teamNumber) {
 
 void Pawn::setSide(int side) {
     this->side = side;
-    changed = true;
 }
 
 void Pawn::setRemainingActions(int actions) {
@@ -180,13 +175,11 @@ void Pawn::setHP(int healthPoints) {
 
 void Pawn::setRotationAngle(float angle) {
     this->rotationAngle = angle;
-    changed = true;
 }
 
 void Pawn::setPosition(float inx, float iny) {
     xPos = inx;
     yPos = iny;
-    changed = true;
 }
 
 // Equipment-related methods
@@ -199,7 +192,6 @@ bool Pawn::addEquipment(Equipment* item) {
             {
                 equipment.push_back(item);
                 remainingSpace.hands -= item->getSpaceOccupied().numSpaces;
-                changed = true;
                 return true;
             }
         }
@@ -209,7 +201,6 @@ bool Pawn::addEquipment(Equipment* item) {
             {
                 equipment.push_back(item);
                 remainingSpace.extras -= item->getSpaceOccupied().numSpaces;
-                changed = true;
                 return true;
             }
         }   
@@ -229,7 +220,6 @@ bool Pawn::removeEquipment(int index) {
         }
         delete equipment[index];
         equipment.erase(equipment.begin() + index);
-        changed = true;
         return true;
     }
     return false;
@@ -257,7 +247,6 @@ bool Pawn::isAlive() const {
 void Pawn::changePos(float x, float y) {
     xPos = x;
     yPos = y;
-    changed = true;
 }
 
 void Pawn::dead()

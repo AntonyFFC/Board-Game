@@ -12,7 +12,6 @@ Hex::Hex(std::tuple<int, int, int> inCoords, float inxPos, float inyPos)
     scale = 0.8f;
     xOffset = 30.f;
     yOffset = 20.f;
-    pawn = nullptr;
     setPawn(false);
     startColor = sf::Color(134, 179, 0);
     base = sf::Color(104, 176, 163);
@@ -138,6 +137,11 @@ void Hex::setColour(sf::Color inFill, sf::Color inOut)
     shape.setOutlineColor(inOut);
 }
 
+void Hex::setPawnDist(int dist)
+{
+    pawnDist_ = dist;
+}
+
 bool Hex::isRock() const {
     return isRock_;
 }
@@ -176,6 +180,11 @@ std::tuple<int, int, int> Hex::getCubeCoords() {
 
 sf::Vector2f Hex::getPos() const {
     return sf::Vector2f(xPos,yPos);
+}
+
+int Hex::getPawnDist() const
+{
+    return pawnDist_;
 }
 
 void Hex::setHighlight(bool boolean)

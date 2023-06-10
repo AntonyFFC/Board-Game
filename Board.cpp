@@ -121,6 +121,7 @@ std::vector < std::tuple<int, int, int>> Board::getReachable(std::tuple<int, int
                 {
                     visited.push_back(neighbour);
                     fringes[k].push_back(neighbour);
+                    hexDict[neighbour]->setPawnDist(k);
                 }
             }
         }
@@ -248,27 +249,32 @@ void Board::boardPreperation()
 void Board::handleClick(sf::Vector2i mousePosition)
 {
     for (auto& pair : hexDict) {
-        std::tuple<int, int, int> hexagon = pair.first;
+        std::tuple<int, int, int> present = pair.first;
 
-        if (hexDict[hexagon]->isClicked(mousePosition)) {
+        if (hexDict[present]->isClicked(mousePosition)) {
             for (std::tuple<int, int, int> hex : highlighted)
             {
                 hexDict[hex]->setHighlight(false);
             }
 
-            auto it = std::find(highlighted.begin(), highlighted.end(), hexagon);
+            auto it = std::find(highlighted.begin(), highlighted.end(), present);
 
-            if (hexDict[hexagon]->isPawn() || it != highlighted.end())
+            if (hexDict[present]->isPawn() || it != highlighted.end())
             {
                 if (it != highlighted.end())
                 {
-                    Pawn* pawn = hexDict[clicked]->pawn;
-                    hexDict[clicked]->setPawn(false);
-                    pawn->reduceActions(distance(hexagon, clicked));//change so reduces actions correctly
-                    hexDict[hexagon]->setPawn(true, pawn);
+                    Pawn* pawn = hexDict[previous]->pawn;
+                    hexDict[previous]->setPawn(false);
+                    pawn->reduceActions(hexDict[present]->getPawnDist());
+                    if (pawn->getRemainingActions() == 0)
+                    {
+                        pawn->setRemainingActions(pawn->getMaxActions());
+                        pawn->addEquipment(new Equipment("helmet", 1, { 1, "hands" }, 1, 1, "Weapon", 5, ""));
+                    }
+                    hexDict[present]->setPawn(true, pawn);
                 }
-                //highlighted = getInRange(hexDict[hexagon]->getCubeCoords(), 1,0);
-                highlighted = getReachable(hexDict[hexagon]->getCubeCoords(), hexDict[hexagon]->pawn->getRemainingActions());
+                //highlighted = getInRange(hexDict[present]->getCubeCoords(), 1,0);
+                highlighted = getReachable(hexDict[present]->getCubeCoords(), hexDict[present]->pawn->getRemainingActions());
                 int i = 0;
                 for (std::tuple<int, int, int> hex : highlighted)
                 {
@@ -276,7 +282,7 @@ void Board::handleClick(sf::Vector2i mousePosition)
                     i++;
                 }
             }
-            clicked = hexDict[hexagon]->getCubeCoords();
+            previous = hexDict[present]->getCubeCoords();
             break;
         }
     }

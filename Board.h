@@ -5,6 +5,7 @@
 #include <tuple>
 #include "Pawn.h"
 #include <algorithm>
+#include "Equipment.h"
 class Board {
 public:
 	Board(int Rows = 10, int Columns = 10, float HSize = 1.f);
@@ -35,5 +36,5 @@ private:
 	float xOffset;
 	float yOffset;
 	std::vector< std::tuple<int, int, int>> highlighted = std::vector< std::tuple<int, int, int>>();
-	std::tuple<int, int, int> clicked = std::tuple<int, int, int>();
+	std::tuple<int, int, int> previous = std::tuple<int, int, int>();
 };

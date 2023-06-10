@@ -23,10 +23,14 @@ public:
 	void setBlocking(bool boolean);
 	void setPos(float inx = 0, float iny = 0);
 	void setCoords(int inx = 0, int iny = 0, int inz = 0);
+	void setPawnDist(int dist);
+
+	//getters
 	sf::Vector2f getOrigin() const;
 	std::tuple<int, int, int> getCubeCoords();
 	virtual sf::ConvexShape getShape() = 0;
 	sf::Vector2f getPos() const;
+	int getPawnDist() const;
 
 	// bools
 	bool isRock() const;
@@ -56,6 +60,7 @@ private:
 	float scale;
 	float xOffset;
 	float yOffset;
+	int pawnDist_;
 	bool isRock_ = false;
 	bool isWall_ = false;
 	bool isBase_ = false;
