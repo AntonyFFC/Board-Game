@@ -6,6 +6,7 @@ Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions, in
 {
     scaleFactor = 0.05f;
     rotationAngle = 90.0f;
+    remainingSpace = space;
     setupPawn();
 }
 
@@ -185,10 +186,10 @@ void Pawn::setPosition(float inx, float iny) {
 // Equipment-related methods
 
 bool Pawn::addEquipment(Equipment* item) {
-    if (equipment.size() < space.hands+space.extras) {
+    if (equipment.size() <= space.hands+space.extras) {
         if (item->getSpaceOccupied().spaceType == "hands")
         {
-            if (item->getSpaceOccupied().numSpaces < remainingSpace.hands)
+            if (item->getSpaceOccupied().numSpaces <= remainingSpace.hands)
             {
                 equipment.push_back(item);
                 remainingSpace.hands -= item->getSpaceOccupied().numSpaces;
@@ -197,7 +198,7 @@ bool Pawn::addEquipment(Equipment* item) {
         }
         else
         {
-            if (item->getSpaceOccupied().numSpaces < remainingSpace.extras)
+            if (item->getSpaceOccupied().numSpaces <= remainingSpace.extras)
             {
                 equipment.push_back(item);
                 remainingSpace.extras -= item->getSpaceOccupied().numSpaces;
@@ -209,7 +210,7 @@ bool Pawn::addEquipment(Equipment* item) {
 }
 
 bool Pawn::removeEquipment(int index) {
-    if (index >= 0 && index < equipment.size()) {
+    if (remainingSpace.hands+remainingSpace.hands < space.extras+space.hands && index >= 0 && index < equipment.size()) {
         if (equipment[index]->getSpaceOccupied().spaceType == "hands")
         {
             remainingSpace.hands += equipment[index]->getSpaceOccupied().numSpaces;

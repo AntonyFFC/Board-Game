@@ -269,7 +269,6 @@ void Board::handleClick(sf::Vector2i mousePosition)
                     if (pawn->getRemainingActions() == 0)
                     {
                         pawn->setRemainingActions(pawn->getMaxActions());
-                        pawn->addEquipment(new Equipment("helmet", 1, { 1, "hands" }, 1, 1, "Weapon", 5, ""));
                     }
                     hexDict[present]->setPawn(true, pawn);
                 }
