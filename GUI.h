@@ -21,4 +21,8 @@ private:
     int screenHeight;
     sf::RenderWindow* window;
     Board* grid;
+    Pawn* p1;
+    Equipment* e1;
+    Equipment* e2;
+    Equipment* e3;
 };

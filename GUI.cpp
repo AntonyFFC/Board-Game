@@ -5,22 +5,23 @@ Gui::Gui(const int screenWidth, const int screenHeight)
 {
 	window = new sf::RenderWindow(sf::VideoMode(screenWidth, screenHeight), "Hex Board");
 	grid = new Board(13, 19, 0.8f);
+    p1 = new Pawn("Mirmi³", 1, 0, 5, 4, { 2,1 }, 7, 510.f, 504.0f);
+    e1 = new Equipment("sword", 1, { 1, "hands" }, 1, 1, "Weapon", 5, "");
+    e2 = new Equipment("helmet", 1, { 1, "extras" }, 1, 1, "Armour", 5, "");
+    e3 = new Equipment("shield", 1, { 1, "hands" }, 1, 1, "Weapon", 5, "");
 }
 
 Gui::~Gui()
 {
 	delete window;
+    delete grid;
 }
 
 void Gui::start() {
-    Pawn p1("Mirmi³", 1, 0, 5, 4, { 2,1 }, 7, 510.f, 504.0f);
-    grid->hexDict[{0, 0, 0}]->setPawn(true, &p1);
-    Equipment e1("sword", 1, { 1, "hands" }, 1, 1, "Weapon", 5, "");
-    Equipment e2("helmet", 1, { 1, "extras" }, 1, 1, "Armour", 5, "");
-    Equipment e3("shield", 1, { 1, "hands" }, 1, 1, "Weapon", 5, "");
-    std::cout << grid->hexDict[{0, 0, 0}]->pawn->addEquipment(&e1);
-    std::cout << grid->hexDict[{0, 0, 0}]->pawn->addEquipment(&e2);
-    std::cout << grid->hexDict[{0, 0, 0}]->pawn->addEquipment(&e3);
+    grid->hexDict[{0, 0, 0}]->setPawn(true, p1);
+    std::cout << grid->hexDict[{0, 0, 0}]->pawn->addEquipment(e1);
+    std::cout << grid->hexDict[{0, 0, 0}]->pawn->addEquipment(e2);
+    std::cout << grid->hexDict[{0, 0, 0}]->pawn->addEquipment(e3);
     while (window->isOpen())
     {
 
@@ -35,7 +36,9 @@ void Gui::start() {
                 grid->handleClick(mousePosition);
             }
             if (event.type == sf::Event::Closed)
+            {
                 window->close();
+            }
         }
     }
 }

@@ -2,7 +2,7 @@
 #include "Equipment.h"
 
 Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions, int healthPoints, SpaceInventory space, int price, float xPos, float yPos)
-    : name(name), teamNumber(teamNumber), side(side),maxActions(maxActions), remainingActions(maxActions), HP(healthPoints), space(space), price(price), xPos(xPos), yPos(yPos), combinedSprite()
+    : name(name), teamNumber(teamNumber), side(side),maxActions(maxActions), remainingActions(maxActions), HP(healthPoints), space(space), price(price), xPos(xPos), yPos(yPos), combinedSprite(), equipment()
 {
     scaleFactor = 0.05f;
     rotationAngle = 90.0f;
@@ -11,10 +11,6 @@ Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions, in
 }
 
 Pawn::~Pawn() {
-    // Perform any necessary cleanup here
-    // (e.g., deleting dynamically allocated resources)
-
-    // Clear the equipment vector
     for (Equipment* weapon : equipment) {
         delete weapon;
     }

@@ -9,6 +9,7 @@
 class Board {
 public:
 	Board(int Rows = 10, int Columns = 10, float HSize = 1.f);
+	~Board();
 
 	/*std::vector<Hex> hexagons;*/
 

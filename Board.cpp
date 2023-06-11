@@ -42,6 +42,22 @@ Board::Board(int Rows, int Columns, float HSize)
 
 }
 
+Board::~Board()
+{
+    std::vector<std::tuple<int, int, int>> keysToDelete;
+    for (const auto& pair : hexDict) {
+        keysToDelete.push_back(pair.first);
+    }
+
+    for (const auto& key : keysToDelete) { //this is so that I don't iterate and delete the same thing
+        auto iter = hexDict.find(key);
+        if (iter != hexDict.end()) {
+            delete iter->second;
+            hexDict.erase(iter);
+        }
+    }
+}
+
 class DirectionVectors {
 public:
     static std::vector<std::tuple<int, int, int>> directionVectors;
