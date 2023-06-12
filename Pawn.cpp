@@ -57,6 +57,7 @@ void Pawn::createSprite()
     sf::Vector2f finalPos(xPos + combinedSprite->getGlobalBounds().width / 2.0f, yPos - combinedSprite->getGlobalBounds().height / 2.0f);
     combinedSprite->setPosition(finalPos.x, finalPos.y);
     combinedSprite->setRotation(rotationAngle);
+    delete renderTexture;
 }
 
 void Pawn::initializeSpriteMap()
@@ -250,9 +251,3 @@ void Pawn::dead()
 {
 
 }
-
-const std::map<std::string, int> Pawn::priorities = {
-    {"helmet", 1},
-    {"sword", 2},
-    {"Shield", 3}
-};

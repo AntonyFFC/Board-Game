@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <map>
 
 class Equipment {
 public:
@@ -20,7 +21,9 @@ public:
     std::string getType() const;
     int getPrice() const;
     std::string getAdditionalCapabilities() const;
+    int getPriority() const;
 
+    static const std::map<std::string, int> priorities;
 private:
     std::string name;
     int range;
@@ -30,4 +33,5 @@ private:
     std::string type;
     int price;
     std::string additionalCapabilities;
+    int priority;
 };
