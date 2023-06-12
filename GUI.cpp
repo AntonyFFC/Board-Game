@@ -18,10 +18,10 @@ Gui::~Gui()
 }
 
 void Gui::start() {
-    grid->hexDict[{0, 0, 0}]->setPawn(true, p1);
-    std::cout << grid->hexDict[{0, 0, 0}]->pawn->addEquipment(e1);
-    std::cout << grid->hexDict[{0, 0, 0}]->pawn->addEquipment(e2);
-    std::cout << grid->hexDict[{0, 0, 0}]->pawn->addEquipment(e3);
+    grid->hexDict[{-7, 5, 2}]->setPawn(true, p1);
+    std::cout << grid->hexDict[{-7, 5, 2}]->pawn->addEquipment(e1);
+    std::cout << grid->hexDict[{-7, 5, 2}]->pawn->addEquipment(e2);
+    std::cout << grid->hexDict[{-7, 5, 2}]->pawn->addEquipment(e3);
     while (window->isOpen())
     {
 

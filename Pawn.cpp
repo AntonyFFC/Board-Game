@@ -250,3 +250,9 @@ void Pawn::dead()
 {
 
 }
+
+const std::map<std::string, int> Pawn::priorities = {
+    {"helmet", 1},
+    {"sword", 2},
+    {"Shield", 3}
+};
