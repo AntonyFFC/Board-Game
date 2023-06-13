@@ -5,10 +5,7 @@ Equipment::Equipment(const std::string& name, int range, const SpaceOccupied& sp
     const std::string& additionalCapabilities)
     : name(name), range(range), spaceOccupied(spaceOccupied), attackValue(attackValue),
     attackActions(attackActions), type(type), price(price),
-    additionalCapabilities(additionalCapabilities) 
-{
-    priority = priorities.at(name);
-}
+    additionalCapabilities(additionalCapabilities) {}
 
 std::string Equipment::getName() const {
     return name;
@@ -41,13 +38,3 @@ int Equipment::getPrice() const {
 std::string Equipment::getAdditionalCapabilities() const {
     return additionalCapabilities;
 }
-
-int Equipment::getPriority() const {
-    return priority;
-}
-
-const std::map<std::string, int> Equipment::priorities = {
-    {"helmet", 1},
-    {"sword", 2},
-    {"Shield", 3}
-};

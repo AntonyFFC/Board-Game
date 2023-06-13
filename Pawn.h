@@ -54,6 +54,7 @@ public:
     void dead();
 
     std::map<std::string, sf::Sprite> spriteMap;
+    static const std::map<std::string, int> order;
 private:
     std::unordered_set<std::string> getSet();
     void createSprite();

@@ -37,16 +37,27 @@ std::unordered_set<std::string> Pawn::getSet() {
     return nameSet;
 }
 
+std::vector<sf::Sprite> sortSprites(Pawn& pawn,std::map<std::string, sf::Sprite> map) {
+
+    std::vector<sf::Sprite> spriteVector(pawn.order.size());
+    for (const auto& pair : map)
+    {
+        spriteVector[pawn.order.at(pair.first)] = pair.second;
+    }
+    return spriteVector;
+}
 
 void Pawn::createSprite()
 {
+    std::vector<sf::Sprite> sortedSprites;
+    sortedSprites = sortSprites(*this, spriteMap);
     sf::RenderTexture* renderTexture = new sf::RenderTexture;
     renderTexture->create(1400, 1400);
 
     renderTexture->clear(sf::Color::Transparent);
-    for (const auto& pair : spriteMap)
+    for (const auto& sprite : sortedSprites)
     {
-        renderTexture->draw(pair.second);
+        renderTexture->draw(sprite);
     }
     renderTexture->display();
 
@@ -251,3 +262,11 @@ void Pawn::dead()
 {
 
 }
+
+const std::map<std::string, int> Pawn::order = {
+    {"red", 0},
+    {"blue", 1},
+    {"helmet", 2},
+    {"sword", 3},
+    {"shield", 4}
+};
