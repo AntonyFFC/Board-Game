@@ -11,6 +11,13 @@ Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions, in
 }
 
 Pawn::~Pawn() {
+    for (sf::Texture* texture : textures)
+    {
+        delete texture;
+    }
+    textures.clear();
+    spriteMap.clear();
+
     for (Equipment* weapon : equipment) {
         delete weapon;
     }
@@ -95,9 +102,10 @@ void Pawn::initializeSpriteMap()
             texture = new sf::Texture;
             if (!texture->loadFromFile(filePath))
             {
-                // Handle error loading texture
+                delete texture;
                 continue;
             }
+            textures.push_back(texture);
             sf::Sprite sprite(*texture);
             spriteMap[fileName] = sprite;
         } while (FindNextFileA(findHandle, &findData));
