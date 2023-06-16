@@ -6,6 +6,7 @@
 #include <SFML/Graphics.hpp>
 #include <Windows.h>
 #include <unordered_set>
+#include <stdexcept>
 
 class Pawn {
 public:
@@ -19,7 +20,6 @@ public:
 
 
     // Getter methods
-    void setupPawn();
     std::string getName() const;
     int getTeamNumber() const;
     int getSide() const;
@@ -40,6 +40,7 @@ public:
     void setHP(int healthPoints);
     void setRotationAngle(float angle);
     void setPosition(float inx, float iny);
+    void setScale(float ins);
 
     // Equipment-related methods
     bool addEquipment(Equipment* item);
@@ -54,10 +55,12 @@ public:
     void dead();
 
     static const std::map<std::string, int> order;
+    static std::map<std::string, sf::Sprite> spriteMap;
+    static std::vector<sf::Texture*> textures;
 private:
     std::unordered_set<std::string> getSet();
     void createSprite();
-    void initializeSpriteMap();
+    static std::map<std::string, sf::Sprite> initializeSpriteMap();
 
     std::string name;
     int teamNumber;
@@ -74,6 +77,5 @@ private:
     mutable sf::Sprite *combinedSprite;
     float xPos;
     float yPos;
-    std::vector<sf::Texture*> textures;
-    std::map<std::string, sf::Sprite> spriteMap;
+
 };

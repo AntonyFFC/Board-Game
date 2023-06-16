@@ -17,6 +17,9 @@ Hex::Hex(std::tuple<int, int, int> inCoords, float inxPos, float inyPos)
     base = sf::Color(104, 176, 163);
     startHigh = sf::Color(185, 224, 67);
     baseHigh = sf::Color(159, 227, 215);
+    shape = initShape();
+    setCoords(std::get<0>(cubeCoords), std::get<1>(cubeCoords), std::get<2>(cubeCoords));
+    setScl(scale);
 }
 
 Hex::~Hex() {
@@ -70,7 +73,8 @@ void Hex::setCoords(int inx, int iny, int inz)
 
 void Hex::setScl(float inS)
 {
-    shape.setScale(inS, inS);
+    scale = inS;
+    shape.setScale(scale, scale);
 }
 
 float Hex::getRadius() const
@@ -223,8 +227,6 @@ Grass::Grass(std::tuple<int, int, int> inCoords, float inxPos, float inyPos)
 sf::ConvexShape Grass::getShape() {
     sf::Color currentFill = fill;
     sf::Color currentOut = out;
-    shape = initShape();
-    setCoords(std::get<0>(cubeCoords), std::get<1>(cubeCoords), std::get<2>(cubeCoords));
     if (isStart()) {
         if (isHigh()) {
             currentFill = startHigh;
@@ -248,7 +250,6 @@ sf::ConvexShape Grass::getShape() {
         currentOut = highOut;
     }
     setColour(currentFill, currentOut);
-    setScl(scale);
     return shape;
 }
 
@@ -269,10 +270,7 @@ void Rock::setHighlight(bool boolean)
 sf::ConvexShape Rock::getShape() {
     sf::Color currentFill = fill;
     sf::Color currentOut = out;
-    shape = initShape();
-    setCoords(std::get<0>(cubeCoords), std::get<1>(cubeCoords), std::get<2>(cubeCoords));
     setColour(currentFill, currentOut);
-    setScl(scale);
     return shape;
 }
 
@@ -290,13 +288,10 @@ Wall::Wall(std::tuple<int, int, int> inCoords, float inxPos, float inyPos)
 sf::ConvexShape Wall::getShape() {
     sf::Color currentFill = fill;
     sf::Color currentOut = out;
-    shape = initShape();
-    setCoords(std::get<0>(cubeCoords), std::get<1>(cubeCoords), std::get<2>(cubeCoords));
     if (isHigh()) {
         currentFill = highFill;
         currentOut = highOut;
     }
     setColour(fill, out);
-    setScl(scale);
     return shape;
 }

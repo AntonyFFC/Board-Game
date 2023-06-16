@@ -7,7 +7,7 @@ Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions, in
     scaleFactor = 0.05f;
     rotationAngle = 90.0f;
     remainingSpace = space;
-    setupPawn();
+    createSprite();
 }
 
 Pawn::~Pawn() {
@@ -25,11 +25,6 @@ Pawn::~Pawn() {
     delete combinedSprite;
 }
 
-void Pawn::setupPawn() {
-    initializeSpriteMap();
-    createSprite();
-}
-
 std::unordered_set<std::string> Pawn::getSet() {
     std::unordered_set<std::string> nameSet;
     if (side == 0)
@@ -44,20 +39,16 @@ std::unordered_set<std::string> Pawn::getSet() {
     return nameSet;
 }
 
-std::vector<sf::Sprite> sortSprites(Pawn& pawn,std::map<std::string, sf::Sprite> map) {
-
-    std::vector<sf::Sprite> spriteVector(pawn.order.size());
-    for (const auto& pair : map)
-    {
-        spriteVector[pawn.order.at(pair.first)] = pair.second;
-    }
-    return spriteVector;
-}
-
 void Pawn::createSprite()
 {
-    std::vector<sf::Sprite> sortedSprites;
-    sortedSprites = sortSprites(*this, spriteMap);
+    delete combinedSprite;
+    std::vector<sf::Sprite> sortedSprites(order.size());
+    std::unordered_set<std::string> stuff = getSet();
+    for (std::string name : stuff)
+    {
+        sortedSprites[order.at(name)] = spriteMap[name];
+    }
+
     sf::RenderTexture* renderTexture = new sf::RenderTexture;
     renderTexture->create(1400, 1400);
 
@@ -69,57 +60,16 @@ void Pawn::createSprite()
     renderTexture->display();
 
     sf::Texture *combinedTexture = new sf::Texture(renderTexture->getTexture());
+    delete renderTexture;
     /*combinedTexture->copyToImage().saveToFile("assets/combined.png");*/
     combinedSprite = new sf::Sprite(*combinedTexture);
     combinedSprite->setScale(scaleFactor, scaleFactor);
     sf::Vector2f finalPos(xPos + combinedSprite->getGlobalBounds().width / 2.0f, yPos - combinedSprite->getGlobalBounds().height / 2.0f);
     combinedSprite->setPosition(finalPos.x, finalPos.y);
     combinedSprite->setRotation(rotationAngle);
-    delete renderTexture;
-}
-
-void Pawn::initializeSpriteMap()
-{
-    std::unordered_set<std::string> fileNames = getSet();
-    std::string folderPath = "assets/";
-    std::string searchPattern = folderPath + "*.png";
-    WIN32_FIND_DATAA findData;
-    HANDLE findHandle = FindFirstFileA(searchPattern.c_str(), &findData);
-
-    if (findHandle != INVALID_HANDLE_VALUE)
-    {
-        do
-        {
-            std::string fileName = findData.cFileName;
-            fileName = fileName.substr(0, fileName.length() - 4);
-            if (fileNames.find(fileName) == fileNames.end() || spriteMap.find(fileName) != spriteMap.end()) {
-                continue; // Skip this file
-            }
-            std::string filePath = folderPath + fileName + ".png";
-
-            // Load the texture
-            sf::Texture* texture;
-            texture = new sf::Texture;
-            if (!texture->loadFromFile(filePath))
-            {
-                delete texture;
-                continue;
-            }
-            textures.push_back(texture);
-            sf::Sprite sprite(*texture);
-            spriteMap[fileName] = sprite;
-        } while (FindNextFileA(findHandle, &findData));
-        FindClose(findHandle);
-    }
-    else
-    {
-        // Handle error opening directory
-        return;
-    }
 }
 
 sf::Sprite Pawn::getSprite() {
-    setupPawn();
     return *combinedSprite;
 }
 
@@ -192,11 +142,19 @@ void Pawn::setHP(int healthPoints) {
 
 void Pawn::setRotationAngle(float angle) {
     this->rotationAngle = angle;
+    combinedSprite->setRotation(rotationAngle);
 }
 
 void Pawn::setPosition(float inx, float iny) {
     xPos = inx;
     yPos = iny;
+    sf::Vector2f finalPos(xPos + combinedSprite->getGlobalBounds().width / 2.0f, yPos - combinedSprite->getGlobalBounds().height / 2.0f);
+    combinedSprite->setPosition(finalPos.x, finalPos.y);
+}
+
+void Pawn::setScale(float ins) {
+    scaleFactor = ins;
+    combinedSprite->setScale(scaleFactor, scaleFactor);
 }
 
 // Equipment-related methods
@@ -209,6 +167,7 @@ bool Pawn::addEquipment(Equipment* item) {
             {
                 equipment.push_back(item);
                 remainingSpace.hands -= item->getSpaceOccupied().numSpaces;
+                createSprite();
                 return true;
             }
         }
@@ -218,6 +177,7 @@ bool Pawn::addEquipment(Equipment* item) {
             {
                 equipment.push_back(item);
                 remainingSpace.extras -= item->getSpaceOccupied().numSpaces;
+                createSprite();
                 return true;
             }
         }   
@@ -237,6 +197,7 @@ bool Pawn::removeEquipment(int index) {
         }
         delete equipment[index];
         equipment.erase(equipment.begin() + index);
+        createSprite();
         return true;
     }
     return false;
@@ -278,3 +239,46 @@ const std::map<std::string, int> Pawn::order = {
     {"sword", 3},
     {"shield", 4}
 };
+
+std::vector<sf::Texture*> Pawn::textures;
+
+std::map<std::string, sf::Sprite> Pawn::initializeSpriteMap()
+{
+    std::string folderPath = "assets/";
+    std::string searchPattern = folderPath + "*.png";
+    WIN32_FIND_DATAA findData;
+    HANDLE findHandle = FindFirstFileA(searchPattern.c_str(), &findData);
+
+    std::map<std::string, sf::Sprite> sprites;
+
+    if (findHandle != INVALID_HANDLE_VALUE)
+    {
+        do
+        {
+            std::string fileName = findData.cFileName;
+            fileName = fileName.substr(0, fileName.length() - 4);
+            std::string filePath = folderPath + fileName + ".png";
+
+            // Load the texture
+            sf::Texture* texture;
+            texture = new sf::Texture;
+            if (!texture->loadFromFile(filePath))
+            {
+                delete texture;
+                continue;
+            }
+            // This holds the textures so that the sprites work
+            textures.push_back(texture);
+            sf::Sprite sprite(*texture);
+            sprites[fileName] = sprite;
+        } while (FindNextFileA(findHandle, &findData));
+        FindClose(findHandle);
+    }
+    else
+    {
+        throw std::runtime_error("Invalid handle value");
+    }
+    return sprites;
+}
+
+std::map<std::string, sf::Sprite> Pawn::spriteMap = initializeSpriteMap();
