@@ -29,6 +29,53 @@ bool isTupleInVector(const std::vector<std::tuple<int, int, int>>& vec, const st
     return false;
 }
 
+float lerp(int a, int b, float t)
+{
+    return a + (b - a) * t;
+}
+
+std::tuple<float, float, float> cube_lerp(std::tuple<int, int, int> a, std::tuple<int, int, int> b, float t)
+{
+    return { lerp(std::get<0>(a), std::get<0>(b), t),
+        lerp(std::get<1>(a), std::get<1>(b), t),
+        lerp(std::get<2>(a), std::get<2>(b), t) };
+}
+
+std::tuple<int, int, int> cubeRound(std::tuple<float, float, float> a)
+{
+    int q = round(std::get<0>(a));
+    int r = round(std::get<1>(a));
+    int s = round(std::get<2>(a));
+
+    float q_diff = abs(q - (std::get<0>(a)));
+    float r_diff = abs(r - (std::get<1>(a)));
+    float s_diff = abs(s - (std::get<2>(a)));
+
+    if (q_diff > r_diff && q_diff > s_diff)
+        q = -r - s;
+    else if (r_diff > s_diff)
+        r = -q - s;
+    else
+        s = -q - r;
+
+    return { q, r, s };
+}
+
+std::vector <std::tuple<int, int, int>> Board::linedraw(std::tuple<int, int, int> a, std::tuple<int, int, int> b)
+{
+    int N = distance(a, b);
+    std::vector <std::tuple<int, int, int>> results;
+    for (int i = 0; i <= N; i++)
+    {
+        std::tuple<int, int, int> coords = cubeRound(cube_lerp(a, b, 1.0 / N * i));
+        if (coords == a || !hexDict.count(coords)) {
+            continue;
+        }
+        results.push_back(coords);
+    }
+    return results;
+}
+
 Board::Board(int Rows, int Columns, float HSize)
     :numRows(Rows), numCols(Columns), hexSize(HSize)
 {
@@ -143,6 +190,39 @@ std::vector < std::tuple<int, int, int>> Board::getReachable(std::tuple<int, int
         }
     }
     return visited;
+}
+
+std::vector < std::tuple<int, int, int>> Board::getInView(std::tuple<int, int, int> start, int dist, int minDist)
+{
+    bool skipOuterLoop = false;
+    std::vector <std::tuple<int, int, int>> results;
+    std::vector < std::tuple<int, int, int>> inRange = getInRange(start, dist, minDist);
+    for (std::tuple<int, int, int> coordinates : inRange)
+    {
+        std::vector < std::tuple<int, int, int>> inLine = linedraw(start, coordinates);
+        for (std::tuple<int, int, int> lineHex : inLine)
+        {
+            if (hexDict[lineHex]->isBlocking())
+            {
+                skipOuterLoop = true;
+                break;
+            }
+        }
+
+        if (skipOuterLoop) {
+            skipOuterLoop = false;
+            continue;
+        }
+
+        for (std::tuple<int, int, int> hex : inLine)
+        {
+            if (!isTupleInVector(results, hex) && isTupleInVector(inRange, hex))
+            {
+                results.push_back(hex);
+            }
+        }
+    }
+    return results;
 }
 
 class ObjectCoordinates {
@@ -289,7 +369,9 @@ void Board::handleClick(sf::Vector2i mousePosition)
                     hexDict[present]->setPawn(true, pawn);
                 }
                 //highlighted = getInRange(hexDict[present]->getCubeCoords(), 1,0);
-                highlighted = getReachable(hexDict[present]->getCubeCoords(), hexDict[present]->pawn->getRemainingActions());
+                //highlighted = getReachable(hexDict[present]->getCubeCoords(), hexDict[present]->pawn->getRemainingActions());
+                //highlighted = linedraw(hexDict[previous]->getCubeCoords(), hexDict[present]->getCubeCoords());
+                highlighted = getInView(hexDict[present]->getCubeCoords(), 6, 4);
                 int i = 0;
                 for (std::tuple<int, int, int> hex : highlighted)
                 {

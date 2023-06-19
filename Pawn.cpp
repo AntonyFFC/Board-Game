@@ -236,8 +236,10 @@ const std::map<std::string, int> Pawn::order = {
     {"red", 0},
     {"blue", 1},
     {"helmet", 2},
-    {"sword", 3},
-    {"shield", 4}
+    {"plate armour", 3},
+    {"leather armour", 3},
+    {"sword", 4},
+    {"shield", 5}
 };
 
 std::vector<sf::Texture*> Pawn::textures;

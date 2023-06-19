@@ -8,7 +8,7 @@ Gui::Gui(const int screenWidth, const int screenHeight)
     p1 = new Pawn("Mirmi³", 1, 0, 5, 4, { 2,1 }, 7, 510.f, 504.0f);
     e1 = new Equipment("sword", 1, { 1, "hands" }, 1, 1, "Weapon", 5, "");
     e2 = new Equipment("helmet", 1, { 1, "extras" }, 1, 1, "Armour", 5, "");
-    e3 = new Equipment("shield", 1, { 1, "hands" }, 1, 1, "Weapon", 5, "");
+    e3 = new Equipment("plate armour", 1, { 1, "hands" }, 1, 1, "Weapon", 5, "");
 }
 
 Gui::~Gui()
