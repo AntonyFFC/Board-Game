@@ -1,4 +1,4 @@
-#include "Pawn.h"
+﻿#include "Pawn.h"
 #include "Equipment.h"
 
 Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions, int healthPoints, SpaceInventory space, int price, float xPos, float yPos)
@@ -237,25 +237,34 @@ void Pawn::draw(sf::RenderTarget& target, bool isShift)
     target.draw(getSprite());
     if (isShift) {
         sf::Text attributesText;
+        int size = 15;
         attributesText.setFont(globalFont);
-        attributesText.setCharacterSize(15);
-        attributesText.setFillColor(sf::Color::White);
-
-        // Set the attributes text content
-        std::string attributes = getName() + "\n"
-            + "A: " + std::to_string(getMaxActions()) + "\n"
-            + "HP: " + std::to_string(getHP()) + "\n";
-
-        attributesText.setString(attributes);
-        float lineSpacing = 0.8f;
-        attributesText.setLineSpacing(lineSpacing);
+        attributesText.setCharacterSize(size);
 
         // Position the attributes text relative to the pawn's sprite
         sf::FloatRect spriteBounds = getSprite().getGlobalBounds();
-        attributesText.setPosition(spriteBounds.left, spriteBounds.top - 20);
+        attributesText.setPosition(spriteBounds.left + spriteBounds.width/5, spriteBounds.top - spriteBounds.height/4);
 
-        // Draw the attributes text
+        attributesText.setFillColor(sf::Color::White);
+        attributesText.setString(getName());
         target.draw(attributesText);
+
+        attributesText.move(0, 15);
+        attributesText.setFillColor(sf::Color::Blue);
+        attributesText.setString(std::to_string(getMaxActions()));
+        target.draw(attributesText);
+
+        attributesText.move(-15, -15+spriteBounds.height);
+        attributesText.setFillColor(sf::Color::Red);
+        attributesText.setLineSpacing(0.3);
+        attributesText.setCharacterSize(size * 2);
+        std::string hpString = "";
+        hpString = 176;
+        for (int i = 0; i < getHP(); ++i) {
+            attributesText.move(0, -10);
+            attributesText.setString(hpString);
+            target.draw(attributesText);
+        }
     }
 }
 
