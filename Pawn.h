@@ -7,6 +7,7 @@
 #include <Windows.h>
 #include <unordered_set>
 #include <stdexcept>
+#include "Globals.h"
 
 class Pawn {
 public:
@@ -50,9 +51,9 @@ public:
     void reduceActions(int amount);
     void reduceHP(int amount);
     bool isAlive() const;
-
     void changePos(float x, float y);
     void dead();
+    void draw(sf::RenderTarget& target, bool isShift);
 
     static const std::map<std::string, int> order;
     static std::map<std::string, sf::Sprite> spriteMap;

@@ -22,7 +22,7 @@ public:
 	std::vector < std::tuple<int, int, int>> linedraw(std::tuple<int, int, int> a, std::tuple<int, int, int> b);
 	std::vector < std::tuple<int, int, int>> getInView(std::tuple<int, int, int> start, int dist=1, int minDist=1);
 
-	void drawBoard(sf::RenderTarget& target);
+	void drawBoard(sf::RenderTarget& target, bool isShift);
 	void deleteHexagons();
 	void setStart();
 	void setRocks();

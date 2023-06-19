@@ -232,6 +232,33 @@ void Pawn::dead()
 
 }
 
+void Pawn::draw(sf::RenderTarget& target, bool isShift)
+{
+    target.draw(getSprite());
+    if (isShift) {
+        sf::Text attributesText;
+        attributesText.setFont(globalFont);
+        attributesText.setCharacterSize(15);
+        attributesText.setFillColor(sf::Color::White);
+
+        // Set the attributes text content
+        std::string attributes = getName() + "\n"
+            + "A: " + std::to_string(getMaxActions()) + "\n"
+            + "HP: " + std::to_string(getHP()) + "\n";
+
+        attributesText.setString(attributes);
+        float lineSpacing = 0.8f;
+        attributesText.setLineSpacing(lineSpacing);
+
+        // Position the attributes text relative to the pawn's sprite
+        sf::FloatRect spriteBounds = getSprite().getGlobalBounds();
+        attributesText.setPosition(spriteBounds.left, spriteBounds.top - 20);
+
+        // Draw the attributes text
+        target.draw(attributesText);
+    }
+}
+
 const std::map<std::string, int> Pawn::order = {
     {"red", 0},
     {"blue", 1},

@@ -280,10 +280,10 @@ std::vector<std::tuple<int, int, int>> ObjectCoordinates::startCoordinates = {
     {-7, 4, 3}, {-7, 5, 2}, {-8, 6, 2}, {-8, 5, 3}, {-8, 4, 4}, {-8, 3, 5}
 };
 
-void Board::drawBoard(sf::RenderTarget& target)
+void Board::drawBoard(sf::RenderTarget& target, bool isShift)
 {
     for (auto& pair : hexDict) {
-        pair.second->draw(target);
+        pair.second->draw(target, isShift);
     }
 }
 

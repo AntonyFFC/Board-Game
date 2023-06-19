@@ -16,6 +16,7 @@ public:
     ~Gui();
 
     void start();
+    void keyPressed(const sf::Event& event);
 private:
     int screenWidth;
     int screenHeight;
@@ -25,4 +26,5 @@ private:
     Equipment* e1;
     Equipment* e2;
     Equipment* e3;
+    bool isShiftKeyPressed = false;
 };

@@ -206,11 +206,11 @@ bool Hex::isClicked(sf::Vector2i mousePosition) const {
     return distance < hexRadius;
 }
 
-void Hex::draw(sf::RenderTarget& target) {
+void Hex::draw(sf::RenderTarget& target, bool isShift) {
     target.draw(getShape());
     if (isPawn()) {
-        pawn->setPosition(getOrigin().x,getOrigin().y);
-        target.draw(pawn->getSprite());
+        pawn->setPosition(getOrigin().x, getOrigin().y);
+        pawn->draw(target, isShift);
     }
 }
 
