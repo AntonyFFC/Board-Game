@@ -135,7 +135,6 @@ void Hex::setPawn(bool boolean, Pawn* inPawn)
         pawn = nullptr;
     }
     isPawn_ = boolean;
-    isBlocking_ = boolean;
 }
 
 void Hex::setBlocking(bool boolean)

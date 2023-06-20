@@ -352,7 +352,7 @@ void Board::handleClick(sf::Vector2i mousePosition)
         if (hexDict[present]->isClicked(mousePosition)) {
             if (hexDict[present]->isPawn() || hexDict[present]->isHigh(0))
             {
-                if (hexDict[present]->isHigh(0))
+                if (hexDict[present]->isHigh(0) && !hexDict[present]->isPawn())
                 {
                     Pawn* pawn = hexDict[previous]->pawn;
                     hexDict[previous]->setPawn(false);
@@ -363,6 +363,7 @@ void Board::handleClick(sf::Vector2i mousePosition)
                     }
                     hexDict[present]->setPawn(true, pawn);
                 }
+                
 
                 for (std::tuple<int, int, int> hex : highlighted[0])
                 {
@@ -378,6 +379,10 @@ void Board::handleClick(sf::Vector2i mousePosition)
                 {
                     hexDict[hex]->setHighlight(true, 0);
                 }
+            }
+            if (hexDict[present]->isHigh(1) && hexDict[present]->isPawn())
+            {
+                hexDict[present]->pawn->reduceHP(1);
             }
             previous = present;
             break;
@@ -399,9 +404,9 @@ void Board::handleShift(bool isShift)
         {
             hexDict[hex]->setHighlight(false, 1);
         }
-        highlighted[1].clear();
         return;
     }
+    highlighted[1].clear();
     for (Pawn* pawn : pawnDict)
     {
         std::tuple<int, int, int> coords = pawn->getHexCoords();
