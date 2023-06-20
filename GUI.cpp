@@ -7,6 +7,7 @@ Gui::Gui(const int screenWidth, const int screenHeight)
 	window = new sf::RenderWindow(sf::VideoMode(screenWidth, screenHeight), "Hex Board");
 	grid = new Board(13, 19, 0.8f);
     p1 = new Pawn("Mirmil", 1, 0, 5, 4, { 2,1 }, 7, 510.f, 504.0f);
+    p2 = new Pawn("Lucjan", 2, 1, 5, 4, { 2,1 }, 7, 510.f, 504.0f);
     e1 = new Equipment("sword", 1, { 1, "hands" }, 1, 1, "Weapon", 5, "");
     e2 = new Equipment("helmet", 1, { 1, "extras" }, 1, 1, "Armour", 5, "");
     e3 = new Equipment("plate armour", 1, { 1, "hands" }, 1, 1, "Weapon", 5, "");
@@ -20,6 +21,7 @@ Gui::~Gui()
 
 void Gui::start() {
     grid->addPawn(p1, { -7, 5, 2 });
+    grid->addPawn(p2, { 9, -6, -3 });
     std::cout << grid->hexDict[{-7, 5, 2}]->pawn->addEquipment(e1);
     std::cout << grid->hexDict[{-7, 5, 2}]->pawn->addEquipment(e2);
     std::cout << grid->hexDict[{-7, 5, 2}]->pawn->addEquipment(e3);
