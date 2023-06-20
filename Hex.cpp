@@ -122,7 +122,10 @@ void Hex::setStart(bool boolean)
 void Hex::setPawn(bool boolean, Pawn* inPawn)
 {
     if (boolean)
+    {
         pawn = inPawn;
+        pawn->setHexCoords(cubeCoords);
+    }
     else if (pawn != nullptr) {
         pawn = nullptr;
     }

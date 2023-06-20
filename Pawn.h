@@ -32,6 +32,7 @@ public:
     Equipment* getEquipment(int index) const;
     int getPrice() const;
     sf::Sprite getSprite();
+    std::tuple<int, int, int> getHexCoords() const;
 
     // Setter methods
     void setName(const std::string& name);
@@ -42,6 +43,7 @@ public:
     void setRotationAngle(float angle);
     void setPosition(float inx, float iny);
     void setScale(float ins);
+    void setHexCoords(std::tuple<int, int, int> coords);
 
     // Equipment-related methods
     bool addEquipment(Equipment* item);
@@ -62,6 +64,7 @@ private:
     std::unordered_set<std::string> getSet();
     void createSprite();
     static std::map<std::string, sf::Sprite> initializeSpriteMap();
+    void drawStats(sf::RenderTarget& target);
 
     std::string name;
     int teamNumber;
@@ -78,5 +81,5 @@ private:
     mutable sf::Sprite *combinedSprite;
     float xPos;
     float yPos;
-
+    std::tuple<int, int, int> hexCoords;
 };

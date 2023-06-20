@@ -118,6 +118,11 @@ int Pawn::getPrice() const {
     return price;
 }
 
+std::tuple<int, int, int> Pawn::getHexCoords() const
+{
+    return hexCoords;
+}
+
 // Setter methods
 
 void Pawn::setName(const std::string& name) {
@@ -146,8 +151,8 @@ void Pawn::setRotationAngle(float angle) {
 }
 
 void Pawn::setPosition(float inx, float iny) {
-    xPos = inx;
-    yPos = iny;
+    this->xPos = inx;
+    this->yPos = iny;
     sf::Vector2f finalPos(xPos + combinedSprite->getGlobalBounds().width / 2.0f, yPos - combinedSprite->getGlobalBounds().height / 2.0f);
     combinedSprite->setPosition(finalPos.x, finalPos.y);
 }
@@ -155,6 +160,11 @@ void Pawn::setPosition(float inx, float iny) {
 void Pawn::setScale(float ins) {
     scaleFactor = ins;
     combinedSprite->setScale(scaleFactor, scaleFactor);
+}
+
+void Pawn::setHexCoords(std::tuple<int, int, int> coords)
+{
+    this->hexCoords = coords;
 }
 
 // Equipment-related methods
@@ -236,35 +246,42 @@ void Pawn::draw(sf::RenderTarget& target, bool isShift)
 {
     target.draw(getSprite());
     if (isShift) {
-        sf::Text attributesText;
-        int size = 15;
-        attributesText.setFont(globalFont);
-        attributesText.setCharacterSize(size);
+        drawStats(target);
+    }
+}
 
-        // Position the attributes text relative to the pawn's sprite
-        sf::FloatRect spriteBounds = getSprite().getGlobalBounds();
-        attributesText.setPosition(spriteBounds.left + spriteBounds.width/5, spriteBounds.top - spriteBounds.height/4);
+void Pawn::drawStats(sf::RenderTarget& target)
+{
+    sf::Text attributesText;
+    int size = 15;
+    attributesText.setFont(globalFont);
+    attributesText.setCharacterSize(size);
 
-        attributesText.setFillColor(sf::Color::White);
-        attributesText.setString(getName());
+    // Position the attributes text relative to the pawn's sprite
+    sf::FloatRect spriteBounds = getSprite().getGlobalBounds();
+    attributesText.setPosition(spriteBounds.left + spriteBounds.width / 5, spriteBounds.top - spriteBounds.height / 4);
+
+    attributesText.setFillColor(sf::Color::White);
+    attributesText.setString(getName());
+    target.draw(attributesText);
+
+    attributesText.move(0, 15);
+    attributesText.setFillColor(sf::Color::Blue);
+    attributesText.setString(std::to_string(getMaxActions()));
+    target.draw(attributesText);
+
+    attributesText.move(-17, spriteBounds.height - 7);
+    attributesText.setFillColor(sf::Color::Red);
+    attributesText.setOutlineColor(sf::Color::Red);
+    attributesText.setOutlineThickness(2);
+    attributesText.setLineSpacing(0.3);
+    attributesText.setCharacterSize(size * 2);
+    std::string hpString = "";
+    hpString = 176;
+    for (int i = 0; i < getHP(); ++i) {
+        attributesText.move(0, -12);
+        attributesText.setString(hpString);
         target.draw(attributesText);
-
-        attributesText.move(0, 15);
-        attributesText.setFillColor(sf::Color::Blue);
-        attributesText.setString(std::to_string(getMaxActions()));
-        target.draw(attributesText);
-
-        attributesText.move(-15, -15+spriteBounds.height);
-        attributesText.setFillColor(sf::Color::Red);
-        attributesText.setLineSpacing(0.3);
-        attributesText.setCharacterSize(size * 2);
-        std::string hpString = "";
-        hpString = 176;
-        for (int i = 0; i < getHP(); ++i) {
-            attributesText.move(0, -10);
-            attributesText.setString(hpString);
-            target.draw(attributesText);
-        }
     }
 }
 

@@ -368,19 +368,44 @@ void Board::handleClick(sf::Vector2i mousePosition)
                     }
                     hexDict[present]->setPawn(true, pawn);
                 }
-                //highlighted = getInRange(hexDict[present]->getCubeCoords(), 1,0);
-                //highlighted = getReachable(hexDict[present]->getCubeCoords(), hexDict[present]->pawn->getRemainingActions());
-                //highlighted = linedraw(hexDict[previous]->getCubeCoords(), hexDict[present]->getCubeCoords());
-                highlighted = getInView(hexDict[present]->getCubeCoords(), 6, 4);
-                int i = 0;
+                //highlighted = getInRange(present, 1,0);
+                highlighted = getReachable(present, hexDict[present]->pawn->getRemainingActions());
+                //highlighted = linedraw(previous, present);
+                //highlighted = getInView(present, 6, 4);
                 for (std::tuple<int, int, int> hex : highlighted)
                 {
                     hexDict[hex]->setHighlight(true);
-                    i++;
                 }
             }
-            previous = hexDict[present]->getCubeCoords();
+            previous = present;
             break;
+        }
+    }
+}
+
+void Board::addPawn(Pawn* inPawn, std::tuple<int, int, int> coords)
+{
+    pawnDict.push_back(inPawn);
+    hexDict[coords]->setPawn(true, inPawn);
+}
+
+void Board::handleShift(bool isShift)
+{
+    if (!isShift)
+    {
+        for (std::tuple<int, int, int> hex : highlighted)
+        {
+            hexDict[hex]->setHighlight(false);
+        }
+        return;
+    }
+    for (Pawn* pawn : pawnDict)
+    {
+        std::tuple<int, int, int> coords = pawn->getHexCoords();
+        highlighted = getInView(coords, 6, 4);
+        for (std::tuple<int, int, int> hex : highlighted)
+        {
+            hexDict[hex]->setHighlight(true);
         }
     }
 }

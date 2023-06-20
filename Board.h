@@ -29,6 +29,8 @@ public:
 	void setBases();
 	void boardPreperation();
 	void handleClick(sf::Vector2i mousePosition);
+	void addPawn(Pawn* inPawn, std::tuple<int, int, int> coords);
+	void handleShift(bool isShift);
 private:
 	int numRows;
 	int numCols;
@@ -40,4 +42,5 @@ private:
 	float yOffset;
 	std::vector< std::tuple<int, int, int>> highlighted = std::vector< std::tuple<int, int, int>>();
 	std::tuple<int, int, int> previous = std::tuple<int, int, int>();
+	std::vector<Pawn*> pawnDict;
 };
