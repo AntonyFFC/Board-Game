@@ -23,15 +23,19 @@ public:
 	std::vector < std::tuple<int, int, int>> getInView(std::tuple<int, int, int> start, int dist=1, int minDist=1);
 
 	void drawBoard(sf::RenderTarget& target, bool isShift);
+	void handleClick(sf::Vector2i mousePosition);
+	void addPawn(Pawn* inPawn, std::tuple<int, int, int> coords);
+	void handleShift(bool isShift);
+private:
 	void deleteHexagons();
 	void setStart();
 	void setRocks();
 	void setBases();
 	void boardPreperation();
-	void handleClick(sf::Vector2i mousePosition);
-	void addPawn(Pawn* inPawn, std::tuple<int, int, int> coords);
-	void handleShift(bool isShift);
-private:
+	void pawnClicked(std::tuple<int, int, int> current);
+	void pawnMoved(std::tuple<int, int, int> previous, std::tuple<int, int, int> current);
+	void clearHighlight();
+	void attack(std::tuple<int, int, int> previous, std::tuple<int, int, int> current);
 	int numRows;
 	int numCols;
 	float hexSize;
@@ -41,6 +45,7 @@ private:
 	float xOffset;
 	float yOffset;
 	std::vector<std::vector< std::tuple<int, int, int>>> highlighted;
-	std::tuple<int, int, int> previous = std::tuple<int, int, int>();
+	std::tuple<int, int, int> previous;
+	std::tuple<int, int, int> empty = { -9, -9, -9 };
 	std::vector<Pawn*> pawnDict;
 };

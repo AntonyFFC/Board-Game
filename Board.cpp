@@ -88,7 +88,7 @@ Board::Board(int Rows, int Columns, float HSize)
     highlighted.push_back(std::vector<std::tuple<int, int, int>>());
 
     boardPreperation();
-
+    previous = empty;
 }
 
 Board::~Board()
@@ -350,45 +350,79 @@ void Board::handleClick(sf::Vector2i mousePosition)
         std::tuple<int, int, int> present = pair.first;
 
         if (hexDict[present]->isClicked(mousePosition)) {
-            if (hexDict[present]->isPawn() || hexDict[present]->isHigh(0))
+            if (!hexDict[present]->isPawn() && !hexDict[present]->isHigh(0))
             {
-                if (hexDict[present]->isHigh(0) && !hexDict[present]->isPawn())
-                {
-                    Pawn* pawn = hexDict[previous]->pawn;
-                    hexDict[previous]->setPawn(false);
-                    pawn->reduceActions(hexDict[present]->getPawnDist());
-                    if (pawn->getRemainingActions() == 0)
-                    {
-                        pawn->setRemainingActions(pawn->getMaxActions());
-                    }
-                    hexDict[present]->setPawn(true, pawn);
-                }
-                
-                for (std::tuple<int, int, int> hex : highlighted[0])
-                {
-                    hexDict[hex]->setHighlight(false, 0);
-                }
-                highlighted[0].clear();
+                clearHighlight();
+                previous = empty;
+                break;
+            }
 
-                //highlighted = getInRange(present, 1,0);
-                highlighted[0] = getReachable(present, hexDict[present]->pawn->getRemainingActions());
-                //highlighted = linedraw(previous, present);
-                //highlighted = getInView(present, 6, 4);
-                for (std::tuple<int, int, int> hex : highlighted[0])
+            if (hexDict[present]->isPawn())
+            {
+                if (previous != empty) //this checks if this the second clikck of a player
                 {
-                    hexDict[hex]->setHighlight(true, 0);
+                    std::vector<std::tuple<int, int, int>> inView = getInView(previous, 2, 0);
+                    auto it = std::find(inView.begin(), inView.end(), present);
+                    if (it != inView.end())
+                    {
+                        attack(previous, present);
+                        previous = empty;
+                        if (hexDict[present]->isHigh(0))
+                        {
+                            clearHighlight();
+                        }
+                    }
+                }
+                else
+                {
+                    pawnClicked(present);
+                    previous = present;
                 }
             }
-            std::vector<std::tuple<int, int, int>> inView = getInView(previous, 2, 0);
-            auto it = std::find(inView.begin(), inView.end(), present);
-            if (it != inView.end())
+            else if (hexDict[present]->isHigh(0))
             {
-                hexDict[present]->pawn->reduceHP(1);
+                pawnMoved(previous, present);
+                clearHighlight();
+                previous = empty;
             }
-            previous = present;
             break;
         }
     }
+}
+
+void Board::pawnClicked(std::tuple<int, int, int> current)
+{
+    highlighted[0] = getReachable(current, hexDict[current]->pawn->getRemainingActions());
+    for (std::tuple<int, int, int> hex : highlighted[0])
+    {
+        hexDict[hex]->setHighlight(true, 0);
+    }
+}
+
+void Board::pawnMoved(std::tuple<int, int, int> previous, std::tuple<int, int, int> current)
+{
+    Pawn* pawn = hexDict[previous]->pawn;
+    hexDict[previous]->setPawn(false);
+    pawn->reduceActions(hexDict[current]->getPawnDist());
+    if (pawn->getRemainingActions() == 0)
+    {
+        pawn->setRemainingActions(pawn->getMaxActions());
+    }
+    hexDict[current]->setPawn(true, pawn);
+}
+
+void Board::attack(std::tuple<int, int, int> previous, std::tuple<int, int, int> current)
+{
+        hexDict[current]->pawn->reduceHP(1);
+}
+
+void Board::clearHighlight()
+{
+    for (std::tuple<int, int, int> hex : highlighted[0])
+    {
+        hexDict[hex]->setHighlight(false, 0);
+    }
+    highlighted[0].clear();
 }
 
 void Board::addPawn(Pawn* inPawn, std::tuple<int, int, int> coords)
