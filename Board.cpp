@@ -401,14 +401,15 @@ void Board::pawnClicked(std::tuple<int, int, int> current)
 
 void Board::pawnMoved(std::tuple<int, int, int> previous, std::tuple<int, int, int> current)
 {
-    Pawn* pawn = hexDict[previous]->pawn;
     hexDict[previous]->setPawn(false);
-    pawn->reduceActions(hexDict[current]->getPawnDist());
-    if (pawn->getRemainingActions() == 0)
+    pawnDict[previous]->reduceActions(hexDict[current]->getPawnDist());
+    if (pawnDict[previous]->getRemainingActions() == 0)
     {
-        pawn->setRemainingActions(pawn->getMaxActions());
+        pawnDict[previous]->setRemainingActions(pawnDict[previous]->getMaxActions());
     }
-    hexDict[current]->setPawn(true, pawn);
+    hexDict[current]->setPawn(true, pawnDict[previous]);
+    pawnDict[current] = pawnDict[previous];
+    pawnDict.erase(previous);
 }
 
 void Board::attack(std::tuple<int, int, int> previous, std::tuple<int, int, int> current)
@@ -437,8 +438,7 @@ void Board::handleShiftOn()
     {
         for (auto& pair : pawnDict)
         {
-            std::tuple<int, int, int> coords = pair.second->getHexCoords();
-            std::vector<std::tuple<int, int, int>> inView = getInView(coords, 2, 0);
+            std::vector<std::tuple<int, int, int>> inView = getInView(pair.first, 2, 0);
             highlighted[1].insert(highlighted[1].end(), inView.begin(), inView.end());
         }
 
