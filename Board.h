@@ -37,6 +37,8 @@ private:
 	void pawnMoved(std::tuple<int, int, int> previous, std::tuple<int, int, int> current);
 	void clearHighlight();
 	void attack(std::tuple<int, int, int> previous, std::tuple<int, int, int> current);
+	std::vector<std::tuple<int, int, int>> getViewOfWeapon(std::tuple<int, int, int> current, Equipment* weapon);
+	std::vector<std::tuple<int, int, int>> getViewOfPawn(std::tuple<int, int, int> current);
 	int numRows;
 	int numCols;
 	float hexSize;

@@ -107,11 +107,8 @@ int Pawn::getEquipmentCount() const {
     return equipment.size();
 }
 
-Equipment* Pawn::getEquipment(int index) const {
-    if (index >= 0 && index < equipment.size()) {
-        return equipment[index];
-    }
-    return nullptr;
+std::vector<Equipment*> Pawn::getEquipment() const {
+    return equipment;
 }
 
 int Pawn::getPrice() const {

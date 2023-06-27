@@ -200,11 +200,6 @@ int Hex::getPawnDist() const
 
 void Hex::setHighlight(bool boolean, int col)
 {
-    int arrSize = sizeof(highlights) / sizeof(highlights[0]);
-    for (int i = 0; i < arrSize; i++)
-    {
-        highlights[i] = false;
-    }
     highlights[col] = boolean;
 }
 
@@ -238,42 +233,41 @@ sf::ConvexShape Grass::getShape() {
     sf::Color currentFill = fill;
     sf::Color currentOut = out;
 
-    int highIndex = -1;
+    int largestHighIndex = -1;
     int arrSize = sizeof(highlights) / sizeof(highlights[0]);
     for (int i = 0; i < arrSize; i++) {
         if (highlights[i]) {
-            highIndex = i;
-            break;
+            largestHighIndex = i;
         }
     }
 
     if (isStart()) {
-        if (highIndex == -1)
+        if (largestHighIndex == -1)
         {
             currentFill = startColor;
         }
         else
         {
-            currentFill = startHigh[highIndex];
-            currentOut = highOut[highIndex];
+            currentFill = startHigh[largestHighIndex];
+            currentOut = highOut[largestHighIndex];
         }     
     }
     else if (isBase())
     {
-        if (highIndex == -1)
+        if (largestHighIndex == -1)
         {
             currentFill = base;
         }
         else
         {
-            currentFill = baseHigh[highIndex];
-            currentOut = highOut[highIndex];
+            currentFill = baseHigh[largestHighIndex];
+            currentOut = highOut[largestHighIndex];
         }
     }
-    else if (highIndex != -1)
+    else if (largestHighIndex != -1)
     {
-        currentFill = highFill[highIndex];
-        currentOut = highOut[highIndex];
+        currentFill = highFill[largestHighIndex];
+        currentOut = highOut[largestHighIndex];
     }
     setColour(currentFill, currentOut);
     return shape;

@@ -29,7 +29,7 @@ public:
     int getHP() const;
     SpaceInventory getSpace() const;
     int getEquipmentCount() const;
-    Equipment* getEquipment(int index) const;
+    std::vector<Equipment*> getEquipment() const;
     int getPrice() const;
     sf::Sprite getSprite();
     std::tuple<int, int, int> getHexCoords() const;
