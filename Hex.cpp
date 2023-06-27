@@ -200,6 +200,11 @@ int Hex::getPawnDist() const
 
 void Hex::setHighlight(bool boolean, int col)
 {
+    int arrSize = sizeof(highlights) / sizeof(highlights[0]);
+    for (int i = 0; i < arrSize; i++)
+    {
+        highlights[i] = false;
+    }
     highlights[col] = boolean;
 }
 
@@ -232,56 +237,43 @@ Grass::Grass(std::tuple<int, int, int> inCoords, float inxPos, float inyPos)
 sf::ConvexShape Grass::getShape() {
     sf::Color currentFill = fill;
     sf::Color currentOut = out;
+
+    int highIndex = -1;
+    int arrSize = sizeof(highlights) / sizeof(highlights[0]);
+    for (int i = 0; i < arrSize; i++) {
+        if (highlights[i]) {
+            highIndex = i;
+            break;
+        }
+    }
+
     if (isStart()) {
-        if (isHigh(0) && isHigh(1))
+        if (highIndex == -1)
         {
-            currentFill = startHigh[2];
-            currentOut = highOut[2];
-        }
-        else if (isHigh(0)) {
-            currentFill = startHigh[0];
-            currentOut = highOut[0];
-        }
-        else if (isHigh(1))
-        {
-            currentFill = startHigh[1];
-            currentOut = highOut[1];
+            currentFill = startColor;
         }
         else
-            currentFill = startColor;
+        {
+            currentFill = startHigh[highIndex];
+            currentOut = highOut[highIndex];
+        }     
     }
     else if (isBase())
     {
-        if (isHigh(0) && isHigh(1))
+        if (highIndex == -1)
         {
-            currentFill = baseHigh[2];
-            currentOut = highOut[2];
-        }
-        else if (isHigh(0)) {
-            currentFill = baseHigh[0];
-            currentOut = highOut[0];
-        }
-        else if (isHigh(1))
-        {
-            currentFill = baseHigh[1];
-            currentOut = highOut[1];
+            currentFill = base;
         }
         else
-            currentFill = base;
+        {
+            currentFill = baseHigh[highIndex];
+            currentOut = highOut[highIndex];
+        }
     }
-    else if (isHigh(0) && isHigh(1))
+    else if (highIndex != -1)
     {
-        currentFill = highFill[2];
-        currentOut = highOut[2];
-    }
-    else if (isHigh(0)) {
-        currentFill = highFill[0];
-        currentOut = highOut[0];
-    }
-    else if (isHigh(1))
-    {
-        currentFill = highFill[1];
-        currentOut = highOut[1];
+        currentFill = highFill[highIndex];
+        currentOut = highOut[highIndex];
     }
     setColour(currentFill, currentOut);
     return shape;

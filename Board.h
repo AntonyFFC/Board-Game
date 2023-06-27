@@ -25,7 +25,8 @@ public:
 	void drawBoard(sf::RenderTarget& target, bool isShift);
 	void handleClick(sf::Vector2i mousePosition);
 	void addPawn(Pawn* inPawn, std::tuple<int, int, int> coords);
-	void handleShift(bool isShift);
+	void handleShiftOn();
+	void handleShiftOff();
 private:
 	void deleteHexagons();
 	void setStart();
@@ -44,8 +45,9 @@ private:
 	float horizSpacing;
 	float xOffset;
 	float yOffset;
+	bool wasShift = false;
 	std::vector<std::vector< std::tuple<int, int, int>>> highlighted;
 	std::tuple<int, int, int> previous;
 	std::tuple<int, int, int> empty = { -9, -9, -9 };
-	std::vector<Pawn*> pawnDict;
+	std::map<std::tuple<int, int, int>, Pawn*> pawnDict;
 };

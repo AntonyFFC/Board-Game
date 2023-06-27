@@ -413,7 +413,7 @@ void Board::pawnMoved(std::tuple<int, int, int> previous, std::tuple<int, int, i
 
 void Board::attack(std::tuple<int, int, int> previous, std::tuple<int, int, int> current)
 {
-        hexDict[current]->pawn->reduceHP(1);
+        pawnDict[current]->reduceHP(1);
 }
 
 void Board::clearHighlight()
@@ -427,29 +427,41 @@ void Board::clearHighlight()
 
 void Board::addPawn(Pawn* inPawn, std::tuple<int, int, int> coords)
 {
-    pawnDict.push_back(inPawn);
+    pawnDict[coords] = inPawn;
     hexDict[coords]->setPawn(true, inPawn);
 }
 
-void Board::handleShift(bool isShift)
+void Board::handleShiftOn()
 {
-    if (!isShift)
+    if (!wasShift)
     {
-        for (std::tuple<int, int, int> hex : highlighted[1])
+        for (auto& pair : pawnDict)
         {
-            hexDict[hex]->setHighlight(false, 1);
+            std::tuple<int, int, int> coords = pair.second->getHexCoords();
+            std::vector<std::tuple<int, int, int>> inView = getInView(coords, 2, 0);
+            highlighted[1].insert(highlighted[1].end(), inView.begin(), inView.end());
         }
-        highlighted[1].clear();
-        return;
-    }
-    for (Pawn* pawn : pawnDict)
-    {
-        std::tuple<int, int, int> coords = pawn->getHexCoords();
-        std::vector<std::tuple<int, int, int>> inView = getInView(coords, 2, 0);
-        highlighted[1].insert(highlighted[1].end(), inView.begin(), inView.end());
+
         for (std::tuple<int, int, int> hex : highlighted[1])
         {
+            if (hexDict[hex]->isHigh(1))
+            {
+                hexDict[hex]->setHighlight(true, 2);
+                continue;
+            }
             hexDict[hex]->setHighlight(true, 1);
         }
     }
+    wasShift = true;
+}
+
+void Board::handleShiftOff()
+{
+    for (std::tuple<int, int, int> hex : highlighted[1])
+    {
+        hexDict[hex]->setHighlight(false, 1);
+        hexDict[hex]->setHighlight(false, 2);
+    }
+    highlighted[1].clear();
+    wasShift = false;
 }

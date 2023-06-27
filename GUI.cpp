@@ -42,11 +42,11 @@ void Gui::start() {
 void Gui::keyPressed(const sf::Event& event) {
     if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::LShift) {
         isShiftKeyPressed = true;
-        grid->handleShift(isShiftKeyPressed);
+        grid->handleShiftOn();
     }
     else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::LShift) {
         isShiftKeyPressed = false;
-        grid->handleShift(isShiftKeyPressed);
+        grid->handleShiftOff();
     }
     else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
         sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
