@@ -9,6 +9,7 @@
 #include "Pawn.h"
 #include <tuple>
 #include <cmath>
+#include "Pawns.h"
 
 class Gui {
 public:
@@ -22,6 +23,7 @@ private:
     int screenHeight;
     sf::RenderWindow* window;
     Board* grid;
+    Pawns* pawns;
     Pawn* p1;
     Pawn* p2;
     Equipment* e1;

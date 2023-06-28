@@ -1,6 +1,4 @@
 #include "Board.h"
-#include "Hex.h"
-#include <SFML/Graphics.hpp>
 #include <random>
 //#include <iostream>
 
@@ -88,7 +86,6 @@ Board::Board(int Rows, int Columns, float HSize)
     highlighted.push_back(std::vector<std::tuple<int, int, int>>());
 
     boardPreperation();
-    previous = empty;
 }
 
 Board::~Board()
@@ -344,138 +341,6 @@ void Board::boardPreperation()
     setBases();
 }
 
-void Board::handleClick(sf::Vector2i mousePosition)
-{
-    for (auto& pair : hexDict) {
-        std::tuple<int, int, int> present = pair.first;
-
-        if (hexDict[present]->isClicked(mousePosition)) {
-            if (!hexDict[present]->isPawn() && !hexDict[present]->isHigh(0))
-            {
-                clearHighlight();
-                previous = empty;
-                break;
-            }
-
-            if (hexDict[present]->isPawn())
-            {
-                if (previous != empty) //this checks if this the second click of a player
-                {
-                    std::vector<std::tuple<int, int, int>> inView = getViewOfPawn(previous);
-                    auto it = std::find(inView.begin(), inView.end(), present);
-                    if (it != inView.end())
-                    {
-                        attack(previous, present);
-                        clearHighlight();
-                        if (pawnDict[previous]->getRemainingActions() == pawnDict[previous]->getMaxActions())
-                        {
-                            previous = empty;
-                        }
-                        else
-                        {
-                            pawnClicked(previous);
-                        }
-                    }
-                }
-                else //this occurs when it is the first click of the player
-                {
-                    pawnClicked(present);
-                    previous = present;
-                }
-            }
-            else if (hexDict[present]->isHigh(0))
-            {
-                pawnMoved(previous, present);
-                clearHighlight();
-                if (pawnDict[present]->getRemainingActions() == pawnDict[present]->getMaxActions())
-                {
-                    previous = empty;
-                }
-                else
-                {
-                    pawnClicked(present);
-                    previous = present;
-                }
-            }
-            break;
-        }
-    }
-}
-
-void Board::pawnClicked(std::tuple<int, int, int> current)
-{
-    highlighted[0] = getReachable(current, hexDict[current]->pawn->getRemainingActions());
-    for (std::tuple<int, int, int> hex : highlighted[0])
-    {
-        hexDict[hex]->setHighlight(true, 0);
-    }
-}
-
-void Board::pawnMoved(std::tuple<int, int, int> previous, std::tuple<int, int, int> current)
-{
-    hexDict[previous]->setPawn(false);
-    pawnDict[previous]->reduceActions(hexDict[current]->getPawnDist());
-    if (pawnDict[previous]->getRemainingActions() == 0)
-    {
-        pawnDict[previous]->setRemainingActions(pawnDict[previous]->getMaxActions());
-    }
-    hexDict[current]->setPawn(true, pawnDict[previous]);
-    pawnDict[current] = pawnDict[previous];
-    pawnDict.erase(previous);
-}
-
-void Board::attack(std::tuple<int, int, int> previous, std::tuple<int, int, int> current)
-{
-        Pawn* attacker = pawnDict[previous];
-        Equipment* weapon = nullptr;
-        for (Equipment* item : attacker->getEquipment())
-        {
-            if (item->getType() == "Weapon")
-            {
-                weapon = item;
-            }
-        }
-        if (weapon != nullptr)
-        {
-            pawnDict[current]->reduceHP(weapon->getAttackValue());
-            attacker->reduceActions(weapon->getAttackActions());
-            if (attacker->getRemainingActions() == 0)
-            {
-                attacker->setRemainingActions(attacker->getMaxActions());
-            }
-        }
-        else {
-            throw std::runtime_error("No weapon to attack with");
-        }
-}
-
-std::vector<std::tuple<int, int, int>> Board::getViewOfWeapon(std::tuple<int, int, int> coords, Equipment* weapon)
-{
-    int range = weapon->getRange();
-    return getInView(coords, range, 0);
-}
-
-std::vector<std::tuple<int, int, int>> Board::getViewOfPawn(std::tuple<int, int, int> coords)
-{
-    Pawn* pawn = pawnDict[coords];
-    Equipment* weapon = nullptr;
-    int range = 0;
-    std::vector<std::tuple<int, int, int>> inView;
-    for (Equipment* item : pawn->getEquipment())
-    {
-        if (item->getType() == "Weapon" && item->getRange()>range)
-        {
-            weapon = item;
-            range = item->getRange();
-        }
-    }
-    if (weapon != nullptr)
-    {
-        inView = getViewOfWeapon(coords, weapon);
-    }
-    return inView;
-}
-
 void Board::clearHighlight()
 {
     for (std::tuple<int, int, int> hex : highlighted[0])
@@ -483,44 +348,4 @@ void Board::clearHighlight()
         hexDict[hex]->setHighlight(false, 0);
     }
     highlighted[0].clear();
-}
-
-void Board::addPawn(Pawn* inPawn, std::tuple<int, int, int> coords)
-{
-    pawnDict[coords] = inPawn;
-    hexDict[coords]->setPawn(true, inPawn);
-}
-
-void Board::handleShiftOn()
-{
-    if (!wasShift)
-    {
-        for (auto& pair : pawnDict)
-        {
-            std::vector<std::tuple<int, int, int>> inView = getViewOfPawn(pair.first);
-            highlighted[1].insert(highlighted[1].end(), inView.begin(), inView.end());
-        }
-
-        for (std::tuple<int, int, int> hex : highlighted[1])
-        {
-            if (hexDict[hex]->isHigh(1) || hexDict[hex]->isHigh(0))
-            {
-                hexDict[hex]->setHighlight(true, 2);
-                continue;
-            }
-            hexDict[hex]->setHighlight(true, 1);
-        }
-    }
-    wasShift = true;
-}
-
-void Board::handleShiftOff()
-{
-    for (std::tuple<int, int, int> hex : highlighted[1])
-    {
-        hexDict[hex]->setHighlight(false, 1);
-        hexDict[hex]->setHighlight(false, 2);
-    }
-    highlighted[1].clear();
-    wasShift = false;
 }
