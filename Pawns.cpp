@@ -5,6 +5,21 @@ Pawns::Pawns(Board* board)
 {
     previous = empty;
     wasShift = false;
+    whosTurn = 0;
+    setupText();
+}
+
+void Pawns::flipTurn()
+{
+    if (whosTurn)
+    {
+        whosTurn =  0;
+    }
+    else
+    {
+        whosTurn = 1;
+    }
+    setupText();
 }
 
 void Pawns::handleClick(sf::Vector2i mousePosition)
@@ -22,7 +37,7 @@ void Pawns::handleClick(sf::Vector2i mousePosition)
 
             if (board->hexDict[present]->isPawn())
             {
-                if (previous != empty) //this checks if this the second click of a player
+                if (previous != empty) //this checks if this is not the first click of a player
                 {
                     std::vector<std::tuple<int, int, int>> inView = getViewOfPawn(previous);
                     auto it = std::find(inView.begin(), inView.end(), present);
@@ -33,6 +48,7 @@ void Pawns::handleClick(sf::Vector2i mousePosition)
                         if (pawnDict[previous]->getRemainingActions() == pawnDict[previous]->getMaxActions())
                         {
                             previous = empty;
+                            flipTurn();
                         }
                         else
                         {
@@ -42,8 +58,16 @@ void Pawns::handleClick(sf::Vector2i mousePosition)
                 }
                 else //this occurs when it is the first click of the player
                 {
-                    pawnClicked(present);
-                    previous = present;
+                    if (whosTurn == pawnDict[present]->getSide())
+                    {
+                        pawnClicked(present);
+                        previous = present;
+                    }
+                    else {
+                        board->clearHighlight();
+                        previous = empty;
+                        break;
+                    }
                 }
             }
             else if (board->hexDict[present]->isHigh(0))
@@ -53,6 +77,7 @@ void Pawns::handleClick(sf::Vector2i mousePosition)
                 if (pawnDict[present]->getRemainingActions() == pawnDict[present]->getMaxActions())
                 {
                     previous = empty;
+                    flipTurn();
                 }
                 else
                 {
@@ -108,6 +133,11 @@ void Pawns::handleShiftOff()
 bool Pawns::addItemToPawn(std::tuple<int, int, int> coords, Equipment* item)
 {
     return pawnDict[coords]->addEquipment(item);
+}
+
+void Pawns::drawTurn(sf::RenderTarget& target)
+{
+    target.draw(turnText);
 }
 
 void Pawns::pawnClicked(std::tuple<int, int, int> current)
@@ -190,4 +220,22 @@ std::vector<std::tuple<int, int, int>> Pawns::getRangeOfPawn(std::tuple<int, int
     std::vector<std::tuple<int, int, int>> inRange;
     inRange = board->getReachable(coords, pawn->getRemainingActions());
     return inRange;
+}
+
+void Pawns::setupText()
+{
+    int size = 30;
+    turnText.setFont(globalFont2);
+    turnText.setCharacterSize(size);
+    turnText.setPosition(10,10);
+    if (whosTurn)
+    {
+        turnText.setFillColor(sf::Color::Blue);
+        turnText.setString("Turn: Blue");
+    }
+    else
+    {
+        turnText.setFillColor(sf::Color::Red);
+        turnText.setString("Turn: Red");
+    }
 }

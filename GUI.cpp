@@ -30,6 +30,7 @@ void Gui::start() {
 
         window->clear();
         grid->drawBoard(*window, isShiftKeyPressed);
+        pawns->drawTurn(*window);
         window->display();
 
         sf::Event event;

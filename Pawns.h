@@ -30,6 +30,7 @@ public:
 		addItemToPawn(coords, std::forward<Args>(rest)...); //reccursion
 		return done;
 	}
+	void drawTurn(sf::RenderTarget& target);
 
 private:
 	void pawnClicked(std::tuple<int, int, int> current);
@@ -38,11 +39,15 @@ private:
 	std::vector<std::tuple<int, int, int>> getViewOfWeapon(std::tuple<int, int, int> current, Equipment* weapon);
 	std::vector<std::tuple<int, int, int>> getViewOfPawn(std::tuple<int, int, int> current);
 	std::vector<std::tuple<int, int, int>> getRangeOfPawn(std::tuple<int, int, int> current);
+	void setupText();
+	void flipTurn();
 
 	Board* board;
 	std::tuple<int, int, int> previous;
 	bool wasShift;
 	std::tuple<int, int, int> empty = { -9, -9, -9 };
 	std::map<std::tuple<int, int, int>, Pawn*> pawnDict;
+	int whosTurn;
+	sf::Text turnText;
 };
 
