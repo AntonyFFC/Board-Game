@@ -6,6 +6,7 @@ Pawns::Pawns(Board* board)
     previous = empty;
     wasShift = false;
     whosTurn = 0;
+    whichPawn = 0;
     setupText();
 }
 
@@ -22,11 +23,23 @@ void Pawns::flipTurn()
     setupText();
 }
 
+int Pawns::numberOfPawn(std::tuple<int, int, int> coords)
+{
+    int keyValue = -1;
+    Pawn* targetObject = board->hexDict[coords]->pawn;
+
+    for (const Pawn* pawn : pawnDict) {
+        keyValue++;
+        if (pawn == targetObject) {
+            return keyValue;
+        }
+    }
+}
+
 void Pawns::handleClick(sf::Vector2i mousePosition)
 {
     for (auto& pair : board->hexDict) {
         std::tuple<int, int, int> present = pair.first;
-
         if (board->hexDict[present]->isClicked(mousePosition)) {
             if (!board->hexDict[present]->isPawn() && !board->hexDict[present]->isHigh(0))
             {
@@ -39,28 +52,29 @@ void Pawns::handleClick(sf::Vector2i mousePosition)
             {
                 if (previous != empty) //this checks if this is not the first click of a player
                 {
-                    std::vector<std::tuple<int, int, int>> inView = getViewOfPawn(previous);
+                    std::vector<std::tuple<int, int, int>> inView = getViewOfPawn(whichPawn);
                     auto it = std::find(inView.begin(), inView.end(), present);
                     if (it != inView.end())
                     {
-                        attack(previous, present);
+                        attack(whichPawn, numberOfPawn(present));
                         board->clearHighlight();
-                        if (pawnDict[previous]->getRemainingActions() == pawnDict[previous]->getMaxActions())
+                        if (pawnDict[whichPawn]->getRemainingActions() == pawnDict[whichPawn]->getMaxActions())
                         {
                             previous = empty;
                             flipTurn();
                         }
                         else
                         {
-                            pawnClicked(previous);
+                            pawnClicked(whichPawn);
                         }
                     }
                 }
                 else //this occurs when it is the first click of the player
                 {
-                    if (whosTurn == pawnDict[present]->getSide())
+                    if (whosTurn == board->hexDict[present]->pawn->getSide())
                     {
-                        pawnClicked(present);
+                        whichPawn = numberOfPawn(present);
+                        pawnClicked(whichPawn);
                         previous = present;
                     }
                     else {
@@ -72,16 +86,16 @@ void Pawns::handleClick(sf::Vector2i mousePosition)
             }
             else if (board->hexDict[present]->isHigh(0))
             {
-                pawnMoved(previous, present);
+                pawnMoved(whichPawn, present);
                 board->clearHighlight();
-                if (pawnDict[present]->getRemainingActions() == pawnDict[present]->getMaxActions())
+                if (pawnDict[whichPawn]->getRemainingActions() == pawnDict[whichPawn]->getMaxActions())
                 {
                     previous = empty;
                     flipTurn();
                 }
                 else
                 {
-                    pawnClicked(present);
+                    pawnClicked(whichPawn);
                     previous = present;
                 }
             }
@@ -90,9 +104,36 @@ void Pawns::handleClick(sf::Vector2i mousePosition)
     }
 }
 
+void Pawns::handleClickRight(sf::Vector2i mousePosition)
+{
+    std::tuple<int, int, int> pawnCoords = pawnDict[whichPawn]->getHexCoords();
+    for (const std::tuple<int, int, int> coords : board->getNeighbours(pawnCoords)) {
+        if (board->hexDict[coords]->isClicked(mousePosition)) {
+            placeWall(whichPawn,coords);
+        }
+    }
+}
+
+void Pawns::placeWall(int pawnNumber, std::tuple<int, int, int> coords)
+{
+    board->clearHighlight();
+    pawnDict[pawnNumber]->reduceActions(1);
+    board->setWall(coords);
+    if (pawnDict[pawnNumber]->getRemainingActions() == 0)
+    {
+        pawnDict[pawnNumber]->setRemainingActions(pawnDict[pawnNumber]->getMaxActions());
+        previous = empty;
+        flipTurn();
+    }
+    else
+    {
+        pawnClicked(pawnNumber);
+    }
+}
+
 void Pawns::addPawn(Pawn* inPawn, std::tuple<int, int, int> coords)
 {
-    pawnDict[coords] = inPawn;
+    pawnDict.push_back(inPawn);
     board->hexDict[coords]->setPawn(true, inPawn);
 }
 
@@ -100,9 +141,9 @@ void Pawns::handleShiftOn()
 {
     if (!wasShift)
     {
-        for (auto& pair : pawnDict)
+        for (int i = 0; i<pawnDict.size(); i++)
         {
-            std::vector<std::tuple<int, int, int>> inView = getViewOfPawn(pair.first);
+            std::vector<std::tuple<int, int, int>> inView = getViewOfPawn(i);
             board->highlighted[1].insert(board->highlighted[1].end(), inView.begin(), inView.end());
         }
 
@@ -130,9 +171,9 @@ void Pawns::handleShiftOff()
     wasShift = false;
 }
 
-bool Pawns::addItemToPawn(std::tuple<int, int, int> coords, Equipment* item)
+bool Pawns::addItemToPawn(int number, Equipment* item)
 {
-    return pawnDict[coords]->addEquipment(item);
+    return pawnDict[number]->addEquipment(item);
 }
 
 void Pawns::drawTurn(sf::RenderTarget& target)
@@ -140,31 +181,30 @@ void Pawns::drawTurn(sf::RenderTarget& target)
     target.draw(turnText);
 }
 
-void Pawns::pawnClicked(std::tuple<int, int, int> current)
+void Pawns::pawnClicked(int pawnNum)
 {
-    board->highlighted[0] = getRangeOfPawn(current);
+    board->highlighted[0] = getRangeOfPawn(pawnNum);
     for (std::tuple<int, int, int> hex : board->highlighted[0])
     {
         board->hexDict[hex]->setHighlight(true, 0);
     }
 }
 
-void Pawns::pawnMoved(std::tuple<int, int, int> previous, std::tuple<int, int, int> current)
+void Pawns::pawnMoved(int pawnNum, std::tuple<int, int, int> where)
 {
-    board->hexDict[previous]->setPawn(false);
-    pawnDict[previous]->reduceActions(board->hexDict[current]->getPawnDist());
-    if (pawnDict[previous]->getRemainingActions() == 0)
+    Pawn* pawn = pawnDict[pawnNum];
+    pawn->reduceActions(board->hexDict[where]->getPawnDist());
+    if (pawn->getRemainingActions() == 0)
     {
-        pawnDict[previous]->setRemainingActions(pawnDict[previous]->getMaxActions());
+        pawn->setRemainingActions(pawn->getMaxActions());
     }
-    board->hexDict[current]->setPawn(true, pawnDict[previous]);
-    pawnDict[current] = pawnDict[previous];
-    pawnDict.erase(previous);
+    board->hexDict[previous]->setPawn(false);
+    board->hexDict[where]->setPawn(true, pawn);
 }
 
-void Pawns::attack(std::tuple<int, int, int> previous, std::tuple<int, int, int> current)
+void Pawns::attack(int pawnNum, int attackedNum)
 {
-    Pawn* attacker = pawnDict[previous];
+    Pawn* attacker = pawnDict[pawnNum];
     Equipment* weapon = nullptr;
     for (Equipment* item : attacker->getEquipment())
     {
@@ -175,7 +215,7 @@ void Pawns::attack(std::tuple<int, int, int> previous, std::tuple<int, int, int>
     }
     if (weapon != nullptr)
     {
-        pawnDict[current]->reduceHP(weapon->getAttackValue());
+        pawnDict[attackedNum]->reduceHP(weapon->getAttackValue());
         attacker->reduceActions(weapon->getAttackActions());
         if (attacker->getRemainingActions() == 0)
         {
@@ -187,15 +227,16 @@ void Pawns::attack(std::tuple<int, int, int> previous, std::tuple<int, int, int>
     }
 }
 
-std::vector<std::tuple<int, int, int>> Pawns::getViewOfWeapon(std::tuple<int, int, int> coords, Equipment* weapon)
+std::vector<std::tuple<int, int, int>> Pawns::getViewOfWeapon(int pawnNum, Equipment* weapon)
 {
+    Pawn* pawn = pawnDict[pawnNum];
     int range = weapon->getRange();
-    return board->getInView(coords, range, 0);
+    return board->getInView(pawn->getHexCoords(), range, 0);
 }
 
-std::vector<std::tuple<int, int, int>> Pawns::getViewOfPawn(std::tuple<int, int, int> coords)
+std::vector<std::tuple<int, int, int>> Pawns::getViewOfPawn(int pawnNum)
 {
-    Pawn* pawn = pawnDict[coords];
+    Pawn* pawn = pawnDict[pawnNum];
     Equipment* weapon = nullptr;
     int range = 0;
     std::vector<std::tuple<int, int, int>> inView;
@@ -209,16 +250,16 @@ std::vector<std::tuple<int, int, int>> Pawns::getViewOfPawn(std::tuple<int, int,
     }
     if (weapon != nullptr)
     {
-        inView = getViewOfWeapon(coords, weapon);
+        inView = getViewOfWeapon(pawnNum, weapon);
     }
     return inView;
 }
 
-std::vector<std::tuple<int, int, int>> Pawns::getRangeOfPawn(std::tuple<int, int, int> coords)
+std::vector<std::tuple<int, int, int>> Pawns::getRangeOfPawn(int pawnNum)
 {
-    Pawn* pawn = pawnDict[coords];
+    Pawn* pawn = pawnDict[pawnNum];
     std::vector<std::tuple<int, int, int>> inRange;
-    inRange = board->getReachable(coords, pawn->getRemainingActions());
+    inRange = board->getReachable(pawn->getHexCoords(), pawn->getRemainingActions());
     return inRange;
 }
 

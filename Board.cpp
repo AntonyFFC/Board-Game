@@ -349,3 +349,8 @@ void Board::clearHighlight()
     }
     highlighted[0].clear();
 }
+
+void Board::setWall(std::tuple<int, int, int> coords)
+{
+    hexDict[coords] = new Wall(coords);
+}

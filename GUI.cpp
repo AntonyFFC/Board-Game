@@ -24,7 +24,7 @@ Gui::~Gui()
 void Gui::start() {
     pawns->addPawn(p1, { -7, 5, 2 });
     pawns->addPawn(p2, { 9, -6, -3 });
-    pawns->addItemToPawn({ -7, 5, 2 }, e1, e2, e3);
+    pawns->addItemToPawn(0, e1, e2, e3);
     while (window->isOpen())
     {
 
@@ -52,6 +52,10 @@ void Gui::keyPressed(const sf::Event& event) {
     else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
         sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
         pawns->handleClick(mousePosition);
+    }
+    else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right) {
+        sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
+        pawns->handleClickRight(mousePosition);
     }
     if (event.type == sf::Event::Closed)
     {

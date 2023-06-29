@@ -14,20 +14,22 @@ public:
 	std::map<std::tuple<int, int, int>, Hex*> hexDict; // stores al of the hexes in the dictionary with the coordinates as the index
 	std::map<std::tuple<int, int, int>, std::vector<std::tuple<int, int, int>>> hexNeighboursDict; // stores all neighbours of each hex
 
+	void drawBoard(sf::RenderTarget& target, bool isShift);
+private:
 	std::vector < std::tuple<int, int, int>> getNeighbours(std::tuple<int, int, int> hexCoordinates);
 	std::vector < std::tuple<int, int, int>> getInRange(std::tuple<int, int, int> hexCoordinates, int dist = 1, int minDistance = 1);
 	std::vector < std::tuple<int, int, int>> getReachable(std::tuple<int, int, int> start, int movement = 5);
 	std::vector < std::tuple<int, int, int>> linedraw(std::tuple<int, int, int> a, std::tuple<int, int, int> b);
-	std::vector < std::tuple<int, int, int>> getInView(std::tuple<int, int, int> start, int dist=1, int minDist=1);
+	std::vector < std::tuple<int, int, int>> getInView(std::tuple<int, int, int> start, int dist = 1, int minDist = 1);
 
-	void drawBoard(sf::RenderTarget& target, bool isShift);
-private:
 	void deleteHexagons();
 	void setStart();
 	void setRocks();
 	void setBases();
 	void boardPreperation();
 	void clearHighlight();
+	void setWall(std::tuple<int, int, int> coords);
+
 	int numRows;
 	int numCols;
 	float hexSize;
