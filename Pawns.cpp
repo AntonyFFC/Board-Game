@@ -41,12 +41,12 @@ void Pawns::handleClick(sf::Vector2i mousePosition)
     for (auto& pair : board->hexDict) {
         std::tuple<int, int, int> present = pair.first;
         if (board->hexDict[present]->isClicked(mousePosition)) {
-            if (!board->hexDict[present]->isPawn() && !board->hexDict[present]->isHigh(0))
+            if ((!board->hexDict[present]->isPawn()|| !board->hexDict[present]->pawn->isAlive()) && !board->hexDict[present]->isHigh(0))
             {
                 board->clearHighlight();
                 previous = empty;
             }
-            else if (board->hexDict[present]->isPawn())
+            else if (board->hexDict[present]->isPawn() && board->hexDict[present]->pawn->isAlive())
             {
                 if (previous != empty) //this checks if this is not the first click of a player
                 {

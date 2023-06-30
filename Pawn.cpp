@@ -238,7 +238,14 @@ void Pawn::changePos(float x, float y) {
 
 void Pawn::dead()
 {
-
+    if (side == 0)
+    {
+        combinedSprite->setTexture(*spriteMap["dead red"].getTexture());
+    }
+    else
+    {
+        combinedSprite->setTexture(*spriteMap["dead blue"].getTexture());
+    }
 }
 
 void Pawn::draw(sf::RenderTarget& target, bool isShift)
