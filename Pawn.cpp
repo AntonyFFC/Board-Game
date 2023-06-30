@@ -1,5 +1,7 @@
 ﻿#include "Pawn.h"
 #include "Equipment.h"
+#include <random>
+#include <iostream>
 
 Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions, int healthPoints, SpaceInventory space, int price, float xPos, float yPos)
     : name(name), teamNumber(teamNumber), side(side),maxActions(maxActions), remainingActions(maxActions), HP(healthPoints), space(space), price(price), xPos(xPos), yPos(yPos), combinedSprite(), equipment()
@@ -280,6 +282,106 @@ void Pawn::drawStats(sf::RenderTarget& target)
         attributesText.setString(hpString);
         target.draw(attributesText);
     }
+}
+
+void Pawn::attack(int value)
+{
+    std::vector<bool> armours = whatArmour();
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dis(1, 6);
+    int randomNumber = dis(gen);
+    if (randomNumber == 1 && armours[2])
+    {
+        std::cout << "covering used\n";
+        useArmour("Covering", armours, value);
+    }
+    else if (randomNumber > 1 && randomNumber <= 4 && armours[0])
+    {
+        std::cout << "shield hit\n";
+        useArmour("Shield", armours, value);
+    }
+    else if (randomNumber <= 6 && randomNumber >= 5 && armours[1])
+    {
+        std::cout << "helmet hit\n";
+        useArmour("helmet", armours, value);
+    }
+    else if (armours[2])
+    {
+        std::cout << "covering used\n";
+        useArmour("Covering", armours, value);
+    }
+    else
+    {
+        std::cout << "person hit\n";
+        reduceHP(value);
+    }
+}
+
+std::vector<bool> Pawn::whatArmour()
+{
+    int size = 3;
+    std::vector<bool> types(size, false);
+    for (Equipment* item : getEquipment())
+    {
+        if (item->getType() == "Armour")
+        {
+            if (item->getAdditionalCapabilities() == "Shield")
+            {
+                types[0] = true;
+            }
+            else if (item->getAdditionalCapabilities() == "Helmet")
+            {
+                types[1] = true;
+            }
+            else
+            {
+                types[2] = true;
+            }
+        }
+    }
+    return types;
+}
+
+void Pawn::useArmour(const std::string& type, std::vector<bool>& armours, int value)
+{
+    Equipment* armour = findArmour(type);
+    int rest = armour->reduceDurability(value);
+    if (armour->getAttackValue() <= 0)
+    {
+        auto iter = std::find(equipment.begin(), equipment.end(), armour);
+        removeEquipment(std::distance(equipment.begin(), iter));
+        if (armours[2] && type != "Covering")
+        {
+            Equipment* covering = findArmour("Covering");
+            int rest2 = covering->reduceDurability(rest);
+            if (covering->getAttackValue() <= 0)
+            {
+                auto iter = std::find(equipment.begin(), equipment.end(), covering);
+                removeEquipment(std::distance(equipment.begin(), iter));
+                reduceHP(rest2);
+            }
+        }
+        else
+        {
+            reduceHP(rest);
+        }
+    }
+}
+
+Equipment* Pawn::findArmour(const std::string& type)
+{
+    for (Equipment* item : getEquipment())
+    {
+        if (item->getType() == "Armour")
+        {
+            if (item->getAdditionalCapabilities() == type)
+            {
+                return item;
+            }
+        }
+    }
+    throw std::runtime_error("Now such armour");
 }
 
 const std::map<std::string, int> Pawn::order = {

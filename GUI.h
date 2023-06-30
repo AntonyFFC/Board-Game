@@ -29,5 +29,6 @@ private:
     Equipment* e1;
     Equipment* e2;
     Equipment* e3;
+    Equipment* e4;
     bool isShiftKeyPressed = false;
 };

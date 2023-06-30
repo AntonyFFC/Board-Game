@@ -250,7 +250,7 @@ void Pawns::attack(int pawnNum, int attackedNum)
     }
     if (weapon != nullptr)
     {
-        pawnDict[attackedNum]->reduceHP(weapon->getAttackValue());
+        pawnDict[attackedNum]->attack(weapon->getAttackValue());
         attacker->reduceActions(weapon->getAttackActions());
         if (attacker->getRemainingActions() == 0)
         {

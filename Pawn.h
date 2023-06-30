@@ -56,6 +56,7 @@ public:
     void changePos(float x, float y);
     void dead();
     void draw(sf::RenderTarget& target, bool isShift);
+    void attack(int value);
 
     static const std::map<std::string, int> order;
     static std::map<std::string, sf::Sprite> spriteMap;
@@ -65,6 +66,9 @@ private:
     void createSprite();
     static std::map<std::string, sf::Sprite> initializeSpriteMap();
     void drawStats(sf::RenderTarget& target);
+    std::vector<bool> whatArmour();
+    Equipment* findArmour(const std::string& type);
+    void useArmour(const std::string& type, std::vector<bool>& armours, int value);
 
     std::string name;
     int teamNumber;

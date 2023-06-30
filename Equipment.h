@@ -21,6 +21,7 @@ public:
     std::string getType() const;
     int getPrice() const;
     std::string getAdditionalCapabilities() const;
+    int reduceDurability(int value);
 private:
     std::string name;
     int range;

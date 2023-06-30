@@ -1,4 +1,5 @@
 #include "Equipment.h"
+#include <stdexcept>
 
 Equipment::Equipment(const std::string& name, int range, const SpaceOccupied& spaceOccupied, int attackValue,
     int attackActions,const std::string& type, int price,
@@ -37,4 +38,24 @@ int Equipment::getPrice() const {
 
 std::string Equipment::getAdditionalCapabilities() const {
     return additionalCapabilities;
+}
+
+int Equipment::reduceDurability(int value)
+{
+    if (getType() != "Armour")
+    {
+        throw std::runtime_error("Item is not an armour");
+    }
+    else
+    {
+        int rest = 0;
+        attackValue -= value;
+        if (attackValue < 0)
+        {
+            rest = -attackValue;
+            attackValue = 0;
+        }
+        return rest;
+    }
+
 }
