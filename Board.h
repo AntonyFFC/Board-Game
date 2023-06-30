@@ -29,6 +29,7 @@ private:
 	void boardPreperation();
 	void clearHighlight();
 	void setWall(std::tuple<int, int, int> coords);
+	void setGrass(std::tuple<int, int, int> coords);
 
 	int numRows;
 	int numCols;

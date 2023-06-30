@@ -307,11 +307,11 @@ Wall::Wall(std::tuple<int, int, int> inCoords, float inxPos, float inyPos)
 sf::ConvexShape Wall::getShape() {
     sf::Color currentFill = fill;
     sf::Color currentOut = out;
-    if (isHigh(0) || isHigh(1))
+    if (isHigh(0) || isHigh(1) || isHigh(2))
     {
         currentFill = highFill[0];
         currentOut = highOut[0];
     }
-    setColour(fill, out);
+    setColour(currentFill, currentOut);
     return shape;
 }

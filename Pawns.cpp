@@ -45,10 +45,8 @@ void Pawns::handleClick(sf::Vector2i mousePosition)
             {
                 board->clearHighlight();
                 previous = empty;
-                break;
             }
-
-            if (board->hexDict[present]->isPawn())
+            else if (board->hexDict[present]->isPawn())
             {
                 if (previous != empty) //this checks if this is not the first click of a player
                 {
@@ -84,7 +82,7 @@ void Pawns::handleClick(sf::Vector2i mousePosition)
                     }
                 }
             }
-            else if (board->hexDict[present]->isHigh(0))
+            else //this occurs when the hex is highlighted
             {
                 pawnMoved(whichPawn, present);
                 board->clearHighlight();
@@ -109,7 +107,19 @@ void Pawns::handleClickRight(sf::Vector2i mousePosition)
     std::tuple<int, int, int> pawnCoords = pawnDict[whichPawn]->getHexCoords();
     for (const std::tuple<int, int, int> coords : board->getNeighbours(pawnCoords)) {
         if (board->hexDict[coords]->isClicked(mousePosition)) {
-            placeWall(whichPawn,coords);
+            if (board->hexDict[coords]->isBlocking())
+            {
+                if (!board->hexDict[coords]->isWall() || !destroyWall(whichPawn, coords))
+                {
+                    board->clearHighlight();
+                    previous = empty;
+                }
+            }
+            else
+            {
+                placeWall(whichPawn, coords);
+            }
+            break;
         }
     }
 }
@@ -129,6 +139,31 @@ void Pawns::placeWall(int pawnNumber, std::tuple<int, int, int> coords)
     {
         pawnClicked(pawnNumber);
     }
+}
+
+bool Pawns::destroyWall(int pawnNumber, std::tuple<int, int, int> coords)
+{
+    board->clearHighlight();
+    if (pawnDict[pawnNumber]->getRemainingActions() - 4 < 0)
+    {
+        return false;
+    }
+    else
+    {
+        board->setGrass(coords);
+        pawnDict[pawnNumber]->reduceActions(4);
+        if (pawnDict[pawnNumber]->getRemainingActions() == 0)
+        {
+            pawnDict[pawnNumber]->setRemainingActions(pawnDict[pawnNumber]->getMaxActions());
+            previous = empty;
+            flipTurn();
+        }
+        else
+        {
+            pawnClicked(pawnNumber);
+        }
+    }
+    return true;
 }
 
 void Pawns::addPawn(Pawn* inPawn, std::tuple<int, int, int> coords)

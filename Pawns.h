@@ -44,6 +44,7 @@ private:
 	void flipTurn();
 	int numberOfPawn(std::tuple<int, int, int> coords);
 	void placeWall(int pawnNumber, std::tuple<int, int, int> coords);
+	bool destroyWall(int pawnNumber, std::tuple<int, int, int> coords);
 
 	Board* board;
 	std::tuple<int, int, int> previous;

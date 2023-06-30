@@ -354,3 +354,8 @@ void Board::setWall(std::tuple<int, int, int> coords)
 {
     hexDict[coords] = new Wall(coords);
 }
+
+void Board::setGrass(std::tuple<int, int, int> coords)
+{
+    hexDict[coords] = new Grass(coords);
+}
