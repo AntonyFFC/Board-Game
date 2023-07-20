@@ -8,13 +8,17 @@ public:
         int numSpaces;
         std::string spaceType;
     };
+    struct Range {
+        int minRange;
+        int maxRange;
+    };
 
-    Equipment(const std::string& name, int range, const SpaceOccupied& spaceOccupied, int attackValue,
+    Equipment(const std::string& name, Range range, const SpaceOccupied& spaceOccupied, int attackValue,
         int attackActions,const std::string& type, int price, const std::string& additionalCapabilities);
 
     // getters
     std::string getName() const;
-    int getRange() const;
+    Range getRange() const;
     SpaceOccupied getSpaceOccupied() const;
     int getAttackValue() const;
     int getAttackActions() const;
@@ -24,7 +28,7 @@ public:
     int reduceDurability(int value);
 private:
     std::string name;
-    int range;
+    Range range;
     SpaceOccupied spaceOccupied;
     int attackValue;
     int attackActions;

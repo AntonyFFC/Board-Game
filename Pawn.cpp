@@ -291,6 +291,22 @@ void Pawn::drawStats(sf::RenderTarget& target)
     }
 }
 
+void Pawn::rangedAttack(int value, int missMax) // for example if is 3 then 1,2,3 misses
+{
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dis(1, 6);
+    int randomNumber = dis(gen);
+    if (randomNumber <= missMax)
+    {
+        std::cout << "miss\n";
+    }
+    else
+    {
+        attack(value);
+    }
+}
+
 void Pawn::attack(int value)
 {
     std::vector<bool> armours = whatArmour();

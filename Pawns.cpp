@@ -262,11 +262,27 @@ void Pawns::attack(int pawnNum, int attackedNum)
     }
 }
 
+int getMissValueFromString(const std::string& text)
+{
+    std::istringstream iss(text);
+
+    std::string firstWord;
+    iss >> firstWord;
+
+    if (firstWord == "Ranged") {
+        int secondWordAsInt;
+        if (iss >> secondWordAsInt) {
+            return secondWordAsInt;
+        }
+    }
+    return 0;
+}
+
 std::vector<std::tuple<int, int, int>> Pawns::getViewOfWeapon(int pawnNum, Equipment* weapon)
 {
     Pawn* pawn = pawnDict[pawnNum];
-    int range = weapon->getRange();
-    return board->getInView(pawn->getHexCoords(), range, 0);
+    Equipment::Range range = weapon->getRange();
+    return board->getInView(pawn->getHexCoords(), range.maxRange, range.minRange);
 }
 
 std::vector<std::tuple<int, int, int>> Pawns::getViewOfPawn(int pawnNum)
@@ -277,10 +293,10 @@ std::vector<std::tuple<int, int, int>> Pawns::getViewOfPawn(int pawnNum)
     std::vector<std::tuple<int, int, int>> inView;
     for (Equipment* item : pawn->getEquipment())
     {
-        if (item->getType() == "Weapon" && item->getRange() > range)
+        if (item->getType() == "Weapon" && item->getRange().maxRange > range)
         {
             weapon = item;
-            range = item->getRange();
+            range = item->getRange().maxRange;
         }
     }
     if (weapon != nullptr)

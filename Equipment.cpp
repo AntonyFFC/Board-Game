@@ -1,7 +1,7 @@
 #include "Equipment.h"
 #include <stdexcept>
 
-Equipment::Equipment(const std::string& name, int range, const SpaceOccupied& spaceOccupied, int attackValue,
+Equipment::Equipment(const std::string& name, Range range, const SpaceOccupied& spaceOccupied, int attackValue,
     int attackActions,const std::string& type, int price,
     const std::string& additionalCapabilities)
     : name(name), range(range), spaceOccupied(spaceOccupied), attackValue(attackValue),
@@ -12,7 +12,7 @@ std::string Equipment::getName() const {
     return name;
 }
 
-int Equipment::getRange() const {
+Equipment::Range Equipment::getRange() const {
     return range;
 }
 

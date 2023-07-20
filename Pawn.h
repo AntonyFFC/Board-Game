@@ -57,6 +57,7 @@ public:
     void dead();
     void draw(sf::RenderTarget& target, bool isShift);
     void attack(int value);
+    void rangedAttack(int value, int missMax);
 
     static const std::map<std::string, int> order;
     static std::map<std::string, sf::Sprite> spriteMap;

@@ -9,10 +9,10 @@ Gui::Gui(const int screenWidth, const int screenHeight)
     pawns = new Pawns(grid);
     p1 = new Pawn("Mirmil", 1, 0, 5, 4, { 2,1 }, 7, 510.f, 504.0f);
     p2 = new Pawn("Lucjan", 2, 1, 5, 4, { 2,1 }, 7, 510.f, 504.0f);
-    e1 = new Equipment("sword", 1, { 1, "hands" }, 1, 1, "Weapon", 5, "");
-    e2 = new Equipment("helmet", 1, { 1, "extras" }, 1, 1, "Armour", 5, "Helmet");
-    e3 = new Equipment("plate armour", 1, { 1, "hands" }, 2, 1, "Armour", 5, "Covering");
-    e4 = new Equipment("shield", 1, { 1, "hands" }, 2, 1, "Armour", 5, "Shield");
+    e1 = new Equipment("sword", { 0,1 }, { 1, "hands" }, 1, 1, "Weapon", 5, "");
+    e2 = new Equipment("helmet", { 0,1 }, { 1, "extras" }, 1, 1, "Armour", 5, "Helmet");
+    e3 = new Equipment("plate armour", { 0,1 }, { 1, "hands" }, 2, 1, "Armour", 5, "Covering");
+    e4 = new Equipment("shield", { 0,1 }, { 1, "hands" }, 2, 1, "Armour", 5, "Shield");
 }
 
 Gui::~Gui()

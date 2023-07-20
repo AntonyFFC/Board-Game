@@ -6,6 +6,7 @@
 #include "Pawn.h"
 #include "Board.h"
 #include "Equipment.h"
+#include <sstream>
 class Pawns
 {
 public:
