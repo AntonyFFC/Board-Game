@@ -20,6 +20,7 @@ public:
 	void setGrass(bool boolean);
 	void setStart(bool boolean);
 	void setPawn(bool boolean, Pawn* inPawn = nullptr);
+	void setBody(bool boolean, Pawn* inBody = nullptr);
 	void setBlocking(bool boolean);
 	void setPos(float inx = 0, float iny = 0);
 	void setCoords(int inx = 0, int iny = 0, int inz = 0);
@@ -39,6 +40,7 @@ public:
 	bool isGrass() const;
 	bool isStart() const;
 	bool isPawn() const;
+	bool hasBody() const;
 	bool isBlocking() const;
 	bool isHigh(int col) const;
 	bool isClicked(sf::Vector2i mousePosition) const;
@@ -47,6 +49,7 @@ public:
 	void draw(sf::RenderTarget& target, bool isShift);
 	void setScl(float inS = 0.8);	
 	Pawn* pawn;
+	Pawn* body;
 
 private:
 	sf::ConvexShape initShape() const;
@@ -67,6 +70,7 @@ private:
 	bool isGrass_ = false;
 	bool isStart_ = false;
 	bool isPawn_ = false;
+	bool hasBody_ = false;
 	bool highlights[3];
 	bool isBlocking_ = false;
 	sf::Color fill;

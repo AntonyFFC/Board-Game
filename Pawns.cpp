@@ -241,7 +241,7 @@ void Pawns::attack(int pawnNum, int attackedNum)
 {
     Pawn* attacker = pawnDict[pawnNum];
     Equipment* weapon = nullptr;
-    for (Equipment* item : attacker->getEquipment())
+    for (Equipment* item : attacker->getEquipment()) //change this later for a function for choosing weapon
     {
         if (item->getType() == "Weapon")
         {
@@ -250,13 +250,18 @@ void Pawns::attack(int pawnNum, int attackedNum)
     }
     if (weapon != nullptr)
     {
+        Pawn* attacked = pawnDict[attackedNum];
         if (weapon->isRanged())
         {
-            pawnDict[attackedNum]->rangedAttack(weapon->getAttackValue(), weapon->getMissMax());
+            attacked->rangedAttack(weapon->getAttackValue(), weapon->getMissMax());
         }
         else
         {
-            pawnDict[attackedNum]->attack(weapon->getAttackValue());
+            attacked->attack(weapon->getAttackValue());
+        }
+        if (!attacked->isAlive())
+        {
+            board->hexDict[attacked->getHexCoords()]->setBody(true, attacked);
         }
         attacker->reduceActions(weapon->getAttackActions());
         if (attacker->getRemainingActions() == 0)
@@ -280,19 +285,16 @@ std::vector<std::tuple<int, int, int>> Pawns::getViewOfPawn(int pawnNum)
 {
     Pawn* pawn = pawnDict[pawnNum];
     Equipment* weapon = nullptr;
-    int range = 0;
     std::vector<std::tuple<int, int, int>> inView;
+    std::vector<std::tuple<int, int, int>> inViewWeapon;
     for (Equipment* item : pawn->getEquipment())
     {
-        if (item->getType() == "Weapon" && item->getRange().maxRange > range)
+        if (item->getType() == "Weapon")
         {
             weapon = item;
-            range = item->getRange().maxRange;
+            inViewWeapon = getViewOfWeapon(pawnNum, weapon);
+            inView.insert(inView.end(), inViewWeapon.begin(), inViewWeapon.end());
         }
-    }
-    if (weapon != nullptr)
-    {
-        inView = getViewOfWeapon(pawnNum, weapon);
     }
     return inView;
 }

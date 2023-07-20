@@ -327,7 +327,7 @@ void Pawn::attack(int value)
     else if (randomNumber <= 6 && randomNumber >= 5 && armours[1])
     {
         std::cout << "helmet hit\n";
-        useArmour("helmet", armours, value);
+        useArmour("Helmet", armours, value);
     }
     else if (armours[2])
     {

@@ -16,6 +16,7 @@ Hex::Hex(std::tuple<int, int, int> inCoords, float inxPos, float inyPos)
     xOffset = 30.f;
     yOffset = 20.f;
     setPawn(false);
+    setBody(false);
     startColor = sf::Color(134, 179, 0);
     base = sf::Color(104, 176, 163);
     startHigh = { sf::Color(185, 224, 67), sf::Color(217, 91, 33), sf::Color(199,167,52)};
@@ -137,6 +138,19 @@ void Hex::setPawn(bool boolean, Pawn* inPawn)
     isPawn_ = boolean;
 }
 
+void Hex::setBody(bool boolean, Pawn* inBody)
+{
+    if (boolean)
+    {
+        body = inBody;
+        body->setHexCoords(cubeCoords);
+    }
+    else if (body != nullptr) {
+        body = nullptr;
+    }
+    hasBody_ = boolean;
+}
+
 void Hex::setBlocking(bool boolean)
 {
     isBlocking_ = boolean;
@@ -183,6 +197,11 @@ bool Hex::isBlocking() const {
 
 bool Hex::isHigh(int col) const {
     return highlights[col];
+}
+
+bool Hex::hasBody() const
+{
+    return hasBody_;
 }
 
 std::tuple<int, int, int> Hex::getCubeCoords() {
