@@ -5,6 +5,7 @@ Pawns::Pawns(Board* board)
 {
     previous = empty;
     wasShift = false;
+    isTrading_ = false;
     whosTurn = 0;
     whichPawn = 0;
     setupText();
@@ -23,10 +24,16 @@ void Pawns::flipTurn()
     setupText();
 }
 
-int Pawns::numberOfPawn(std::tuple<int, int, int> coords)
+int Pawns::numberOfPawn(std::tuple<int, int, int> coords, bool body)
 {
     int keyValue = -1;
-    Pawn* targetObject = board->hexDict[coords]->pawn;
+    Pawn* targetObject = nullptr;
+    if (body) {
+        targetObject = board->hexDict[coords]->body;
+    }
+    else {
+        targetObject = board->hexDict[coords]->pawn;
+    }
 
     for (const Pawn* pawn : pawnDict) {
         keyValue++;
@@ -105,22 +112,52 @@ void Pawns::handleClick(sf::Vector2i mousePosition)
 void Pawns::handleClickRight(sf::Vector2i mousePosition)
 {
     std::tuple<int, int, int> pawnCoords = pawnDict[whichPawn]->getHexCoords();
-    for (const std::tuple<int, int, int> coords : board->getNeighbours(pawnCoords)) {
-        if (board->hexDict[coords]->isClicked(mousePosition)) {
-            if (board->hexDict[coords]->isBlocking())
-            {
-                if (!board->hexDict[coords]->isWall() || !destroyWall(whichPawn, coords))
+    if (board->hexDict[pawnCoords]->isClicked(mousePosition))
+    {
+        setTrading(true);
+    }
+    else
+    {
+        for (const std::tuple<int, int, int> coords : board->getNeighbours(pawnCoords)) {
+            if (board->hexDict[coords]->isClicked(mousePosition)) {
+                if (board->hexDict[coords]->isBlocking())
                 {
-                    board->clearHighlight();
-                    previous = empty;
+                    if (!board->hexDict[coords]->isWall() || !destroyWall(whichPawn, coords))
+                    {
+                        board->clearHighlight();
+                        previous = empty;
+                    }
                 }
+                else
+                {
+                    placeWall(whichPawn, coords);
+                }
+                break;
             }
-            else
-            {
-                placeWall(whichPawn, coords);
-            }
-            break;
         }
+    }
+}
+
+void Pawns::drawTrade(sf::RenderTarget& target)
+{
+    Pawn* pawn = pawnDict[whichPawn];
+    Pawn* body = pawnDict[numberOfPawn(pawn->getHexCoords(), true)];
+    int size = 15;
+    tradeText.setFont(globalFont2);
+    tradeText.setCharacterSize(size);
+    tradeText.setPosition(target.getSize().x - tradeText.getGlobalBounds().width - 40, 35);
+    tradeText.setFillColor(sf::Color::White);
+    std::vector<Equipment*> bodysEquipment = body->getEquipment();
+    for (Equipment* item : bodysEquipment)
+    {
+        tradeText.move(0, 15);
+        tradeText.setString(item->getName() + " Range: " + std::to_string(item->getRange().minRange) 
+            + "-" + std::to_string(item->getRange().maxRange) + " Space: " 
+            + std::to_string(item->getSpaceOccupied().numSpaces) + item->getSpaceOccupied().spaceType
+            + " Attack: " + std::to_string(item->getAttackValue()) + " Actions: " + std::to_string(item->getAttackActions())
+            + " Type: " + item->getType() + " Price: " + std::to_string(item->getPrice()) + " Other: "
+            + item->getAdditionalCapabilities());
+        target.draw(tradeText);
     }
 }
 
@@ -206,9 +243,26 @@ void Pawns::handleShiftOff()
     wasShift = false;
 }
 
+bool Pawns::isTrading() const {
+    return isTrading_;
+}
+
 bool Pawns::addItemToPawn(int number, Equipment* item)
 {
     return pawnDict[number]->addEquipment(item);
+}
+
+void Pawns::setTrading(bool boolean) {
+    isTrading_ = boolean;
+}
+
+void Pawns::drawTexts(sf::RenderTarget& target)
+{
+    drawTurn(target);
+    if (isTrading())
+    {
+        drawTrade(target);
+    }
 }
 
 void Pawns::drawTurn(sf::RenderTarget& target)

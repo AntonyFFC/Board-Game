@@ -30,6 +30,7 @@ Hex::Hex(std::tuple<int, int, int> inCoords, float inxPos, float inyPos)
 
 Hex::~Hex() {
    delete pawn;
+   delete body;
 }
 
 sf::ConvexShape Hex::initShape() const
@@ -234,6 +235,10 @@ bool Hex::isClicked(sf::Vector2i mousePosition) const {
 
 void Hex::draw(sf::RenderTarget& target, bool isShift) {
     target.draw(getShape());
+    if (hasBody()) {
+        body->setPosition(getOrigin().x, getOrigin().y);
+        body->draw(target, isShift);
+    }
     if (isPawn()) {
         pawn->setPosition(getOrigin().x, getOrigin().y);
         pawn->draw(target, isShift);

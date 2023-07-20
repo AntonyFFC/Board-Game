@@ -26,14 +26,14 @@ Gui::~Gui()
 void Gui::start() {
     pawns->addPawn(p1, { -7, 5, 2 });
     pawns->addPawn(p2, { 9, -6, -3 });
-    pawns->addItemToPawn(0, e1, e2, e3);
-    pawns->addItemToPawn(1, e5);
+    pawns->addItemToPawn(0, e1, e3);
+    pawns->addItemToPawn(1, e5, e2);
     while (window->isOpen())
     {
 
         window->clear();
         grid->drawBoard(*window, isShiftKeyPressed);
-        pawns->drawTurn(*window);
+        pawns->drawTexts(*window);
         window->display();
 
         sf::Event event;
