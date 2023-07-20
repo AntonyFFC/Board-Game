@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <map>
+#include <sstream>
 
 class Equipment {
 public:
@@ -25,7 +26,9 @@ public:
     std::string getType() const;
     int getPrice() const;
     std::string getAdditionalCapabilities() const;
+    int getMissMax() const;
     int reduceDurability(int value);
+    bool isRanged();
 private:
     std::string name;
     Range range;
@@ -35,4 +38,6 @@ private:
     std::string type;
     int price;
     std::string additionalCapabilities;
+    bool ranged;
+    int miss;
 };

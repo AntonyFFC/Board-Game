@@ -13,6 +13,7 @@ Gui::Gui(const int screenWidth, const int screenHeight)
     e2 = new Equipment("helmet", { 0,1 }, { 1, "extras" }, 1, 1, "Armour", 5, "Helmet");
     e3 = new Equipment("plate armour", { 0,1 }, { 1, "hands" }, 2, 1, "Armour", 5, "Covering");
     e4 = new Equipment("shield", { 0,1 }, { 1, "hands" }, 2, 1, "Armour", 5, "Shield");
+    e5 = new Equipment("bow", { 4,6 }, { 2, "hands" }, 2, 1, "Weapon", 5, "Ranged 2");
 }
 
 Gui::~Gui()
@@ -26,7 +27,7 @@ void Gui::start() {
     pawns->addPawn(p1, { -7, 5, 2 });
     pawns->addPawn(p2, { 9, -6, -3 });
     pawns->addItemToPawn(0, e1, e2, e3);
-    pawns->addItemToPawn(1, e4);
+    pawns->addItemToPawn(1, e5);
     while (window->isOpen())
     {
 

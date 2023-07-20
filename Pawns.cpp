@@ -250,7 +250,14 @@ void Pawns::attack(int pawnNum, int attackedNum)
     }
     if (weapon != nullptr)
     {
-        pawnDict[attackedNum]->attack(weapon->getAttackValue());
+        if (weapon->isRanged())
+        {
+            pawnDict[attackedNum]->rangedAttack(weapon->getAttackValue(), weapon->getMissMax());
+        }
+        else
+        {
+            pawnDict[attackedNum]->attack(weapon->getAttackValue());
+        }
         attacker->reduceActions(weapon->getAttackActions());
         if (attacker->getRemainingActions() == 0)
         {
@@ -260,22 +267,6 @@ void Pawns::attack(int pawnNum, int attackedNum)
     else {
         throw std::runtime_error("No weapon to attack with");
     }
-}
-
-int getMissValueFromString(const std::string& text)
-{
-    std::istringstream iss(text);
-
-    std::string firstWord;
-    iss >> firstWord;
-
-    if (firstWord == "Ranged") {
-        int secondWordAsInt;
-        if (iss >> secondWordAsInt) {
-            return secondWordAsInt;
-        }
-    }
-    return 0;
 }
 
 std::vector<std::tuple<int, int, int>> Pawns::getViewOfWeapon(int pawnNum, Equipment* weapon)
