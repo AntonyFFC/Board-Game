@@ -114,7 +114,19 @@ void Pawns::handleClickRight(sf::Vector2i mousePosition)
     std::tuple<int, int, int> pawnCoords = pawnDict[whichPawn]->getHexCoords();
     if (board->hexDict[pawnCoords]->isClicked(mousePosition))
     {
+        board->clearHighlight();
+        pawnDict[whichPawn]->reduceActions(1); //later you must simplify this, exchangging weapons must be added to leftClisk event when istrading is true
         setTrading(true);
+        if (pawnDict[whichPawn]->getRemainingActions() == 0)
+        {
+            pawnDict[whichPawn]->setRemainingActions(pawnDict[whichPawn]->getMaxActions());
+            previous = empty;
+            flipTurn();
+        }
+        else
+        {
+            previous = empty;
+        }
     }
     else
     {
