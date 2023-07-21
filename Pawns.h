@@ -6,6 +6,7 @@
 #include "Pawn.h"
 #include "Board.h"
 #include "Equipment.h"
+#include <functional>
 class Pawns
 {
 public:
@@ -58,7 +59,6 @@ private:
 	int whosTurn;
 	int whichPawn; //current pawn number in pawnDict
 	sf::Text turnText;
-	sf::Text tradeText;
 	bool isTrading_;
 };
 

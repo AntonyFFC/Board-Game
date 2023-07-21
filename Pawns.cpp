@@ -138,27 +138,94 @@ void Pawns::handleClickRight(sf::Vector2i mousePosition)
     }
 }
 
+template <typename T, size_t N>
+int getSumOfArray(T(&arr)[N]) {
+    int sum = 0;
+    for (size_t i = 0; i < N; ++i) {
+        sum += arr[i];
+    }
+    return sum;
+}
+
+std::string rangeToString(Equipment::Range range)
+{
+    std::string outText;
+    outText = std::to_string(range.minRange) + "-" + std::to_string(range.maxRange);
+    return outText;
+}
+
+std::string spaceToString(Equipment::SpaceOccupied space)
+{
+    std::string outText;
+    outText = std::to_string(space.numSpaces) + ":" + space.spaceType;
+    return outText;
+}
+
+void drawTable(sf::RenderTarget& target, std::vector<Equipment*> bodysEquipment)
+{
+    int cellSizes[] = { 70,50,50,50,50,80,50,100 };
+    int sumOfArr = getSumOfArray(cellSizes);
+    std::string headers[] = { "Name","Range","Space","Attack","Actions","Type","Price","Other" };
+    std::vector<std::function<std::string(const Equipment&)>> functions;
+    functions.push_back([](const Equipment& item) { return item.getName(); });
+    functions.push_back([](const Equipment& item) { return rangeToString(item.getRange()); });
+    functions.push_back([](const Equipment& item) { return spaceToString(item.getSpaceOccupied()); });
+    functions.push_back([](const Equipment& item) { return std::to_string(item.getAttackValue()); });
+    functions.push_back([](const Equipment& item) { return std::to_string(item.getAttackActions()); });
+    functions.push_back([](const Equipment& item) { return item.getType(); });
+    functions.push_back([](const Equipment& item) { return std::to_string(item.getPrice()); });
+    functions.push_back([](const Equipment& item) { return item.getAdditionalCapabilities(); });
+
+    sf::RectangleShape cellOutline;
+    cellOutline.setFillColor(sf::Color::Transparent);
+    cellOutline.setOutlineColor(sf::Color::White);
+    cellOutline.setFillColor(sf::Color(99, 51, 51));
+    cellOutline.setOutlineThickness(1.f);
+    cellOutline.setPosition(target.getSize().x - 550, 35);
+    sf::Text tradeText;
+    int size = 13;
+    tradeText.setFont(globalFont2);
+    tradeText.setCharacterSize(size * 0.7);
+    tradeText.setFillColor(sf::Color::White);
+    tradeText.setPosition(target.getSize().x - 550, 35);
+
+    for (int i = 0; i < 8; i++)
+    {
+        cellOutline.setSize(sf::Vector2f(cellSizes[i], 20.f));
+        target.draw(cellOutline);
+        tradeText.setString(headers[i]);
+        target.draw(tradeText);
+        cellOutline.move(cellSizes[i], 0);
+        tradeText.move(cellSizes[i], 0);
+    }
+    tradeText.setCharacterSize(size);
+    cellOutline.setFillColor(sf::Color(200, 200, 200));
+    cellOutline.move(-sumOfArr, 20);
+    tradeText.move(-sumOfArr, 20);
+
+    for (Equipment* item : bodysEquipment)
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            cellOutline.setSize(sf::Vector2f(cellSizes[i], 20.f));
+            target.draw(cellOutline);
+            tradeText.setString(functions[i](*static_cast<const Equipment*>(item)));
+            target.draw(tradeText);
+            cellOutline.move(cellSizes[i], 0);
+            tradeText.move(cellSizes[i], 0);
+        }
+        cellOutline.move(-sumOfArr, 20);
+        tradeText.move(-sumOfArr, 20);
+    }
+}
+
 void Pawns::drawTrade(sf::RenderTarget& target)
 {
     Pawn* pawn = pawnDict[whichPawn];
     Pawn* body = pawnDict[numberOfPawn(pawn->getHexCoords(), true)];
-    int size = 15;
-    tradeText.setFont(globalFont2);
-    tradeText.setCharacterSize(size);
-    tradeText.setPosition(target.getSize().x - tradeText.getGlobalBounds().width - 40, 35);
-    tradeText.setFillColor(sf::Color::White);
     std::vector<Equipment*> bodysEquipment = body->getEquipment();
-    for (Equipment* item : bodysEquipment)
-    {
-        tradeText.move(0, 15);
-        tradeText.setString(item->getName() + " Range: " + std::to_string(item->getRange().minRange) 
-            + "-" + std::to_string(item->getRange().maxRange) + " Space: " 
-            + std::to_string(item->getSpaceOccupied().numSpaces) + item->getSpaceOccupied().spaceType
-            + " Attack: " + std::to_string(item->getAttackValue()) + " Actions: " + std::to_string(item->getAttackActions())
-            + " Type: " + item->getType() + " Price: " + std::to_string(item->getPrice()) + " Other: "
-            + item->getAdditionalCapabilities());
-        target.draw(tradeText);
-    }
+    drawTable(target, bodysEquipment);
+    
 }
 
 void Pawns::placeWall(int pawnNumber, std::tuple<int, int, int> coords)
