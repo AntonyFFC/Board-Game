@@ -50,6 +50,10 @@ private:
 	bool destroyWall(int pawnNumber, std::tuple<int, int, int> coords);
 	void drawTurn(sf::RenderTarget& target);
 	void drawTrade(sf::RenderTarget& target);
+	void drawTable(sf::RenderTarget& target, std::vector<Equipment*> bodysEquipment);
+	std::map<std::string, sf::Sprite> initializeSpriteMap();
+	void drawTypeIcon(sf::RenderTarget& target, std::string type);
+	void drawSpaceIcon(sf::RenderTarget& target, Equipment::SpaceOccupied space);
 
 	Board* board;
 	std::tuple<int, int, int> previous;
@@ -60,5 +64,7 @@ private:
 	int whichPawn; //current pawn number in pawnDict
 	sf::Text turnText;
 	bool isTrading_;
+	std::map<std::string, sf::Sprite> iconSprites;
+	std::vector<sf::Texture*> iconTextures;
 };
 

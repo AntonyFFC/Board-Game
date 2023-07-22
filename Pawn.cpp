@@ -422,7 +422,7 @@ std::vector<sf::Texture*> Pawn::textures;
 
 std::map<std::string, sf::Sprite> Pawn::initializeSpriteMap()
 {
-    std::string folderPath = "assets/";
+    std::string folderPath = "assets/equipment/";
     std::string searchPattern = folderPath + "*.png";
     WIN32_FIND_DATAA findData;
     HANDLE findHandle = FindFirstFileA(searchPattern.c_str(), &findData);

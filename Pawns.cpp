@@ -9,6 +9,7 @@ Pawns::Pawns(Board* board)
     whosTurn = 0;
     whichPawn = 0;
     setupText();
+    iconSprites = initializeSpriteMap();
 }
 
 void Pawns::flipTurn()
@@ -112,10 +113,10 @@ void Pawns::handleClick(sf::Vector2i mousePosition)
 void Pawns::handleClickRight(sf::Vector2i mousePosition)
 {
     std::tuple<int, int, int> pawnCoords = pawnDict[whichPawn]->getHexCoords();
-    if (board->hexDict[pawnCoords]->isClicked(mousePosition))
+    if (board->hexDict[pawnCoords]->isClicked(mousePosition) && board->hexDict[pawnCoords]->hasBody())
     {
         board->clearHighlight();
-        pawnDict[whichPawn]->reduceActions(1); //later you must simplify this, exchangging weapons must be added to leftClisk event when istrading is true
+        pawnDict[whichPawn]->reduceActions(1); //later you must simplify this, exchangging weapons must be added to leftClisk event when istrading is true adne set it to false
         setTrading(true);
         if (pawnDict[whichPawn]->getRemainingActions() == 0)
         {
@@ -173,47 +174,129 @@ std::string spaceToString(Equipment::SpaceOccupied space)
     return outText;
 }
 
-void drawTable(sf::RenderTarget& target, std::vector<Equipment*> bodysEquipment)
+void Pawns::drawSpaceIcon(sf::RenderTarget& target, Equipment::SpaceOccupied space)
 {
-    int cellSizes[] = { 70,50,50,50,50,80,50,100 };
+    int added = 0;
+    for (int i = 0; i < space.numSpaces; i++)
+    {
+        if (space.spaceType == "hands")
+        {
+            target.draw(iconSprites["hand-line-icon"]);
+            iconSprites["hand-line-icon"].move(15, 0);
+        }
+        else
+        {
+            target.draw(iconSprites["plus-round-line-icon"]);
+            iconSprites["plus-round-line-icon"].move(15, 0);
+        }
+        added++;
+    }
+    if (space.spaceType == "hands")
+    {
+        iconSprites["hand-line-icon"].move(-10*added, 0);
+    }
+    else
+    {
+        iconSprites["plus-round-line-icon"].move(-15 * added, 0);
+    }
+
+}
+
+void Pawns::drawTypeIcon(sf::RenderTarget& target, std::string type)
+{
+    if (type == "Weapon")
+    {
+        target.draw(iconSprites["crossed-swords-icon"]);
+    }
+    else if (type == "Armour")
+    {
+        target.draw(iconSprites["shield-icon"]);
+    }
+    else
+    {
+        target.draw(iconSprites["four-squares-icon"]);
+    }
+}
+
+void setScalSpriteMap(float scl, std::map<std::string, sf::Sprite>& spriteMap)
+{
+    for (auto& pair : spriteMap)
+    {
+        sf::Sprite& currentSprite = pair.second;
+        currentSprite.setScale(scl, scl);
+    }
+}
+
+void setPosSpriteMap(int x, int y, std::map<std::string, sf::Sprite> &spriteMap)
+{
+    for (auto& pair : spriteMap)
+    {
+        sf::Sprite& currentSprite = pair.second;
+        currentSprite.setPosition(x, y);
+    }
+}
+
+void moveSpriteMap(int addx, int addy, std::map<std::string, sf::Sprite> &spriteMap)
+{
+    for (auto& pair : spriteMap)
+    {
+        sf::Sprite& currentSprite = pair.second;
+        currentSprite.move(addx, addy);
+    }
+}
+
+void Pawns::drawTable(sf::RenderTarget& target, std::vector<Equipment*> bodysEquipment)
+{
+    int cellSizes[] = { 70,40,40,30,30,30,30,100 };
     int sumOfArr = getSumOfArray(cellSizes);
-    std::string headers[] = { "Name","Range","Space","Attack","Actions","Type","Price","Other" };
+    std::string headers[] = { "Name","left-right-arrow-icon","circle-line-icon","bomb-blast-icon",
+        "history-icon","cube-icon","dollar-icon","Other" };
     std::vector<std::function<std::string(const Equipment&)>> functions;
     functions.push_back([](const Equipment& item) { return item.getName(); });
     functions.push_back([](const Equipment& item) { return rangeToString(item.getRange()); });
-    functions.push_back([](const Equipment& item) { return spaceToString(item.getSpaceOccupied()); });
+    functions.push_back([](const Equipment& item) { return spaceToString(item.getSpaceOccupied()); }); //here draw the sprite with space
     functions.push_back([](const Equipment& item) { return std::to_string(item.getAttackValue()); });
     functions.push_back([](const Equipment& item) { return std::to_string(item.getAttackActions()); });
-    functions.push_back([](const Equipment& item) { return item.getType(); });
+    functions.push_back([](const Equipment& item) { return item.getType(); }); //here draw the sprite with type
     functions.push_back([](const Equipment& item) { return std::to_string(item.getPrice()); });
     functions.push_back([](const Equipment& item) { return item.getAdditionalCapabilities(); });
 
     sf::RectangleShape cellOutline;
     cellOutline.setFillColor(sf::Color::Transparent);
     cellOutline.setOutlineColor(sf::Color::White);
-    cellOutline.setFillColor(sf::Color(99, 51, 51));
+    cellOutline.setFillColor(sf::Color(156, 84, 84));
     cellOutline.setOutlineThickness(1.f);
     cellOutline.setPosition(target.getSize().x - 550, 35);
     sf::Text tradeText;
-    int size = 13;
+    int size = 15;
     tradeText.setFont(globalFont2);
-    tradeText.setCharacterSize(size * 0.7);
-    tradeText.setFillColor(sf::Color::White);
+    tradeText.setCharacterSize(size);
+    tradeText.setFillColor(sf::Color::Black);
     tradeText.setPosition(target.getSize().x - 550, 35);
+    setPosSpriteMap(target.getSize().x - 550, 35, iconSprites);
+    setScalSpriteMap(0.04, iconSprites);
 
     for (int i = 0; i < 8; i++)
     {
         cellOutline.setSize(sf::Vector2f(cellSizes[i], 20.f));
         target.draw(cellOutline);
-        tradeText.setString(headers[i]);
-        target.draw(tradeText);
+        if (headers[i].substr(headers[i].length() - 4) != "icon")
+        {
+            tradeText.setString(headers[i]);
+            target.draw(tradeText);
+        }
+        else
+        {
+            target.draw(iconSprites[headers[i]]);
+        }
         cellOutline.move(cellSizes[i], 0);
         tradeText.move(cellSizes[i], 0);
+        moveSpriteMap(cellSizes[i], 0, iconSprites);
     }
-    tradeText.setCharacterSize(size);
     cellOutline.setFillColor(sf::Color(200, 200, 200));
     cellOutline.move(-sumOfArr, 20);
     tradeText.move(-sumOfArr, 20);
+    moveSpriteMap(-sumOfArr, 20, iconSprites);
 
     for (Equipment* item : bodysEquipment)
     {
@@ -221,13 +304,26 @@ void drawTable(sf::RenderTarget& target, std::vector<Equipment*> bodysEquipment)
         {
             cellOutline.setSize(sf::Vector2f(cellSizes[i], 20.f));
             target.draw(cellOutline);
-            tradeText.setString(functions[i](*static_cast<const Equipment*>(item)));
-            target.draw(tradeText);
+            if (i == 2)
+            {
+                drawSpaceIcon(target, item->getSpaceOccupied());
+            }
+            else if (i == 5)
+            {
+                drawTypeIcon(target, item->getType());
+            }
+            else
+            {
+                tradeText.setString(functions[i](*static_cast<const Equipment*>(item)));
+                target.draw(tradeText);
+            }
             cellOutline.move(cellSizes[i], 0);
             tradeText.move(cellSizes[i], 0);
+            moveSpriteMap(cellSizes[i], 0, iconSprites);
         }
         cellOutline.move(-sumOfArr, 20);
         tradeText.move(-sumOfArr, 20);
+        moveSpriteMap(-sumOfArr, 20, iconSprites);
     }
 }
 
@@ -456,4 +552,43 @@ void Pawns::setupText()
         turnText.setFillColor(sf::Color::Red);
         turnText.setString("Turn: Red");
     }
+}
+
+std::map<std::string, sf::Sprite> Pawns::initializeSpriteMap()
+{
+    std::string folderPath = "assets/icons/";
+    std::string searchPattern = folderPath + "*.png";
+    WIN32_FIND_DATAA findData;
+    HANDLE findHandle = FindFirstFileA(searchPattern.c_str(), &findData);
+
+    std::map<std::string, sf::Sprite> sprites;
+
+    if (findHandle != INVALID_HANDLE_VALUE)
+    {
+        do
+        {
+            std::string fileName = findData.cFileName;
+            fileName = fileName.substr(0, fileName.length() - 4);
+            std::string filePath = folderPath + fileName + ".png";
+
+            // Load the texture
+            sf::Texture* texture;
+            texture = new sf::Texture;
+            if (!texture->loadFromFile(filePath))
+            {
+                delete texture;
+                continue;
+            }
+            // This holds the textures so that the sprites work
+            iconTextures.push_back(texture);
+            sf::Sprite sprite(*texture);
+            sprites[fileName] = sprite;
+        } while (FindNextFileA(findHandle, &findData));
+        FindClose(findHandle);
+    }
+    else
+    {
+        throw std::runtime_error("Invalid handle value");
+    }
+    return sprites;
 }
