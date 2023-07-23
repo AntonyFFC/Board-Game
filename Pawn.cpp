@@ -157,13 +157,18 @@ void Pawn::setPosition(float inx, float iny) {
 }
 
 void Pawn::setScale(float ins) {
-    scaleFactor = ins;
+    this->scaleFactor = ins;
     combinedSprite->setScale(scaleFactor, scaleFactor);
 }
 
 void Pawn::setHexCoords(std::tuple<int, int, int> coords)
 {
     this->hexCoords = coords;
+}
+
+void Pawn::setSpace(int hands, int extras) {
+    this->space.hands = hands;
+    this->space.extras = extras;
 }
 
 // Equipment-related methods
