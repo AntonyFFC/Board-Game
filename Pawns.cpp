@@ -57,9 +57,12 @@ int Pawns::numberOfPawn(std::tuple<int, int, int> coords, bool body)
 
 void Pawns::handleClick(sf::Vector2i mousePosition, sf::RenderTarget& target)
 {
-    if (isTrading() && tableClicked(mousePosition, target))
+    if (isTrading())
     {
-        std::cout << "Table clicked\n";
+        if (tableClicked(mousePosition, target))
+        {
+            std::cout << "Table clicked\n";
+        }
     }
     else
     {
