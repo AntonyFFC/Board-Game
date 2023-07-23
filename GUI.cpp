@@ -54,7 +54,7 @@ void Gui::keyPressed(const sf::Event& event) {
     }
     else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
         sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
-        pawns->handleClick(mousePosition);
+        pawns->handleClick(mousePosition, *window);
     }
     else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right) {
         sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);

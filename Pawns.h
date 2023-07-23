@@ -7,12 +7,13 @@
 #include "Board.h"
 #include "Equipment.h"
 #include <functional>
+#include <iostream>
 class Pawns
 {
 public:
 	Pawns(Board* board);
 
-	void handleClick(sf::Vector2i mousePosition);
+	void handleClick(sf::Vector2i mousePosition, sf::RenderTarget& target);
 	void handleClickRight(sf::Vector2i mousePosition);
 	void addPawn(Pawn* inPawn, std::tuple<int, int, int> coords);
 	void handleShiftOn();
@@ -40,6 +41,9 @@ private:
 	void pawnClicked(int pawnNum);
 	void pawnMoved(int pawnNum, std::tuple<int, int, int> where);
 	void attack(int pawnNum, int attackedNum);
+	void highlightedNoPawn(int pawnNum, std::tuple<int, int, int> current);
+	bool pawnFirst(int pawnNum, std::tuple<int, int, int> current);
+	void pawnSecond(int pawnNum, std::tuple<int, int, int> current);
 	std::vector<std::tuple<int, int, int>> getViewOfWeapon(int pawnNum, Equipment* weapon);
 	std::vector<std::tuple<int, int, int>> getViewOfPawn(int pawnNum);
 	std::vector<std::tuple<int, int, int>> getRangeOfPawn(int pawnNum);
@@ -49,11 +53,13 @@ private:
 	void placeWall(int pawnNumber, std::tuple<int, int, int> coords);
 	bool destroyWall(int pawnNumber, std::tuple<int, int, int> coords);
 	void drawTurn(sf::RenderTarget& target);
+	//trade methods
 	void drawTrade(sf::RenderTarget& target);
-	void drawTable(sf::RenderTarget& target, std::vector<Equipment*> bodysEquipment);
+	void drawTable(sf::RenderTarget& target, std::vector<Equipment*> equipment, int x);
 	std::map<std::string, sf::Sprite> initializeSpriteMap();
 	void drawTypeIcon(sf::RenderTarget& target, std::string type);
 	void drawSpaceIcon(sf::RenderTarget& target, Equipment::SpaceOccupied space);
+	bool tableClicked(sf::Vector2i mousePosition, sf::RenderTarget& target);
 
 	Board* board;
 	std::tuple<int, int, int> previous;
@@ -66,5 +72,8 @@ private:
 	bool isTrading_;
 	std::map<std::string, sf::Sprite> iconSprites;
 	std::vector<sf::Texture*> iconTextures;
+	int cellSizes[8];
+	int tableY;
+	int cellHeight;
 };
 

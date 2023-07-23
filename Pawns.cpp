@@ -1,7 +1,7 @@
 #include "Pawns.h"
 
 Pawns::Pawns(Board* board)
-    :board(board)
+    :board(board), cellSizes{ 70,40,40,30,30,30,30,100 }
 {
     previous = empty;
     wasShift = false;
@@ -10,6 +10,17 @@ Pawns::Pawns(Board* board)
     whichPawn = 0;
     setupText();
     iconSprites = initializeSpriteMap();
+    tableY = 35;
+    cellHeight = 20;
+}
+
+template <typename T, size_t N>
+int getSumOfArray(T(&arr)[N]) {
+    int sum = 0;
+    for (size_t i = 0; i < N; ++i) {
+        sum += arr[i];
+    }
+    return sum;
 }
 
 void Pawns::flipTurn()
@@ -44,69 +55,109 @@ int Pawns::numberOfPawn(std::tuple<int, int, int> coords, bool body)
     }
 }
 
-void Pawns::handleClick(sf::Vector2i mousePosition)
+void Pawns::handleClick(sf::Vector2i mousePosition, sf::RenderTarget& target)
 {
-    for (auto& pair : board->hexDict) {
-        std::tuple<int, int, int> present = pair.first;
-        if (board->hexDict[present]->isClicked(mousePosition)) {
-            if ((!board->hexDict[present]->isPawn()|| !board->hexDict[present]->pawn->isAlive()) && !board->hexDict[present]->isHigh(0))
-            {
-                board->clearHighlight();
-                previous = empty;
-            }
-            else if (board->hexDict[present]->isPawn() && board->hexDict[present]->pawn->isAlive())
-            {
-                if (previous != empty) //this checks if this is not the first click of a player
+    if (isTrading() && tableClicked(mousePosition, target))
+    {
+        std::cout << "Table clicked\n";
+    }
+    else
+    {
+        for (auto& pair : board->hexDict) {
+            std::tuple<int, int, int> present = pair.first;
+            if (board->hexDict[present]->isClicked(mousePosition)) {
+                if ((!board->hexDict[present]->isPawn() || !board->hexDict[present]->pawn->isAlive()) && !board->hexDict[present]->isHigh(0))
                 {
-                    std::vector<std::tuple<int, int, int>> inView = getViewOfPawn(whichPawn);
-                    auto it = std::find(inView.begin(), inView.end(), present);
-                    if (it != inView.end())
-                    {
-                        attack(whichPawn, numberOfPawn(present));
-                        board->clearHighlight();
-                        if (pawnDict[whichPawn]->getRemainingActions() == pawnDict[whichPawn]->getMaxActions())
-                        {
-                            previous = empty;
-                            flipTurn();
-                        }
-                        else
-                        {
-                            pawnClicked(whichPawn);
-                        }
-                    }
-                }
-                else //this occurs when it is the first click of the player
-                {
-                    if (whosTurn == board->hexDict[present]->pawn->getSide())
-                    {
-                        whichPawn = numberOfPawn(present);
-                        pawnClicked(whichPawn);
-                        previous = present;
-                    }
-                    else {
-                        board->clearHighlight();
-                        previous = empty;
-                        break;
-                    }
-                }
-            }
-            else //this occurs when the hex is highlighted
-            {
-                pawnMoved(whichPawn, present);
-                board->clearHighlight();
-                if (pawnDict[whichPawn]->getRemainingActions() == pawnDict[whichPawn]->getMaxActions())
-                {
+                    board->clearHighlight();
                     previous = empty;
-                    flipTurn();
+                }
+                else if (board->hexDict[present]->isPawn() && board->hexDict[present]->pawn->isAlive())
+                {
+                    if (previous != empty)
+                    {
+                        pawnSecond(whichPawn, present);
+                    }
+                    else
+                    {
+                        if (!pawnFirst(whichPawn, present))
+                        {
+                            break;
+                        }
+                    }
                 }
                 else
                 {
-                    pawnClicked(whichPawn);
-                    previous = present;
+                    highlightedNoPawn(whichPawn, present);
                 }
+                break;
             }
-            break;
         }
+    }
+}
+
+bool Pawns::tableClicked(sf::Vector2i mousePosition, sf::RenderTarget& target)
+{
+    int sumOfArr = getSumOfArray(cellSizes);
+    int minX = target.getSize().x - sumOfArr * (2.04);
+    int maxX = target.getSize().x - 0.02;
+    int minY = tableY+ cellHeight;
+    int maxY = minY + +cellHeight * 5;
+    if (mousePosition.x >= minX && mousePosition.x <= maxX && mousePosition.y >= minY && mousePosition.y <= maxY)
+    {
+        return true;
+    }
+    return false;
+}
+
+void Pawns::pawnSecond(int pawnNum, std::tuple<int, int, int> current)
+{
+    std::vector<std::tuple<int, int, int>> inView = getViewOfPawn(pawnNum);
+    auto it = std::find(inView.begin(), inView.end(), current);
+    if (it != inView.end())
+    {
+        attack(pawnNum, numberOfPawn(current));
+        board->clearHighlight();
+        if (pawnDict[pawnNum]->getRemainingActions() == pawnDict[pawnNum]->getMaxActions())
+        {
+            previous = empty;
+            flipTurn();
+        }
+        else
+        {
+            pawnClicked(pawnNum);
+        }
+    }
+}
+
+bool Pawns::pawnFirst(int pawnNum, std::tuple<int, int, int> current)
+{
+    if (whosTurn == board->hexDict[current]->pawn->getSide())
+    {
+        whichPawn = numberOfPawn(current);
+        pawnClicked(whichPawn);
+        previous = current;
+        return true;
+    }
+    else {
+        board->clearHighlight();
+        previous = empty;
+        return false; //stop the loop
+    }
+}
+
+void Pawns::highlightedNoPawn(int pawnNum, std::tuple<int, int, int> current)
+{
+    pawnMoved(pawnNum, current);
+    board->clearHighlight();
+    if (pawnDict[pawnNum]->getRemainingActions() == pawnDict[pawnNum]->getMaxActions())
+    {
+        previous = empty;
+        flipTurn();
+    }
+    else
+    {
+        pawnClicked(pawnNum);
+        previous = current;
     }
 }
 
@@ -151,15 +202,6 @@ void Pawns::handleClickRight(sf::Vector2i mousePosition)
     }
 }
 
-template <typename T, size_t N>
-int getSumOfArray(T(&arr)[N]) {
-    int sum = 0;
-    for (size_t i = 0; i < N; ++i) {
-        sum += arr[i];
-    }
-    return sum;
-}
-
 std::string rangeToString(Equipment::Range range)
 {
     std::string outText;
@@ -193,7 +235,7 @@ void Pawns::drawSpaceIcon(sf::RenderTarget& target, Equipment::SpaceOccupied spa
     }
     if (space.spaceType == "hands")
     {
-        iconSprites["hand-line-icon"].move(-10*added, 0);
+        iconSprites["hand-line-icon"].move(-15*added, 0);
     }
     else
     {
@@ -245,9 +287,8 @@ void moveSpriteMap(int addx, int addy, std::map<std::string, sf::Sprite> &sprite
     }
 }
 
-void Pawns::drawTable(sf::RenderTarget& target, std::vector<Equipment*> bodysEquipment)
+void Pawns::drawTable(sf::RenderTarget& target, std::vector<Equipment*> equipment, int index)
 {
-    int cellSizes[] = { 70,40,40,30,30,30,30,100 };
     int sumOfArr = getSumOfArray(cellSizes);
     std::string headers[] = { "Name","left-right-arrow-icon","circle-line-icon","bomb-blast-icon",
         "history-icon","cube-icon","dollar-icon","Other" };
@@ -261,24 +302,25 @@ void Pawns::drawTable(sf::RenderTarget& target, std::vector<Equipment*> bodysEqu
     functions.push_back([](const Equipment& item) { return std::to_string(item.getPrice()); });
     functions.push_back([](const Equipment& item) { return item.getAdditionalCapabilities(); });
 
+    int innitialXpos = target.getSize().x - sumOfArr * (index*1.02);
     sf::RectangleShape cellOutline;
     cellOutline.setFillColor(sf::Color::Transparent);
     cellOutline.setOutlineColor(sf::Color::White);
     cellOutline.setFillColor(sf::Color(156, 84, 84));
     cellOutline.setOutlineThickness(1.f);
-    cellOutline.setPosition(target.getSize().x - 550, 35);
+    cellOutline.setPosition(innitialXpos, tableY);
     sf::Text tradeText;
     int size = 15;
     tradeText.setFont(globalFont2);
     tradeText.setCharacterSize(size);
     tradeText.setFillColor(sf::Color::Black);
-    tradeText.setPosition(target.getSize().x - 550, 35);
-    setPosSpriteMap(target.getSize().x - 550, 35, iconSprites);
+    tradeText.setPosition(innitialXpos, tableY);
+    setPosSpriteMap(innitialXpos, tableY, iconSprites);
     setScalSpriteMap(0.04, iconSprites);
 
     for (int i = 0; i < 8; i++)
     {
-        cellOutline.setSize(sf::Vector2f(cellSizes[i], 20.f));
+        cellOutline.setSize(sf::Vector2f(cellSizes[i], cellHeight));
         target.draw(cellOutline);
         if (headers[i].substr(headers[i].length() - 4) != "icon")
         {
@@ -294,15 +336,15 @@ void Pawns::drawTable(sf::RenderTarget& target, std::vector<Equipment*> bodysEqu
         moveSpriteMap(cellSizes[i], 0, iconSprites);
     }
     cellOutline.setFillColor(sf::Color(200, 200, 200));
-    cellOutline.move(-sumOfArr, 20);
-    tradeText.move(-sumOfArr, 20);
-    moveSpriteMap(-sumOfArr, 20, iconSprites);
+    cellOutline.move(-sumOfArr, cellHeight);
+    tradeText.move(-sumOfArr, cellHeight);
+    moveSpriteMap(-sumOfArr, cellHeight, iconSprites);
 
-    for (Equipment* item : bodysEquipment)
+    for (Equipment* item : equipment)
     {
         for (int i = 0; i < 8; i++)
         {
-            cellOutline.setSize(sf::Vector2f(cellSizes[i], 20.f));
+            cellOutline.setSize(sf::Vector2f(cellSizes[i], cellHeight));
             target.draw(cellOutline);
             if (i == 2)
             {
@@ -321,9 +363,9 @@ void Pawns::drawTable(sf::RenderTarget& target, std::vector<Equipment*> bodysEqu
             tradeText.move(cellSizes[i], 0);
             moveSpriteMap(cellSizes[i], 0, iconSprites);
         }
-        cellOutline.move(-sumOfArr, 20);
-        tradeText.move(-sumOfArr, 20);
-        moveSpriteMap(-sumOfArr, 20, iconSprites);
+        cellOutline.move(-sumOfArr, cellHeight);
+        tradeText.move(-sumOfArr, cellHeight);
+        moveSpriteMap(-sumOfArr, cellHeight, iconSprites);
     }
 }
 
@@ -332,7 +374,9 @@ void Pawns::drawTrade(sf::RenderTarget& target)
     Pawn* pawn = pawnDict[whichPawn];
     Pawn* body = pawnDict[numberOfPawn(pawn->getHexCoords(), true)];
     std::vector<Equipment*> bodysEquipment = body->getEquipment();
-    drawTable(target, bodysEquipment);
+    drawTable(target, bodysEquipment, 1);
+    std::vector<Equipment*> pawnsEquipment = pawn->getEquipment();
+    drawTable(target, pawnsEquipment, 2);
     
 }
 
