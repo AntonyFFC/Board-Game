@@ -6,7 +6,7 @@ Gui::Gui(const int screenWidth, const int screenHeight)
     initializeFont();
 	window = new sf::RenderWindow(sf::VideoMode(screenWidth, screenHeight), "Hex Board");
 	grid = new Board(13, 19, 0.8f);
-    pawns = new Pawns(grid);
+    pawns = new Pawns(grid, window);
     p1 = new Pawn("Mirmil", 1, 0, 5, 4, { 2,1 }, 7, 510.f, 504.0f);
     p2 = new Pawn("Lucjan", 2, 1, 5, 1, { 2,1 }, 7, 510.f, 504.0f);
     e1 = new Equipment("sword", { 0,1 }, { 1, "hands" }, 1, 1, "Weapon", 5, "");
@@ -33,7 +33,7 @@ void Gui::start() {
 
         window->clear(sf::Color(66, 82, 107));
         grid->drawBoard(*window, isShiftKeyPressed);
-        pawns->drawTexts(*window);
+        pawns->drawTexts();
         window->display();
 
         sf::Event event;
@@ -54,7 +54,7 @@ void Gui::keyPressed(const sf::Event& event) {
     }
     else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
         sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
-        pawns->handleClick(mousePosition, *window);
+        pawns->handleClick(mousePosition);
     }
     else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right) {
         sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);

@@ -8,12 +8,14 @@
 #include "Equipment.h"
 #include <functional>
 #include <iostream>
+#include "TradeTable.h"
 class Pawns
 {
 public:
-	Pawns(Board* board);
+	Pawns(Board* board, sf::RenderWindow* window);
+	~Pawns();
 
-	void handleClick(sf::Vector2i mousePosition, sf::RenderTarget& target);
+	void handleClick(sf::Vector2i mousePosition);
 	void handleClickRight(sf::Vector2i mousePosition);
 	void addPawn(Pawn* inPawn, std::tuple<int, int, int> coords);
 	void handleShiftOn();
@@ -35,7 +37,7 @@ public:
 		return done;
 	}
 	void setTrading(bool boolean);
-	void drawTexts(sf::RenderTarget& target);
+	void drawTexts();
 
 private:
 	void pawnClicked(int pawnNum);
@@ -52,16 +54,11 @@ private:
 	int numberOfPawn(std::tuple<int, int, int> coords, bool body = false);
 	void placeWall(int pawnNumber, std::tuple<int, int, int> coords);
 	bool destroyWall(int pawnNumber, std::tuple<int, int, int> coords);
-	void drawTurn(sf::RenderTarget& target);
-	//trade methods
-	void drawTrade(sf::RenderTarget& target);
-	void drawTable(sf::RenderTarget& target, std::vector<Equipment*> equipment, int x);
-	std::map<std::string, sf::Sprite> initializeSpriteMap();
-	void drawTypeIcon(sf::RenderTarget& target, std::string type);
-	void drawSpaceIcon(sf::RenderTarget& target, Equipment::SpaceOccupied space);
-	bool tableClicked(sf::Vector2i mousePosition, sf::RenderTarget& target);
+	void drawTurn();
 
 	Board* board;
+	TradeTable* tradeTable;
+	sf::RenderWindow* target;
 	std::tuple<int, int, int> previous;
 	bool wasShift;
 	std::tuple<int, int, int> empty = { -9, -9, -9 };
@@ -70,10 +67,5 @@ private:
 	int whichPawn; //current pawn number in pawnDict
 	sf::Text turnText;
 	bool isTrading_;
-	std::map<std::string, sf::Sprite> iconSprites;
-	std::vector<sf::Texture*> iconTextures;
-	int cellSizes[8];
-	int tableY;
-	int cellHeight;
 };
 
