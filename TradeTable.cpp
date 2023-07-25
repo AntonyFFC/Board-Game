@@ -185,7 +185,34 @@ bool TradeTable::tableClicked(sf::Vector2i mousePosition)
 
 void TradeTable::trade(sf::Vector2i mousePosition)
 {
-    // trading done here
+    if (isOnBody(mousePosition))
+    {
+        clickOnBodysEquipment(mousePosition);
+    }
+    else
+    {
+        clickOnPawnsEquipment(mousePosition);
+    }
+}
+
+void TradeTable::clickOnBodysEquipment(sf::Vector2i mousePosition)
+{
+
+}
+
+void TradeTable::clickOnPawnsEquipment(sf::Vector2i mousePosition)
+{
+
+}
+
+bool TradeTable::isOnBody(sf::Vector2i mousePosition)
+{
+    int minXbody = minX + sumOfCellWidths * (1.02);
+    if (mousePosition.x >= minXbody && mousePosition.x <= maxX)
+    {
+        return true;
+    }
+    return false;
 }
 
 // initializers

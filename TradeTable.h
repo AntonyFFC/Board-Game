@@ -19,6 +19,9 @@ private:
 	void drawTable(std::vector<Equipment*> equipment, bool bodys);
 	void drawTypeIcon(std::string type);
 	void drawSpaceIcon(Equipment::SpaceOccupied space);
+	bool isOnBody(sf::Vector2i mousePosition);
+	void clickOnBodysEquipment(sf::Vector2i mousePosition);
+	void clickOnPawnsEquipment(sf::Vector2i mousePosition);
 
 	std::map<std::string, sf::Sprite> initializeSpriteMap();
 	std::vector<std::function<std::string(const Equipment&)>> initializeFunctions();
