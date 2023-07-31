@@ -43,11 +43,7 @@ TradeTable::TradeTable(Pawn* inPawn, Pawn* inBody, sf::RenderWindow* inWindow)
 	sumOfCellWidths = getSumOfArray(cellWidths);
 	target = inWindow;
     cellHeight = 20;
-	minX = target->getSize().x - sumOfCellWidths * (2.04);
-	minY = 35;
-	maxX = target->getSize().x - 0.02;
-	maxY = minY + cellHeight * (std::max(pawn->getEquipmentCount(), body->getEquipmentCount())+1);
-	cellHeight = 20;
+    setUpDimensions();
 	iconSprites = initializeSpriteMap();
     functions = initializeFunctions();
     cell = initializeCells();
@@ -185,24 +181,60 @@ bool TradeTable::tableClicked(sf::Vector2i mousePosition)
 
 void TradeTable::trade(sf::Vector2i mousePosition)
 {
+    Equipment* item = nullptr;
+    bool isBodys;
     if (isOnBody(mousePosition))
     {
-        clickOnBodysEquipment(mousePosition);
+        item = clickOnEquipment(mousePosition, body->getEquipment());
+        isBodys = true;
     }
     else
     {
-        clickOnPawnsEquipment(mousePosition);
+        item = clickOnEquipment(mousePosition, pawn->getEquipment());
+        isBodys = false;
+    }
+    if (item != nullptr)
+    {
+        tradeItem(item, isBodys);
     }
 }
 
-void TradeTable::clickOnBodysEquipment(sf::Vector2i mousePosition)
+void TradeTable::tradeItem(Equipment* item, bool isBodys)
 {
-
+    if (isBodys)
+    {
+        if (pawn->addEquipment(item))
+        {
+            body->removeEquipment(item);
+            setUpDimensions();
+        }
+    }
+    else
+    {
+        if (body->addEquipment(item))
+        {
+            pawn->removeEquipment(item);
+            setUpDimensions();
+        }
+    }
 }
 
-void TradeTable::clickOnPawnsEquipment(sf::Vector2i mousePosition)
+Equipment* TradeTable::clickOnEquipment(sf::Vector2i mousePosition, std::vector<Equipment*> equipment)
 {
-
+    int itemMinY = minY;
+    int itemMaxY = minY+ cellHeight;
+    Equipment* chosen = nullptr;
+    for (Equipment* item : equipment)
+    {
+        itemMinY += cellHeight;
+        itemMaxY += cellHeight;
+        if (mousePosition.y >= itemMinY && mousePosition.y <= itemMaxY)
+        {
+            chosen = item;
+            break;
+        }
+    }
+    return chosen;
 }
 
 bool TradeTable::isOnBody(sf::Vector2i mousePosition)
@@ -300,4 +332,12 @@ sf::Text TradeTable::initializeTradeText()
     text.setCharacterSize(size);
     text.setFillColor(sf::Color::Black);
     return text;
+}
+
+void TradeTable::setUpDimensions()
+{
+    minX = target->getSize().x - sumOfCellWidths * (2.04);
+    minY = 35;
+    maxX = target->getSize().x - 0.02;
+    maxY = minY + cellHeight * (std::max(pawn->getEquipmentCount(), body->getEquipmentCount()) + 1);
 }

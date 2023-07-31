@@ -44,11 +44,12 @@ public:
     void setPosition(float inx, float iny);
     void setScale(float ins);
     void setHexCoords(std::tuple<int, int, int> coords);
-    void setSpace(int hands, int extras);
+    void addSpace(int hands, int extras);
 
     // Equipment-related methods
     bool addEquipment(Equipment* item);
     bool removeEquipment(int index);
+    bool removeEquipment(Equipment* item);
 
     // Other methods
     void reduceActions(int amount);

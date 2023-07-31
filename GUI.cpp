@@ -7,11 +7,11 @@ Gui::Gui(const int screenWidth, const int screenHeight)
 	window = new sf::RenderWindow(sf::VideoMode(screenWidth, screenHeight), "Hex Board");
 	grid = new Board(13, 19, 0.8f);
     pawns = new Pawns(grid, window);
-    p1 = new Pawn("Mirmil", 1, 0, 5, 4, { 2,1 }, 7, 510.f, 504.0f);
-    p2 = new Pawn("Lucjan", 2, 1, 5, 1, { 2,1 }, 7, 510.f, 504.0f);
+    p1 = new Pawn("Mirmil", 1, 0, 5, 4, { 2,2 }, 7, 510.f, 504.0f);
+    p2 = new Pawn("Lucjan", 2, 1, 5, 1, { 2,2 }, 7, 510.f, 504.0f);
     e1 = new Equipment("sword", { 0,1 }, { 1, "hands" }, 1, 1, "Weapon", 5, "");
     e2 = new Equipment("helmet", { 0,1 }, { 1, "extras" }, 1, 1, "Armour", 5, "Helmet");
-    e3 = new Equipment("plate armour", { 0,1 }, { 1, "hands" }, 2, 1, "Armour", 5, "Covering");
+    e3 = new Equipment("plate armour", { 0,1 }, { 1, "extras" }, 2, 1, "Armour", 5, "Covering");
     e4 = new Equipment("shield", { 0,1 }, { 1, "hands" }, 2, 1, "Armour", 5, "Shield");
     e5 = new Equipment("bow", { 4,6 }, { 2, "hands" }, 2, 1, "Weapon", 5, "Ranged 2");
 }
@@ -30,7 +30,6 @@ void Gui::start() {
     pawns->addItemToPawn(1, e5, e2);
     while (window->isOpen())
     {
-
         window->clear(sf::Color(66, 82, 107));
         grid->drawBoard(*window, isShiftKeyPressed);
         pawns->drawTexts();

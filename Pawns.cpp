@@ -56,7 +56,7 @@ void Pawns::handleClick(sf::Vector2i mousePosition)
         if (tradeTable->tableClicked(mousePosition))
         {
             std::cout << "Table clicked\n";
-            //tradeTable->trade(mousePosition);
+            tradeTable->trade(mousePosition);
         }
     }
     else
@@ -343,7 +343,7 @@ void Pawns::attack(int pawnNum, int attackedNum)
         if (!attacked->isAlive())
         {
             board->hexDict[attacked->getHexCoords()]->setPawn(false);
-            attacked->setSpace(10, 10); //this is so the body does not have a low limit of space
+            attacked->addSpace(8, 8); //this is so the body does not have a low limit of space
             board->hexDict[attacked->getHexCoords()]->setBody(true, attacked);
         }
         attacker->reduceActions(weapon->getAttackActions());

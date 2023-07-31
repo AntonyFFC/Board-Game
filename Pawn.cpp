@@ -166,9 +166,11 @@ void Pawn::setHexCoords(std::tuple<int, int, int> coords)
     this->hexCoords = coords;
 }
 
-void Pawn::setSpace(int hands, int extras) {
-    this->space.hands = hands;
-    this->space.extras = extras;
+void Pawn::addSpace(int hands, int extras) {
+    this->space.hands += hands;
+    this->space.extras += extras;
+    this->remainingSpace.hands += hands;
+    this->remainingSpace.extras += extras;
 }
 
 // Equipment-related methods
@@ -209,10 +211,30 @@ bool Pawn::removeEquipment(int index) {
         {
             remainingSpace.extras += equipment[index]->getSpaceOccupied().numSpaces;
         }
-        delete equipment[index];
         equipment.erase(equipment.begin() + index);
         createSprite();
         return true;
+    }
+    return false;
+}
+
+bool Pawn::removeEquipment(Equipment* item) {
+    for (Equipment* object : equipment)
+    {
+        if (object == item)
+        {
+            if (object->getSpaceOccupied().spaceType == "hands")
+            {
+                remainingSpace.hands += object->getSpaceOccupied().numSpaces;
+            }
+            else
+            {
+                remainingSpace.extras += object->getSpaceOccupied().numSpaces;
+            }
+            equipment.erase(std::remove(equipment.begin(), equipment.end(), object), equipment.end());
+            createSprite();
+            return true;
+        }
     }
     return false;
 }
@@ -377,16 +399,16 @@ void Pawn::useArmour(const std::string& type, std::vector<bool>& armours, int va
     int rest = armour->reduceDurability(value);
     if (armour->getAttackValue() <= 0)
     {
-        auto iter = std::find(equipment.begin(), equipment.end(), armour);
-        removeEquipment(std::distance(equipment.begin(), iter));
+        removeEquipment(armour);
+        delete armour;
         if (armours[2] && type != "Covering")
         {
             Equipment* covering = findArmour("Covering");
             int rest2 = covering->reduceDurability(rest);
             if (covering->getAttackValue() <= 0)
             {
-                auto iter = std::find(equipment.begin(), equipment.end(), covering);
-                removeEquipment(std::distance(equipment.begin(), iter));
+                removeEquipment(covering);
+                delete covering;
                 reduceHP(rest2);
             }
         }
