@@ -43,6 +43,7 @@ TradeTable::TradeTable(Pawn* inPawn, Pawn* inBody, sf::RenderWindow* inWindow)
 	sumOfCellWidths = getSumOfArray(cellWidths);
 	target = inWindow;
     cellHeight = 20;
+    gap = 5;
     setUpDimensions();
 	iconSprites = initializeSpriteMap();
     functions = initializeFunctions();
@@ -67,7 +68,7 @@ void TradeTable::drawTable(std::vector<Equipment*> equipment, bool bodys)
     tradeText.setPosition(minX, minY);
     if (bodys)
     {
-        int xmove = sumOfCellWidths * (1.02);
+        int xmove = sumOfCellWidths + gap;
         cell.move(xmove, 0);
         tradeText.move(xmove, 0);
         moveSpriteMap(xmove, 0, iconSprites);
@@ -123,6 +124,19 @@ void TradeTable::drawTable(std::vector<Equipment*> equipment, bool bodys)
         tradeText.move(-sumOfCellWidths, cellHeight);
         moveSpriteMap(-sumOfCellWidths, cellHeight, iconSprites);
     }
+    drawDoneButton();
+}
+
+void TradeTable::drawDoneButton()
+{
+    tradeText.setString("Done");
+    sf::FloatRect textBounds = tradeText.getLocalBounds();
+    cell.setSize(sf::Vector2f(textBounds.width*1.2, cellHeight));
+    cell.setPosition(minX+ sumOfCellWidths- cell.getSize().x/2+gap/2, minY - cellHeight - gap);
+    tradeText.setPosition(minX + sumOfCellWidths - textBounds.width / 2 + gap / 2, minY - cellHeight - gap);
+    cell.setFillColor(sf::Color(109, 201, 169));
+    target->draw(cell);
+    target->draw(tradeText);
 }
 
 void TradeTable::drawSpaceIcon(Equipment::SpaceOccupied space)
@@ -336,8 +350,8 @@ sf::Text TradeTable::initializeTradeText()
 
 void TradeTable::setUpDimensions()
 {
-    minX = target->getSize().x - sumOfCellWidths * (2.04);
+    minX = target->getSize().x - sumOfCellWidths * 2 - gap * 2;
     minY = 35;
-    maxX = target->getSize().x - 0.02;
+    maxX = target->getSize().x - gap;
     maxY = minY + cellHeight * (std::max(pawn->getEquipmentCount(), body->getEquipmentCount()) + 1);
 }

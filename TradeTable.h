@@ -20,6 +20,7 @@ private:
 	void drawTable(std::vector<Equipment*> equipment, bool bodys);
 	void drawTypeIcon(std::string type);
 	void drawSpaceIcon(Equipment::SpaceOccupied space);
+	void drawDoneButton();
 	bool isOnBody(sf::Vector2i mousePosition);
 	Equipment* clickOnEquipment(sf::Vector2i mousePosition, std::vector<Equipment*> equipment);
 	void tradeItem(Equipment* item, bool isBodys);
@@ -46,5 +47,6 @@ private:
 	int cellWidths[8];
 	int sumOfCellWidths;
 	int cellHeight;
+	float gap;
 };
 
