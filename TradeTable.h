@@ -13,6 +13,7 @@ public:
 	TradeTable(Pawn* inPawn, Pawn* inBody, sf::RenderWindow* window);
 	void draw();
 	bool tableClicked(sf::Vector2i mousePosition);
+	bool doneClicked(sf::Vector2i mousePosition);
 	void trade(sf::Vector2i mousePosition);
 
 
@@ -36,6 +37,7 @@ private:
 	sf::RenderWindow* target;
 	std::vector<std::function<std::string(const Equipment&)>> functions;
 	sf::RectangleShape cell;
+	sf::RectangleShape doneCell;
 	sf::Text tradeText;
 	std::map<std::string, sf::Sprite> iconSprites;
 	std::vector<sf::Texture*> iconTextures;

@@ -58,6 +58,11 @@ void Pawns::handleClick(sf::Vector2i mousePosition)
             std::cout << "Table clicked\n";
             tradeTable->trade(mousePosition);
         }
+        else if (tradeTable->doneClicked(mousePosition))
+        {
+            std::cout << "Done clicked\n";
+            // close trade
+        }
     }
     else
     {

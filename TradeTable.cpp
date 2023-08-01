@@ -48,6 +48,7 @@ TradeTable::TradeTable(Pawn* inPawn, Pawn* inBody, sf::RenderWindow* inWindow)
 	iconSprites = initializeSpriteMap();
     functions = initializeFunctions();
     cell = initializeCells();
+    doneCell = initializeCells();
     tradeText = initializeTradeText();
 }
 
@@ -131,11 +132,11 @@ void TradeTable::drawDoneButton()
 {
     tradeText.setString("Done");
     sf::FloatRect textBounds = tradeText.getLocalBounds();
-    cell.setSize(sf::Vector2f(textBounds.width*1.2, cellHeight));
-    cell.setPosition(minX+ sumOfCellWidths- cell.getSize().x/2+gap/2, minY - cellHeight - gap);
+    doneCell.setSize(sf::Vector2f(textBounds.width*1.2, cellHeight));
+    doneCell.setPosition(minX+ sumOfCellWidths- doneCell.getSize().x/2+gap/2, minY - cellHeight - gap);
     tradeText.setPosition(minX + sumOfCellWidths - textBounds.width / 2 + gap / 2, minY - cellHeight - gap);
-    cell.setFillColor(sf::Color(109, 201, 169));
-    target->draw(cell);
+    doneCell.setFillColor(sf::Color(109, 201, 169));
+    target->draw(doneCell);
     target->draw(tradeText);
 }
 
@@ -187,6 +188,15 @@ bool TradeTable::tableClicked(sf::Vector2i mousePosition)
 {
     int clickMinY = minY + cellHeight;
     if (mousePosition.x >= minX && mousePosition.x <= maxX && mousePosition.y >= clickMinY && mousePosition.y <= maxY)
+    {
+        return true;
+    }
+    return false;
+}
+
+bool TradeTable::doneClicked(sf::Vector2i mousePosition)
+{
+    if (doneCell.getGlobalBounds().contains(static_cast<float>(mousePosition.x), static_cast<float>(mousePosition.y)))
     {
         return true;
     }
