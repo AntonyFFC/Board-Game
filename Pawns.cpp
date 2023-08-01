@@ -12,11 +12,6 @@ Pawns::Pawns(Board* board,sf::RenderWindow* window)
     setupText();
 }
 
-Pawns::~Pawns()
-{
-    delete tradeTable;
-}
-
 void Pawns::flipTurn()
 {
     if (whosTurn)
@@ -53,16 +48,7 @@ void Pawns::handleClick(sf::Vector2i mousePosition)
 {
     if (isTrading())
     {
-        if (tradeTable->tableClicked(mousePosition))
-        {
-            std::cout << "Table clicked\n";
-            tradeTable->trade(mousePosition);
-        }
-        else if (tradeTable->doneClicked(mousePosition))
-        {
-            std::cout << "Done clicked\n";
-            // close trade
-        }
+        trading(mousePosition);
     }
     else
     {
@@ -156,9 +142,8 @@ void Pawns::handleClickRight(sf::Vector2i mousePosition)
     if (board->hexDict[pawnCoords]->isClicked(mousePosition) && board->hexDict[pawnCoords]->hasBody())
     {
         board->clearHighlight();
-        pawnDict[whichPawn]->reduceActions(1); //later you must simplify this, exchangging weapons must be added to leftClisk event when istrading is true adne set it to false
+        pawnDict[whichPawn]->reduceActions(1);
         setTrading(true);
-        delete(tradeTable); //later change this so that when trading set to false it is deleted
         tradeTable = new TradeTable(pawnDict[whichPawn], pawnDict[numberOfPawn(pawnCoords, true)], target);
         if (pawnDict[whichPawn]->getRemainingActions() == 0)
         {
@@ -308,6 +293,20 @@ void Pawns::pawnClicked(int pawnNum)
     for (std::tuple<int, int, int> hex : board->highlighted[0])
     {
         board->hexDict[hex]->setHighlight(true, 0);
+    }
+}
+
+void Pawns::trading(sf::Vector2i mousePosition)
+{
+    if (tradeTable->tableClicked(mousePosition))
+    {
+        std::cout << "Table clicked\n";
+        tradeTable->trade(mousePosition);
+    }
+    else if (tradeTable->doneClicked(mousePosition))
+    {
+        setTrading(false);
+        delete(tradeTable);
     }
 }
 

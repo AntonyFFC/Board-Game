@@ -16,7 +16,6 @@ public:
 	bool doneClicked(sf::Vector2i mousePosition);
 	void trade(sf::Vector2i mousePosition);
 
-
 private:
 	void drawTable(std::vector<Equipment*> equipment, bool bodys);
 	void drawTypeIcon(std::string type);

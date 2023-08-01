@@ -43,32 +43,39 @@ std::unordered_set<std::string> Pawn::getSet() {
 
 void Pawn::createSprite()
 {
-    delete combinedSprite;
-    std::vector<sf::Sprite> sortedSprites(order.size());
-    std::unordered_set<std::string> stuff = getSet();
-    for (std::string name : stuff)
+    if (isAlive())
     {
-        sortedSprites[order.at(name)] = spriteMap[name];
+        delete combinedSprite;
+        std::vector<sf::Sprite> sortedSprites(order.size());
+        std::unordered_set<std::string> stuff = getSet();
+        for (std::string name : stuff)
+        {
+            sortedSprites[order.at(name)] = spriteMap[name];
+        }
+
+        sf::RenderTexture* renderTexture = new sf::RenderTexture;
+        renderTexture->create(1400, 1400);
+
+        renderTexture->clear(sf::Color::Transparent);
+        for (const auto& sprite : sortedSprites)
+        {
+            renderTexture->draw(sprite);
+        }
+        renderTexture->display();
+
+        sf::Texture* combinedTexture = new sf::Texture(renderTexture->getTexture());
+        delete renderTexture;
+        /*combinedTexture->copyToImage().saveToFile("assets/combined.png");*/
+        combinedSprite = new sf::Sprite(*combinedTexture);
+        combinedSprite->setScale(scaleFactor, scaleFactor);
+        sf::Vector2f finalPos(xPos + combinedSprite->getGlobalBounds().width / 2.0f, yPos - combinedSprite->getGlobalBounds().height / 2.0f);
+        combinedSprite->setPosition(finalPos.x, finalPos.y);
+        combinedSprite->setRotation(rotationAngle);
     }
-
-    sf::RenderTexture* renderTexture = new sf::RenderTexture;
-    renderTexture->create(1400, 1400);
-
-    renderTexture->clear(sf::Color::Transparent);
-    for (const auto& sprite : sortedSprites)
+    else
     {
-        renderTexture->draw(sprite);
+        dead();
     }
-    renderTexture->display();
-
-    sf::Texture *combinedTexture = new sf::Texture(renderTexture->getTexture());
-    delete renderTexture;
-    /*combinedTexture->copyToImage().saveToFile("assets/combined.png");*/
-    combinedSprite = new sf::Sprite(*combinedTexture);
-    combinedSprite->setScale(scaleFactor, scaleFactor);
-    sf::Vector2f finalPos(xPos + combinedSprite->getGlobalBounds().width / 2.0f, yPos - combinedSprite->getGlobalBounds().height / 2.0f);
-    combinedSprite->setPosition(finalPos.x, finalPos.y);
-    combinedSprite->setRotation(rotationAngle);
 }
 
 sf::Sprite Pawn::getSprite() {

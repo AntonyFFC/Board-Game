@@ -13,7 +13,6 @@ class Pawns
 {
 public:
 	Pawns(Board* board, sf::RenderWindow* window);
-	~Pawns();
 
 	void handleClick(sf::Vector2i mousePosition);
 	void handleClickRight(sf::Vector2i mousePosition);
@@ -41,6 +40,7 @@ public:
 
 private:
 	void pawnClicked(int pawnNum);
+	void trading(sf::Vector2i mousePosition);
 	void pawnMoved(int pawnNum, std::tuple<int, int, int> where);
 	void attack(int pawnNum, int attackedNum);
 	void highlightedNoPawn(int pawnNum, std::tuple<int, int, int> current);
