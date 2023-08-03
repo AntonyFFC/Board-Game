@@ -26,10 +26,14 @@ private:
     Pawns* pawns;
     Pawn* p1;
     Pawn* p2;
+    Pawn* p3;
     Equipment* e1;
     Equipment* e2;
     Equipment* e3;
     Equipment* e4;
     Equipment* e5;
+    Equipment* e6;
+    Equipment* e7;
+    Equipment* e8;
     bool isShiftKeyPressed = false;
 };

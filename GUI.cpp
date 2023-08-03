@@ -8,12 +8,16 @@ Gui::Gui(const int screenWidth, const int screenHeight)
 	grid = new Board(13, 19, 0.8f);
     pawns = new Pawns(grid, window);
     p1 = new Pawn("Mirmil", 1, 0, 5, 4, { 2,2 }, 7, 510.f, 504.0f);
-    p2 = new Pawn("Lucjan", 2, 1, 5, 1, { 2,2 }, 7, 510.f, 504.0f);
+    p2 = new Pawn("Lucjan", 2, 1, 5, 4, { 2,2 }, 7, 510.f, 504.0f);
+    p3 = new Pawn("Zbyszko", 2, 1, 5, 4, { 2,2 }, 7, 510.f, 504.0f);
     e1 = new Equipment("sword", { 0,1 }, { 1, "hands" }, 1, 1, "Weapon", 5, "");
     e2 = new Equipment("helmet", { 0,1 }, { 1, "extras" }, 1, 1, "Armour", 5, "Helmet");
     e3 = new Equipment("plate armour", { 0,1 }, { 1, "extras" }, 2, 1, "Armour", 5, "Covering");
     e4 = new Equipment("shield", { 0,1 }, { 1, "hands" }, 2, 1, "Armour", 5, "Shield");
-    e5 = new Equipment("bow", { 4,6 }, { 2, "hands" }, 2, 1, "Weapon", 5, "Ranged 2");
+    e5 = new Equipment("bow", { 4,7 }, { 2, "hands" }, 1, 2, "Weapon", 5, "Ranged 2");
+    e6 = new Equipment("crossbow", { 4,6 }, { 1, "hands" }, 2, 3, "Weapon", 4, "Ranged 2");
+    e7 = new Equipment("dagger", { 0,1 }, { 1, "extras" }, 5, 1, "Weapon", 2, "Single use");
+    e8 = new Equipment("two handed axe", { 0,2 }, { 1, "extras" }, 3, 4, "Weapon", 2, "");
 }
 
 Gui::~Gui()
@@ -26,8 +30,10 @@ Gui::~Gui()
 void Gui::start() {
     pawns->addPawn(p1, { -7, 5, 2 });
     pawns->addPawn(p2, { 9, -6, -3 });
-    pawns->addItemToPawn(0, e1, e3);
+    pawns->addPawn(p3, { 9, -5, -4 });
+    pawns->addItemToPawn(0, e8, e7);
     pawns->addItemToPawn(1, e5, e2);
+    pawns->addItemToPawn(2, e6, e4);
     while (window->isOpen())
     {
         window->clear(sf::Color(66, 82, 107));
