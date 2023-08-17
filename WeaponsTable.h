@@ -17,7 +17,7 @@ public:
 private:
 	void drawTypeIcon(std::string type);
 	void drawSpaceIcon(Equipment::SpaceOccupied space);
-	Equipment* clickOnEquipment(sf::Vector2i mousePosition, std::vector<Equipment*> equipment);
+	Equipment* clickOnEquipment(sf::Vector2i mousePosition);
 
 	std::map<std::string, sf::Sprite> initializeSpriteMap();
 	std::vector<std::function<std::string(const Equipment&)>> initializeFunctions();

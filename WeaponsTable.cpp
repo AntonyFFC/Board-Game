@@ -152,12 +152,12 @@ bool WeaponsTable::tableClicked(sf::Vector2i mousePosition)
     return false;
 }
 
-Equipment* WeaponsTable::clickOnEquipment(sf::Vector2i mousePosition, std::vector<Equipment*> equipment)
+Equipment* WeaponsTable::clickOnEquipment(sf::Vector2i mousePosition)
 {
     int itemMinY = minY;
     int itemMaxY = minY + cellHeight;
     Equipment* chosen = nullptr;
-    for (Equipment* item : equipment)
+    for (Equipment* item : weapons)
     {
         itemMinY += cellHeight;
         itemMaxY += cellHeight;
@@ -245,7 +245,7 @@ sf::Text WeaponsTable::initializeText()
 
 void WeaponsTable::setUpDimensions()
 {
-    minX = target->getSize().x - sumOfCellWidths * 2 - gap * 2;
+    minX = target->getSize().x - sumOfCellWidths - gap;
     minY = 35;
     maxX = target->getSize().x - gap;
     maxY = minY + cellHeight * (weapons.size() + 1);
