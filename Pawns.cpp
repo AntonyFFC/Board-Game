@@ -333,7 +333,7 @@ void Pawns::attack(int pawnNum, int attackedNum)
             weapon = item;
         }
     }
-    if (weapon != nullptr)
+    if (weapon != nullptr && weapon->getAttackActions() <= attacker->getRemainingActions())
     {
         Pawn* attacked = pawnDict[attackedNum];
         if (weapon->isRanged())
@@ -357,7 +357,7 @@ void Pawns::attack(int pawnNum, int attackedNum)
         }
     }
     else {
-        throw std::runtime_error("No weapon to attack with");
+        std::cout<<"Attack failed\n";
     }
 }
 
