@@ -9,6 +9,7 @@
 #include <functional>
 #include <iostream>
 #include "TradeTable.h"
+#include "WeaponsTable.h"
 class Pawns
 {
 public:
@@ -20,6 +21,7 @@ public:
 	void handleShiftOn();
 	void handleShiftOff();
 	bool isTrading() const;
+	bool isChoosing() const;
 	bool addItemToPawn(int number, Equipment* item);
 	template<typename... Args>
 	bool addItemToPawn(int number, Equipment* item, Args&&... rest)
@@ -36,6 +38,7 @@ public:
 		return done;
 	}
 	void setTrading(bool boolean);
+	void setChoosing(bool boolean);
 	void drawTexts();
 
 private:
@@ -43,6 +46,8 @@ private:
 	void trading(sf::Vector2i mousePosition);
 	void pawnMoved(int pawnNum, std::tuple<int, int, int> where);
 	void attack(int pawnNum, int attackedNum);
+	bool hasWeapon(int pawnNum);
+	Equipment* chooseWeapon(int pawnNum);
 	void highlightedNoPawn(int pawnNum, std::tuple<int, int, int> current);
 	bool pawnFirst(int pawnNum, std::tuple<int, int, int> current);
 	void pawnSecond(int pawnNum, std::tuple<int, int, int> current);
@@ -58,6 +63,7 @@ private:
 
 	Board* board;
 	TradeTable* tradeTable;
+	WeaponsTable* weaponsTable;
 	sf::RenderWindow* target;
 	std::tuple<int, int, int> previous;
 	bool wasShift;
@@ -67,5 +73,6 @@ private:
 	int whichPawn; //current pawn number in pawnDict
 	sf::Text turnText;
 	bool isTrading_;
+	bool isChoosing_;
 };
 

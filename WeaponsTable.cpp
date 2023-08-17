@@ -1,53 +1,55 @@
-#include "TradeTable.h"
+#include "WeaponsTable.h"
 #include "SpriteUtils.h"
 
 template <typename T, size_t N>
 int getSumOfArray(T(&arr)[N]) {
-	int sum = 0;
-	for (size_t i = 0; i < N; ++i) {
-		sum += arr[i];
-	}
-	return sum;
+    int sum = 0;
+    for (size_t i = 0; i < N; ++i) {
+        sum += arr[i];
+    }
+    return sum;
 }
 
-TradeTable::TradeTable(Pawn* inPawn, Pawn* inBody, sf::RenderWindow* inWindow)
-    :pawn(inPawn), body(inBody), headers{ "Name","left-right-arrow-icon","circle-line-icon","bomb-blast-icon",
+std::vector<Equipment*> findWeapons(std::vector<Equipment*> equipment)
+{
+    std::vector<Equipment*> weapons;
+    for (Equipment* item : equipment)
+    {
+        if (item->getType() == "Weapon")
+        {
+            weapons.push_back(item);
+        }
+    }
+    return weapons;
+}
+
+WeaponsTable::WeaponsTable(Pawn* inPawn, sf::RenderWindow* inWindow)
+    :pawn(inPawn), headers{ "Name","left-right-arrow-icon","circle-line-icon","bomb-blast-icon",
  "history-icon","cube-icon","dollar-icon","Other" }, cellWidths{ 70,40,40,30,30,30,30,100 }
 {
-	sumOfCellWidths = getSumOfArray(cellWidths);
-	target = inWindow;
+    sumOfCellWidths = getSumOfArray(cellWidths);
+    target = inWindow;
     cellHeight = 20;
     gap = 5;
     setUpDimensions();
-	iconSprites = initializeSpriteMap();
+    iconSprites = initializeSpriteMap();
     functions = initializeFunctions();
     cell = initializeCells();
     doneCell = initializeCells();
-    tradeText = initializeTradeText();
 }
 
-void TradeTable::draw()
+void WeaponsTable::draw()
 {
-    std::vector<Equipment*> bodysEquipment = body->getEquipment();
-    drawTable(bodysEquipment, true);
-    std::vector<Equipment*> pawnsEquipment = pawn->getEquipment();
-    drawTable(pawnsEquipment, false);
-
+    std::vector<Equipment*> pawnsWeapons = findWeapons(pawn->getEquipment());
+    drawTable(pawnsWeapons);
 }
 
-void TradeTable::drawTable(std::vector<Equipment*> equipment, bool bodys)
+void WeaponsTable::drawTable(std::vector<Equipment*> equipment)
 {
     cell.setPosition(minX, minY);
     setPosSpriteMap(minX, minY, iconSprites);
     setScalSpriteMap(0.04, iconSprites);
-    tradeText.setPosition(minX, minY);
-    if (bodys)
-    {
-        int xmove = sumOfCellWidths + gap;
-        cell.move(xmove, 0);
-        tradeText.move(xmove, 0);
-        moveSpriteMap(xmove, 0, iconSprites);
-    }
+    text.setPosition(minX, minY);
     cell.setFillColor(sf::Color(156, 84, 84));
 
     for (int i = 0; i < 8; i++)
@@ -56,20 +58,20 @@ void TradeTable::drawTable(std::vector<Equipment*> equipment, bool bodys)
         target->draw(cell);
         if (headers[i].substr(headers[i].length() - 4) != "icon")
         {
-            tradeText.setString(headers[i]);
-            target->draw(tradeText);
+            text.setString(headers[i]);
+            target->draw(text);
         }
         else
         {
             target->draw(iconSprites[headers[i]]);
         }
         cell.move(cellWidths[i], 0);
-        tradeText.move(cellWidths[i], 0);
+        text.move(cellWidths[i], 0);
         moveSpriteMap(cellWidths[i], 0, iconSprites);
     }
     cell.setFillColor(sf::Color(200, 200, 200));
     cell.move(-sumOfCellWidths, cellHeight);
-    tradeText.move(-sumOfCellWidths, cellHeight);
+    text.move(-sumOfCellWidths, cellHeight);
     moveSpriteMap(-sumOfCellWidths, cellHeight, iconSprites);
 
     for (Equipment* item : equipment)
@@ -88,33 +90,20 @@ void TradeTable::drawTable(std::vector<Equipment*> equipment, bool bodys)
             }
             else
             {
-                tradeText.setString(functions[i](*static_cast<const Equipment*>(item)));
-                target->draw(tradeText);
+                text.setString(functions[i](*static_cast<const Equipment*>(item)));
+                target->draw(text);
             }
             cell.move(cellWidths[i], 0);
-            tradeText.move(cellWidths[i], 0);
+            text.move(cellWidths[i], 0);
             moveSpriteMap(cellWidths[i], 0, iconSprites);
         }
         cell.move(-sumOfCellWidths, cellHeight);
-        tradeText.move(-sumOfCellWidths, cellHeight);
+        text.move(-sumOfCellWidths, cellHeight);
         moveSpriteMap(-sumOfCellWidths, cellHeight, iconSprites);
     }
-    drawDoneButton();
 }
 
-void TradeTable::drawDoneButton()
-{
-    tradeText.setString("Done");
-    sf::FloatRect textBounds = tradeText.getLocalBounds();
-    doneCell.setSize(sf::Vector2f(textBounds.width*1.2, cellHeight));
-    doneCell.setPosition(minX+ sumOfCellWidths- doneCell.getSize().x/2+gap/2, minY - cellHeight - gap);
-    tradeText.setPosition(minX + sumOfCellWidths - textBounds.width / 2 + gap / 2, minY - cellHeight - gap);
-    doneCell.setFillColor(sf::Color(109, 201, 169));
-    target->draw(doneCell);
-    target->draw(tradeText);
-}
-
-void TradeTable::drawSpaceIcon(Equipment::SpaceOccupied space)
+void WeaponsTable::drawSpaceIcon(Equipment::SpaceOccupied space)
 {
     int added = 0;
     for (int i = 0; i < space.numSpaces; i++)
@@ -142,7 +131,7 @@ void TradeTable::drawSpaceIcon(Equipment::SpaceOccupied space)
 
 }
 
-void TradeTable::drawTypeIcon(std::string type)
+void WeaponsTable::drawTypeIcon(std::string type)
 {
     if (type == "Weapon")
     {
@@ -158,7 +147,7 @@ void TradeTable::drawTypeIcon(std::string type)
     }
 }
 
-bool TradeTable::tableClicked(sf::Vector2i mousePosition)
+bool WeaponsTable::tableClicked(sf::Vector2i mousePosition)
 {
     int clickMinY = minY + cellHeight;
     if (mousePosition.x >= minX && mousePosition.x <= maxX && mousePosition.y >= clickMinY && mousePosition.y <= maxY)
@@ -168,59 +157,10 @@ bool TradeTable::tableClicked(sf::Vector2i mousePosition)
     return false;
 }
 
-bool TradeTable::doneClicked(sf::Vector2i mousePosition)
-{
-    if (doneCell.getGlobalBounds().contains(static_cast<float>(mousePosition.x), static_cast<float>(mousePosition.y)))
-    {
-        return true;
-    }
-    return false;
-}
-
-void TradeTable::trade(sf::Vector2i mousePosition)
-{
-    Equipment* item = nullptr;
-    bool isBodys;
-    if (isOnBody(mousePosition))
-    {
-        item = clickOnEquipment(mousePosition, body->getEquipment());
-        isBodys = true;
-    }
-    else
-    {
-        item = clickOnEquipment(mousePosition, pawn->getEquipment());
-        isBodys = false;
-    }
-    if (item != nullptr)
-    {
-        tradeItem(item, isBodys);
-    }
-}
-
-void TradeTable::tradeItem(Equipment* item, bool isBodys)
-{
-    if (isBodys)
-    {
-        if (pawn->addEquipment(item))
-        {
-            body->removeEquipment(item);
-            setUpDimensions();
-        }
-    }
-    else
-    {
-        if (body->addEquipment(item))
-        {
-            pawn->removeEquipment(item);
-            setUpDimensions();
-        }
-    }
-}
-
-Equipment* TradeTable::clickOnEquipment(sf::Vector2i mousePosition, std::vector<Equipment*> equipment)
+Equipment* WeaponsTable::clickOnEquipment(sf::Vector2i mousePosition, std::vector<Equipment*> equipment)
 {
     int itemMinY = minY;
-    int itemMaxY = minY+ cellHeight;
+    int itemMaxY = minY + cellHeight;
     Equipment* chosen = nullptr;
     for (Equipment* item : equipment)
     {
@@ -235,18 +175,8 @@ Equipment* TradeTable::clickOnEquipment(sf::Vector2i mousePosition, std::vector<
     return chosen;
 }
 
-bool TradeTable::isOnBody(sf::Vector2i mousePosition)
-{
-    int minXbody = minX + sumOfCellWidths * (1.02);
-    if (mousePosition.x >= minXbody && mousePosition.x <= maxX)
-    {
-        return true;
-    }
-    return false;
-}
-
 // initializers
-std::map<std::string, sf::Sprite> TradeTable::initializeSpriteMap()
+std::map<std::string, sf::Sprite> WeaponsTable::initializeSpriteMap()
 {
     std::string folderPath = "assets/icons/";
     std::string searchPattern = folderPath + "*.png";
@@ -285,7 +215,7 @@ std::map<std::string, sf::Sprite> TradeTable::initializeSpriteMap()
     return sprites;
 }
 
-std::vector<std::function<std::string(const Equipment&)>> TradeTable::initializeFunctions()
+std::vector<std::function<std::string(const Equipment&)>> WeaponsTable::initializeFunctions()
 {
     std::vector<std::function<std::string(const Equipment&)>> newFunctions;
     newFunctions.push_back([](const Equipment& item) { return item.getName(); });
@@ -299,7 +229,7 @@ std::vector<std::function<std::string(const Equipment&)>> TradeTable::initialize
     return newFunctions;
 }
 
-sf::RectangleShape TradeTable::initializeCells()
+sf::RectangleShape WeaponsTable::initializeCells()
 {
     sf::RectangleShape newCell;
     newCell.setFillColor(sf::Color::Transparent);
@@ -308,7 +238,7 @@ sf::RectangleShape TradeTable::initializeCells()
     return newCell;
 }
 
-sf::Text TradeTable::initializeTradeText()
+sf::Text WeaponsTable::initializeText()
 {
     sf::Text text;
     int size = 15;
@@ -318,10 +248,10 @@ sf::Text TradeTable::initializeTradeText()
     return text;
 }
 
-void TradeTable::setUpDimensions()
+void WeaponsTable::setUpDimensions()
 {
     minX = target->getSize().x - sumOfCellWidths * 2 - gap * 2;
     minY = 35;
     maxX = target->getSize().x - gap;
-    maxY = minY + cellHeight * (std::max(pawn->getEquipmentCount(), body->getEquipmentCount()) + 1);
+    maxY = minY + cellHeight * (pawn->getEquipmentCount() + 1);
 }

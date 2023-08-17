@@ -161,7 +161,9 @@
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Pawn.cpp" />
     <ClCompile Include="Pawns.cpp" />
+    <ClCompile Include="SpriteUtils.cpp" />
     <ClCompile Include="TradeTable.cpp" />
+    <ClCompile Include="WeaponsTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />
@@ -174,7 +176,9 @@
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Pawn.h" />
     <ClInclude Include="Pawns.h" />
+    <ClInclude Include="SpriteUtils.h" />
     <ClInclude Include="TradeTable.h" />
+    <ClInclude Include="WeaponsTable.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

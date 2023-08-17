@@ -29,6 +29,8 @@ public:
     int getMissMax() const;
     int reduceDurability(int value);
     bool isRanged();
+    std::string rangeToString() const;
+    std::string spaceToString() const;
 private:
     std::string name;
     Range range;

@@ -264,6 +264,10 @@ bool Pawns::isTrading() const {
     return isTrading_;
 }
 
+bool Pawns::isChoosing() const {
+    return isChoosing_;
+}
+
 bool Pawns::addItemToPawn(int number, Equipment* item)
 {
     return pawnDict[number]->addEquipment(item);
@@ -273,12 +277,19 @@ void Pawns::setTrading(bool boolean) {
     isTrading_ = boolean;
 }
 
+void Pawns::setChoosing(bool boolean) {
+    isChoosing_ = boolean;
+}
+
 void Pawns::drawTexts()
 {
     drawTurn();
     if (isTrading())
     {
         tradeTable->draw();
+    }
+    else if (isChoosing()) {
+        weaponsTable->draw();
     }
 }
 
@@ -325,40 +336,68 @@ void Pawns::pawnMoved(int pawnNum, std::tuple<int, int, int> where)
 void Pawns::attack(int pawnNum, int attackedNum)
 {
     Pawn* attacker = pawnDict[pawnNum];
-    Equipment* weapon = nullptr;
-    for (Equipment* item : attacker->getEquipment()) //change this later for a function for choosing weapon
+    if (hasWeapon(pawnNum))
     {
-        if (item->getType() == "Weapon")
+        Equipment* weapon = chooseWeapon(pawnNum);
+        if (weapon->getAttackActions() <= attacker->getRemainingActions())
         {
-            weapon = item;
-        }
-    }
-    if (weapon != nullptr && weapon->getAttackActions() <= attacker->getRemainingActions())
-    {
-        Pawn* attacked = pawnDict[attackedNum];
-        if (weapon->isRanged())
-        {
-            attacked->rangedAttack(weapon->getAttackValue(), weapon->getMissMax());
+            Pawn* attacked = pawnDict[attackedNum];
+            if (weapon->isRanged())
+            {
+                attacked->rangedAttack(weapon->getAttackValue(), weapon->getMissMax());
+            }
+            else
+            {
+                attacked->attack(weapon->getAttackValue());
+            }
+            if (!attacked->isAlive())
+            {
+                board->hexDict[attacked->getHexCoords()]->setPawn(false);
+                attacked->addSpace(8, 8); //this is so the body does not have a low limit of space
+                board->hexDict[attacked->getHexCoords()]->setBody(true, attacked);
+            }
+            attacker->reduceActions(weapon->getAttackActions());
+            if (attacker->getRemainingActions() == 0)
+            {
+                attacker->setRemainingActions(attacker->getMaxActions());
+            }
         }
         else
         {
-            attacked->attack(weapon->getAttackValue());
-        }
-        if (!attacked->isAlive())
-        {
-            board->hexDict[attacked->getHexCoords()]->setPawn(false);
-            attacked->addSpace(8, 8); //this is so the body does not have a low limit of space
-            board->hexDict[attacked->getHexCoords()]->setBody(true, attacked);
-        }
-        attacker->reduceActions(weapon->getAttackActions());
-        if (attacker->getRemainingActions() == 0)
-        {
-            attacker->setRemainingActions(attacker->getMaxActions());
+            std::cout << "Not enough actions\n";
         }
     }
     else {
-        std::cout<<"Attack failed\n";
+        std::cout<<"No weapon\n";
     }
+}
+
+bool Pawns::hasWeapon(int pawnNum)
+{
+    Pawn* attacker = pawnDict[pawnNum];
+    for (Equipment* item : attacker->getEquipment())
+    {
+        if (item->getType() == "Weapon")
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+Equipment* Pawns::chooseWeapon(int pawnNum)
+{
+    weaponsTable = new WeaponsTable(pawnDict[pawnNum], target);
+    setChoosing(true);
+    Pawn* attacker = pawnDict[pawnNum];
+    for (Equipment* item : attacker->getEquipment())
+    {
+        if (item->getType() == "Weapon")
+        {
+            return item;
+        }
+    }
+    return nullptr;
 }
 
 std::vector<std::tuple<int, int, int>> Pawns::getViewOfWeapon(int pawnNum, Equipment* weapon)

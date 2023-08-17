@@ -98,3 +98,18 @@ bool Equipment::isRanged()
 {
     return ranged;
 }
+
+
+std::string Equipment::rangeToString() const
+{
+    std::string outText;
+    outText = std::to_string(range.minRange) + "-" + std::to_string(range.maxRange);
+    return outText;
+}
+
+std::string Equipment::spaceToString() const
+{
+    std::string outText;
+    outText = std::to_string(spaceOccupied.numSpaces) + ":" + spaceOccupied.spaceType;
+    return outText;
+}
