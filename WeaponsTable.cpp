@@ -24,9 +24,10 @@ std::vector<Equipment*> findWeapons(std::vector<Equipment*> equipment)
 }
 
 WeaponsTable::WeaponsTable(Pawn* inPawn, sf::RenderWindow* inWindow)
-    :pawn(inPawn), headers{ "Name","left-right-arrow-icon","circle-line-icon","bomb-blast-icon",
+    :headers{ "Name","left-right-arrow-icon","circle-line-icon","bomb-blast-icon",
  "history-icon","cube-icon","dollar-icon","Other" }, cellWidths{ 70,40,40,30,30,30,30,100 }
 {
+    weapons = findWeapons(inPawn->getEquipment());
     sumOfCellWidths = getSumOfArray(cellWidths);
     target = inWindow;
     cellHeight = 20;
@@ -35,16 +36,10 @@ WeaponsTable::WeaponsTable(Pawn* inPawn, sf::RenderWindow* inWindow)
     iconSprites = initializeSpriteMap();
     functions = initializeFunctions();
     cell = initializeCells();
-    doneCell = initializeCells();
+    text = initializeText();
 }
 
 void WeaponsTable::draw()
-{
-    std::vector<Equipment*> pawnsWeapons = findWeapons(pawn->getEquipment());
-    drawTable(pawnsWeapons);
-}
-
-void WeaponsTable::drawTable(std::vector<Equipment*> equipment)
 {
     cell.setPosition(minX, minY);
     setPosSpriteMap(minX, minY, iconSprites);
@@ -74,7 +69,7 @@ void WeaponsTable::drawTable(std::vector<Equipment*> equipment)
     text.move(-sumOfCellWidths, cellHeight);
     moveSpriteMap(-sumOfCellWidths, cellHeight, iconSprites);
 
-    for (Equipment* item : equipment)
+    for (Equipment* item : weapons)
     {
         for (int i = 0; i < 8; i++)
         {
@@ -253,5 +248,5 @@ void WeaponsTable::setUpDimensions()
     minX = target->getSize().x - sumOfCellWidths * 2 - gap * 2;
     minY = 35;
     maxX = target->getSize().x - gap;
-    maxY = minY + cellHeight * (pawn->getEquipmentCount() + 1);
+    maxY = minY + cellHeight * (weapons.size() + 1);
 }

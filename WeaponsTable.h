@@ -15,7 +15,6 @@ public:
 	bool tableClicked(sf::Vector2i mousePosition);
 
 private:
-	void drawTable(std::vector<Equipment*> equipment);
 	void drawTypeIcon(std::string type);
 	void drawSpaceIcon(Equipment::SpaceOccupied space);
 	Equipment* clickOnEquipment(sf::Vector2i mousePosition, std::vector<Equipment*> equipment);
@@ -26,7 +25,7 @@ private:
 	sf::Text initializeText();
 	void setUpDimensions();
 
-	Pawn* pawn;
+	std::vector<Equipment*> weapons;
 	sf::RenderWindow* target;
 	std::vector<std::function<std::string(const Equipment&)>> functions;
 	sf::RectangleShape cell;

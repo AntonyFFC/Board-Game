@@ -387,7 +387,7 @@ bool Pawns::hasWeapon(int pawnNum)
 
 Equipment* Pawns::chooseWeapon(int pawnNum)
 {
-    weaponsTable = new WeaponsTable(pawnDict[pawnNum], target);
+    weaponsTable = new WeaponsTable(pawnDict[pawnNum], target); // add delete when chosen!!!
     setChoosing(true);
     Pawn* attacker = pawnDict[pawnNum];
     for (Equipment* item : attacker->getEquipment())
