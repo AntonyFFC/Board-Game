@@ -10,7 +10,7 @@
 class WeaponsTable
 {
 public:
-	WeaponsTable(Pawn* inPawn, Pawn* inAttacked, sf::RenderWindow* inWindow);
+	WeaponsTable(Pawn* inPawn, Pawn* inAttacked, std::vector<Equipment*> weapons, sf::RenderWindow* inWindow);
 	void draw();
 	bool tableClicked(sf::Vector2i mousePosition);
 

@@ -10,24 +10,10 @@ int getSumOfArray(T(&arr)[N]) {
     return sum;
 }
 
-std::vector<Equipment*> findWeapons(std::vector<Equipment*> equipment)
-{
-    std::vector<Equipment*> weapons;
-    for (Equipment* item : equipment)
-    {
-        if (item->getType() == "Weapon")
-        {
-            weapons.push_back(item);
-        }
-    }
-    return weapons;
-}
-
-WeaponsTable::WeaponsTable(Pawn* inPawn, Pawn* inAttacked, sf::RenderWindow* inWindow)
-    :attacker(inPawn), attacked(inAttacked),headers{ "Name","left-right-arrow-icon","circle-line-icon","bomb-blast-icon",
+WeaponsTable::WeaponsTable(Pawn* inPawn, Pawn* inAttacked, std::vector<Equipment*> weapons, sf::RenderWindow* inWindow)
+    :attacker(inPawn), attacked(inAttacked), weapons(weapons), headers{"Name","left-right-arrow-icon","circle-line-icon","bomb-blast-icon",
  "history-icon","cube-icon","dollar-icon","Other" }, cellWidths{ 70,40,40,30,30,30,30,100 }
 {
-    weapons = findWeapons(inPawn->getEquipment());
     sumOfCellWidths = getSumOfArray(cellWidths);
     target = inWindow;
     cellHeight = 20;

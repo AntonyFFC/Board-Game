@@ -46,7 +46,7 @@ private:
 	void trading(sf::Vector2i mousePosition);
 	void pawnMoved(int pawnNum, std::tuple<int, int, int> where);
 	void attack(int pawnNum, int attackedNum, Equipment* weapon);
-	int hasWeapon(int pawnNum);
+	std::vector<Equipment*> getWeaponsInUse(int pawnNum, int attackedNum);
 	bool pawnFirst(int pawnNum, std::tuple<int, int, int> current);
 	void pawnSecond(int pawnNum, std::tuple<int, int, int> current);
 	std::vector<std::tuple<int, int, int>> getViewOfWeapon(int pawnNum, Equipment* weapon);

@@ -95,19 +95,11 @@ void Pawns::pawnSecond(int pawnNum, std::tuple<int, int, int> current)
     auto it = std::find(inView.begin(), inView.end(), current);
     if (it != inView.end())
     {
-        int weaponsNum = hasWeapon(pawnNum);
-        if (weaponsNum)
+        std::vector<Equipment*> weaponsInView = getWeaponsInUse(pawnNum, attackedNum);
+        if (weaponsInView.size())
         {
-            if (weaponsNum == 1)
-            {
-                Equipment* weapon = pawnDict[pawnNum]->getEquipment().front();
-                attack(pawnNum, attackedNum, weapon);
-            }
-            else
-            {
-                weaponsTable = new WeaponsTable(pawnDict[pawnNum], pawnDict[attackedNum], target); // add delete when chosen!!!
-                setChoosing(true);
-            }
+            weaponsTable = new WeaponsTable(pawnDict[pawnNum], pawnDict[attackedNum], weaponsInView, target); // add delete when chosen!!!
+            setChoosing(true);
         }
         else
         {
@@ -329,18 +321,24 @@ void Pawns::attack(int pawnNum, int attackedNum, Equipment* weapon)
     }
 }
 
-int Pawns::hasWeapon(int pawnNum)
+std::vector<Equipment*> Pawns::getWeaponsInUse(int pawnNum, int attackedNum)
 {
-    int count = 0;
+    std::vector<Equipment*> items;
+    std::tuple<int, int, int> attackedSpot = pawnDict[attackedNum]->getHexCoords();
     Pawn* attacker = pawnDict[pawnNum];
     for (Equipment* item : attacker->getEquipment())
     {
-        if (item->getType() == "Weapon")
+        if (item->getType() == "Weapon" && item->getAttackActions() <= attacker->getRemainingActions())
         {
-            count++;
+            std::vector<std::tuple<int, int, int>> inView = getViewOfWeapon(pawnNum, item);
+            auto it = std::find(inView.begin(), inView.end(), attackedSpot);
+            if (it != inView.end())
+            {
+                items.push_back(item);
+            }
         }
     }
-    return count;
+    return items;
 }
 
 std::vector<std::tuple<int, int, int>> Pawns::getViewOfWeapon(int pawnNum, Equipment* weapon)
