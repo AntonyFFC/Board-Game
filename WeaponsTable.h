@@ -13,6 +13,9 @@ public:
 	WeaponsTable(Pawn* inPawn, Pawn* inAttacked, std::vector<Equipment*> weapons, sf::RenderWindow* inWindow);
 	void draw();
 	bool tableClicked(sf::Vector2i mousePosition);
+	Pawn* getAttacker() const;
+	Pawn* getAttacked() const;
+	Equipment* getWeapon(sf::Vector2i mousePosition);
 
 private:
 	void drawTypeIcon(std::string type);

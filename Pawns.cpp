@@ -52,7 +52,7 @@ void Pawns::handleClick(sf::Vector2i mousePosition)
     }
     else if (isChoosing())
     {
-        //chosing(mousePosition);
+        choosing(mousePosition);
     }
     else
     {
@@ -279,6 +279,24 @@ void Pawns::trading(sf::Vector2i mousePosition)
     {
         setTrading(false);
         delete(tradeTable);
+    }
+}
+
+void Pawns::choosing(sf::Vector2i mousePosition)
+{
+    Equipment* item = nullptr;
+    if (weaponsTable->tableClicked(mousePosition))
+    {
+        std::cout << "Table clicked\n";
+        item = weaponsTable->getWeapon(mousePosition);
+        if (item != nullptr)
+        {
+            int attackerNum = numberOfPawn(weaponsTable->getAttacker()->getHexCoords());
+            int attackedNum = numberOfPawn(weaponsTable->getAttacked()->getHexCoords());
+            setChoosing(false);
+            attack(attackerNum, attackedNum, item);
+            delete weaponsTable;
+        }
     }
 }
 

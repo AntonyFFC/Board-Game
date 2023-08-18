@@ -44,6 +44,7 @@ public:
 private:
 	void pawnClicked(int pawnNum);
 	void trading(sf::Vector2i mousePosition);
+	void choosing(sf::Vector2i mousePosition);
 	void pawnMoved(int pawnNum, std::tuple<int, int, int> where);
 	void attack(int pawnNum, int attackedNum, Equipment* weapon);
 	std::vector<Equipment*> getWeaponsInUse(int pawnNum, int attackedNum);
