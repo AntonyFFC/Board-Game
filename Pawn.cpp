@@ -163,9 +163,9 @@ void Pawn::setPosition(float inx, float iny) {
     combinedSprite->setPosition(finalPos.x, finalPos.y);
 }
 
-void Pawn::setScale(float ins) {
+void Pawn::scale(float ins) {
     this->scaleFactor = ins;
-    combinedSprite->setScale(scaleFactor, scaleFactor);
+    combinedSprite->scale(scaleFactor, scaleFactor);
 }
 
 void Pawn::setHexCoords(std::tuple<int, int, int> coords)
@@ -188,6 +188,10 @@ bool Pawn::addEquipment(Equipment* item) {
         {
             if (item->getSpaceOccupied().numSpaces <= remainingSpace.hands)
             {
+                if (remainingSpace.hands < space.hands)
+                {
+                    flipSprite(item);
+                }
                 equipment.push_back(item);
                 remainingSpace.hands -= item->getSpaceOccupied().numSpaces;
                 createSprite();
@@ -439,6 +443,17 @@ Equipment* Pawn::findArmour(const std::string& type)
         }
     }
     throw std::runtime_error("Now such armour");
+}
+
+void Pawn::flipSprite(Equipment* item)
+{
+    sf::Sprite sprite = spriteMap[item->getName()];
+    sf::Sprite flippedSprite(sprite);
+    sf::IntRect textureRect = sprite.getTextureRect();
+    textureRect.left += textureRect.width;
+    textureRect.width = -textureRect.width;
+    flippedSprite.setTextureRect(textureRect);
+    spriteMap[item->getName()] = flippedSprite;
 }
 
 const std::map<std::string, int> Pawn::order = {

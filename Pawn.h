@@ -42,7 +42,7 @@ public:
     void setHP(int healthPoints);
     void setRotationAngle(float angle);
     void setPosition(float inx, float iny);
-    void setScale(float ins);
+    void scale(float ins);
     void setHexCoords(std::tuple<int, int, int> coords);
     void addSpace(int hands, int extras);
 
@@ -72,6 +72,7 @@ private:
     std::vector<bool> whatArmour();
     Equipment* findArmour(const std::string& type);
     void useArmour(const std::string& type, std::vector<bool>& armours, int value);
+    void flipSprite(Equipment* item);
 
     std::string name;
     int teamNumber;
