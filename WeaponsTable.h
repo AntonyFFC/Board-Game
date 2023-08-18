@@ -10,7 +10,7 @@
 class WeaponsTable
 {
 public:
-	WeaponsTable(Pawn* inPawn, sf::RenderWindow* window);
+	WeaponsTable(Pawn* inPawn, Pawn* inAttacked, sf::RenderWindow* inWindow);
 	void draw();
 	bool tableClicked(sf::Vector2i mousePosition);
 
@@ -25,11 +25,12 @@ private:
 	sf::Text initializeText();
 	void setUpDimensions();
 
+	Pawn* attacker;
+	Pawn* attacked;
 	std::vector<Equipment*> weapons;
 	sf::RenderWindow* target;
 	std::vector<std::function<std::string(const Equipment&)>> functions;
 	sf::RectangleShape cell;
-	sf::RectangleShape doneCell;
 	sf::Text text;
 	std::map<std::string, sf::Sprite> iconSprites;
 	std::vector<sf::Texture*> iconTextures;

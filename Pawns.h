@@ -45,10 +45,8 @@ private:
 	void pawnClicked(int pawnNum);
 	void trading(sf::Vector2i mousePosition);
 	void pawnMoved(int pawnNum, std::tuple<int, int, int> where);
-	void attack(int pawnNum, int attackedNum);
-	bool hasWeapon(int pawnNum);
-	Equipment* chooseWeapon(int pawnNum);
-	void highlightedNoPawn(int pawnNum, std::tuple<int, int, int> current);
+	void attack(int pawnNum, int attackedNum, Equipment* weapon);
+	int hasWeapon(int pawnNum);
 	bool pawnFirst(int pawnNum, std::tuple<int, int, int> current);
 	void pawnSecond(int pawnNum, std::tuple<int, int, int> current);
 	std::vector<std::tuple<int, int, int>> getViewOfWeapon(int pawnNum, Equipment* weapon);
@@ -60,6 +58,7 @@ private:
 	void placeWall(int pawnNumber, std::tuple<int, int, int> coords);
 	bool destroyWall(int pawnNumber, std::tuple<int, int, int> coords);
 	void drawTurn();
+	void resetTurn(int pawnNum);
 
 	Board* board;
 	TradeTable* tradeTable;

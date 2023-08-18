@@ -23,8 +23,8 @@ std::vector<Equipment*> findWeapons(std::vector<Equipment*> equipment)
     return weapons;
 }
 
-WeaponsTable::WeaponsTable(Pawn* inPawn, sf::RenderWindow* inWindow)
-    :headers{ "Name","left-right-arrow-icon","circle-line-icon","bomb-blast-icon",
+WeaponsTable::WeaponsTable(Pawn* inPawn, Pawn* inAttacked, sf::RenderWindow* inWindow)
+    :attacker(inPawn), attacked(inAttacked),headers{ "Name","left-right-arrow-icon","circle-line-icon","bomb-blast-icon",
  "history-icon","cube-icon","dollar-icon","Other" }, cellWidths{ 70,40,40,30,30,30,30,100 }
 {
     weapons = findWeapons(inPawn->getEquipment());

@@ -50,6 +50,10 @@ void Pawns::handleClick(sf::Vector2i mousePosition)
     {
         trading(mousePosition);
     }
+    else if (isChoosing())
+    {
+        //chosing(mousePosition);
+    }
     else
     {
         for (auto& pair : board->hexDict) {
@@ -76,7 +80,7 @@ void Pawns::handleClick(sf::Vector2i mousePosition)
                 }
                 else
                 {
-                    highlightedNoPawn(whichPawn, present);
+                    pawnMoved(whichPawn, present);
                 }
                 break;
             }
@@ -86,20 +90,28 @@ void Pawns::handleClick(sf::Vector2i mousePosition)
 
 void Pawns::pawnSecond(int pawnNum, std::tuple<int, int, int> current)
 {
+    int attackedNum = numberOfPawn(current);
     std::vector<std::tuple<int, int, int>> inView = getViewOfPawn(pawnNum);
     auto it = std::find(inView.begin(), inView.end(), current);
     if (it != inView.end())
     {
-        attack(pawnNum, numberOfPawn(current));
-        board->clearHighlight();
-        if (pawnDict[pawnNum]->getRemainingActions() == pawnDict[pawnNum]->getMaxActions())
+        int weaponsNum = hasWeapon(pawnNum);
+        if (weaponsNum)
         {
-            previous = empty;
-            flipTurn();
+            if (weaponsNum == 1)
+            {
+                Equipment* weapon = pawnDict[pawnNum]->getEquipment().front();
+                attack(pawnNum, attackedNum, weapon);
+            }
+            else
+            {
+                weaponsTable = new WeaponsTable(pawnDict[pawnNum], pawnDict[attackedNum], target); // add delete when chosen!!!
+                setChoosing(true);
+            }
         }
         else
         {
-            pawnClicked(pawnNum);
+            std::cout << "No weapon\n";
         }
     }
 }
@@ -120,22 +132,6 @@ bool Pawns::pawnFirst(int pawnNum, std::tuple<int, int, int> current)
     }
 }
 
-void Pawns::highlightedNoPawn(int pawnNum, std::tuple<int, int, int> current)
-{
-    pawnMoved(pawnNum, current);
-    board->clearHighlight();
-    if (pawnDict[pawnNum]->getRemainingActions() == pawnDict[pawnNum]->getMaxActions())
-    {
-        previous = empty;
-        flipTurn();
-    }
-    else
-    {
-        pawnClicked(pawnNum);
-        previous = current;
-    }
-}
-
 void Pawns::handleClickRight(sf::Vector2i mousePosition)
 {
     std::tuple<int, int, int> pawnCoords = pawnDict[whichPawn]->getHexCoords();
@@ -145,16 +141,7 @@ void Pawns::handleClickRight(sf::Vector2i mousePosition)
         pawnDict[whichPawn]->reduceActions(1);
         setTrading(true);
         tradeTable = new TradeTable(pawnDict[whichPawn], pawnDict[numberOfPawn(pawnCoords, true)], target);
-        if (pawnDict[whichPawn]->getRemainingActions() == 0)
-        {
-            pawnDict[whichPawn]->setRemainingActions(pawnDict[whichPawn]->getMaxActions());
-            previous = empty;
-            flipTurn();
-        }
-        else
-        {
-            previous = empty;
-        }
+        resetTurn(whichPawn);
     }
     else
     {
@@ -183,22 +170,13 @@ void Pawns::placeWall(int pawnNumber, std::tuple<int, int, int> coords)
     board->clearHighlight();
     pawnDict[pawnNumber]->reduceActions(1);
     board->setWall(coords);
-    if (pawnDict[pawnNumber]->getRemainingActions() == 0)
-    {
-        pawnDict[pawnNumber]->setRemainingActions(pawnDict[pawnNumber]->getMaxActions());
-        previous = empty;
-        flipTurn();
-    }
-    else
-    {
-        pawnClicked(pawnNumber);
-    }
+    resetTurn(pawnNumber);
 }
 
 bool Pawns::destroyWall(int pawnNumber, std::tuple<int, int, int> coords)
 {
     board->clearHighlight();
-    if (pawnDict[pawnNumber]->getRemainingActions() - 4 < 0)
+    if (pawnDict[pawnNumber]->getRemainingActions() < 4)
     {
         return false;
     }
@@ -206,16 +184,7 @@ bool Pawns::destroyWall(int pawnNumber, std::tuple<int, int, int> coords)
     {
         board->setGrass(coords);
         pawnDict[pawnNumber]->reduceActions(4);
-        if (pawnDict[pawnNumber]->getRemainingActions() == 0)
-        {
-            pawnDict[pawnNumber]->setRemainingActions(pawnDict[pawnNumber]->getMaxActions());
-            previous = empty;
-            flipTurn();
-        }
-        else
-        {
-            pawnClicked(pawnNumber);
-        }
+        resetTurn(pawnNumber);
     }
     return true;
 }
@@ -325,79 +294,53 @@ void Pawns::pawnMoved(int pawnNum, std::tuple<int, int, int> where)
 {
     Pawn* pawn = pawnDict[pawnNum];
     pawn->reduceActions(board->hexDict[where]->getPawnDist());
-    if (pawn->getRemainingActions() == 0)
-    {
-        pawn->setRemainingActions(pawn->getMaxActions());
-    }
     board->hexDict[previous]->setPawn(false);
     board->hexDict[where]->setPawn(true, pawn);
+    previous = where;
+    resetTurn(pawnNum);
 }
 
-void Pawns::attack(int pawnNum, int attackedNum)
+void Pawns::attack(int pawnNum, int attackedNum, Equipment* weapon)
 {
     Pawn* attacker = pawnDict[pawnNum];
-    if (hasWeapon(pawnNum))
+    if (weapon->getAttackActions() <= attacker->getRemainingActions())
     {
-        Equipment* weapon = chooseWeapon(pawnNum);
-        if (weapon->getAttackActions() <= attacker->getRemainingActions())
+        Pawn* attacked = pawnDict[attackedNum];
+        if (weapon->isRanged())
         {
-            Pawn* attacked = pawnDict[attackedNum];
-            if (weapon->isRanged())
-            {
-                attacked->rangedAttack(weapon->getAttackValue(), weapon->getMissMax());
-            }
-            else
-            {
-                attacked->attack(weapon->getAttackValue());
-            }
-            if (!attacked->isAlive())
-            {
-                board->hexDict[attacked->getHexCoords()]->setPawn(false);
-                attacked->addSpace(8, 8); //this is so the body does not have a low limit of space
-                board->hexDict[attacked->getHexCoords()]->setBody(true, attacked);
-            }
-            attacker->reduceActions(weapon->getAttackActions());
-            if (attacker->getRemainingActions() == 0)
-            {
-                attacker->setRemainingActions(attacker->getMaxActions());
-            }
+            attacked->rangedAttack(weapon->getAttackValue(), weapon->getMissMax());
         }
         else
         {
-            std::cout << "Not enough actions\n";
+            attacked->attack(weapon->getAttackValue());
         }
+        if (!attacked->isAlive())
+        {
+            board->hexDict[attacked->getHexCoords()]->setPawn(false);
+            attacked->addSpace(8, 8); //this is so the body does not have a low limit of space
+            board->hexDict[attacked->getHexCoords()]->setBody(true, attacked);
+        }
+        attacker->reduceActions(weapon->getAttackActions());
+        resetTurn(pawnNum);
     }
-    else {
-        std::cout<<"No weapon\n";
+    else
+    {
+        std::cout << "Not enough actions\n";
     }
 }
 
-bool Pawns::hasWeapon(int pawnNum)
+int Pawns::hasWeapon(int pawnNum)
 {
+    int count = 0;
     Pawn* attacker = pawnDict[pawnNum];
     for (Equipment* item : attacker->getEquipment())
     {
         if (item->getType() == "Weapon")
         {
-            return true;
+            count++;
         }
     }
-    return false;
-}
-
-Equipment* Pawns::chooseWeapon(int pawnNum)
-{
-    weaponsTable = new WeaponsTable(pawnDict[pawnNum], target); // add delete when chosen!!!
-    setChoosing(true);
-    Pawn* attacker = pawnDict[pawnNum];
-    for (Equipment* item : attacker->getEquipment())
-    {
-        if (item->getType() == "Weapon")
-        {
-            return item;
-        }
-    }
-    return nullptr;
+    return count;
 }
 
 std::vector<std::tuple<int, int, int>> Pawns::getViewOfWeapon(int pawnNum, Equipment* weapon)
@@ -448,5 +391,20 @@ void Pawns::setupText()
     {
         turnText.setFillColor(sf::Color::Red);
         turnText.setString("Turn: Red");
+    }
+}
+
+void Pawns::resetTurn(int pawnNum)
+{
+    board->clearHighlight();
+    if (pawnDict[pawnNum]->getRemainingActions() == 0)
+    {
+        pawnDict[pawnNum]->setRemainingActions(pawnDict[pawnNum]->getMaxActions());
+        previous = empty;
+        flipTurn();
+    }
+    else
+    {
+        pawnClicked(pawnNum);
     }
 }
