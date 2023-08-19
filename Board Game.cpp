@@ -3,6 +3,7 @@
 #include "Equipment.h"
 #include "EquipmentManager.h"
 #include <iostream>
+#include "Menu.h"
 
 int main()
 {
@@ -23,7 +24,9 @@ int main()
         std::cout << data.getName() << data.getPrice() << "\n";
     }*/
 
-    Gui interface1;
-    interface1.start();
+    /*Gui interface1;
+    interface1.start();*/
+    Menu menu1;
+    menu1.start();
     return 0;
 }
