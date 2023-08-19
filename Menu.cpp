@@ -4,11 +4,13 @@ Menu::Menu(const int screenWidth, const int screenHeight)
     : screenWidth(screenWidth), screenHeight(screenHeight) {
     initializeFont();
     window = new sf::RenderWindow(sf::VideoMode(screenWidth, screenHeight), "Menu");
-    selected = 0;
+    selectedIndex = 0;
     buttonLabels = {
     "Local", "Multiplayer",
-    "Player", "Armory", "Settings"
+    "Player", "Armory", "Settings", "Exit"
     };
+    totalHeight = buttonLabels.size() * 70; // Total height of all buttons
+    startY = window->getSize().y / 2.0f - totalHeight / 2.0f;
 }
 
 Menu::~Menu()
@@ -19,7 +21,7 @@ Menu::~Menu()
 void Menu::start() {
     while (window->isOpen())
     {
-        window->clear(sf::Color(66, 82, 107));
+        window->clear(sf::Color(71, 31, 16));
         draw();
         window->display();
 
@@ -44,7 +46,7 @@ void Menu::draw() {
         buttonRect.setPosition(window->getSize().x/2.0f - buttonRect.getSize().x / 2.0f, startY + i * 70);
 
         if (i == getSelectedItem()) {
-            buttonRect.setFillColor(sf::Color::Green); // Highlight the selected button
+            buttonRect.setFillColor(sf::Color(115, 115, 115)); // Highlight the selectedIndex button
         }
         else {
             buttonRect.setFillColor(sf::Color::Blue);
@@ -63,35 +65,39 @@ void Menu::draw() {
 }
 
 void Menu::handleInput(sf::Event event) {
-    if (event.type == sf::Event::KeyPressed) {
+    if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+        sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+
+        for (size_t i = 0; i < buttonLabels.size(); ++i) {
+            sf::FloatRect buttonRect(window->getSize().x / 2.0f - 100, startY + i * 70, 200, 50); // Adjust position and size
+            if (buttonRect.contains(mousePos.x, mousePos.y)) {
+                selectedIndex = i;
+                return;
+            }
+        }
+    }
+    else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
+        sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+
+        for (size_t i = 0; i < buttonLabels.size(); ++i) {
+            sf::FloatRect buttonRect(window->getSize().x / 2.0f - 100, startY + i * 70, 200, 50); // Adjust position and size
+            if (buttonRect.contains(mousePos.x, mousePos.y)) {
+                selectedIndex = i;
+                callSelected(getSelectedItem());
+                return;
+            }
+        }
+    }
+    else if (event.type == sf::Event::KeyPressed) {
         if (event.key.code == sf::Keyboard::Up) {
-            selected--;
-            if (selected < 0)
-                selected = 0;
+            selectedIndex = (selectedIndex + buttonLabels.size() - 1) % buttonLabels.size();
         }
         else if (event.key.code == sf::Keyboard::Down) {
-            selected++;
-            if (selected > buttonLabels.size()-1)
-                selected = buttonLabels.size()-1;
+            selectedIndex = (selectedIndex + 1) % buttonLabels.size();
         }
         else if (event.key.code == sf::Keyboard::Enter) {
-            // Depending on the selected item, perform an action
-            switch (getSelectedItem()) {
-            case 0: // 2 Player Game Button
-                interface1.start();
-            case 1: // Multiplayer Game Button
-                // Start a multiplayer game
-                break;
-            case 2: // Player Button
-                // Go to the player settings
-                break;
-            case 3: // Armory Button
-                // Open the armory or equipment screen
-                break;
-            case 4: // Settings Button
-                // Open the settings menu
-                break;
-            }
+            // Depending on the selectedIndex item, perform an action
+            callSelected(getSelectedItem());
         }
     }
     else if (event.type == sf::Event::Closed)
@@ -101,7 +107,29 @@ void Menu::handleInput(sf::Event event) {
 }
 
 int Menu::getSelectedItem() {
-    // Return the index of the selected menu item
-    // This can be based on which button is currently highlighted or selected
-    return selected;
+    // Return the index of the selectedIndex menu item
+    // This can be based on which button is currently highlighted or selectedIndex
+    return selectedIndex;
+}
+
+void Menu::callSelected(int selected)
+{
+    switch (selected) {
+    case 0: // 2 Player Game Button
+        interface1.start();
+    case 1: // Multiplayer Game Button
+        // Start a multiplayer game
+        break;
+    case 2: // Player Button
+        // Go to the player settings
+        break;
+    case 3: // Armory Button
+        // Open the armory or equipment screen
+        break;
+    case 4: // Settings Button
+        // Open the settings menu
+        break;
+    case 5:
+        window->close();
+    }
 }

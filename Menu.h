@@ -15,11 +15,16 @@ public:
     void handleInput(sf::Event event);
 
     int getSelectedItem();
+
+    void callSelected(int selected);
 private:
     std::vector<std::string> buttonLabels;
     int screenWidth;
     int screenHeight;
+    float totalHeight;
+    float startY;
     sf::RenderWindow* window;
-    int selected;
+    int selectedIndex;
     Gui interface1;
+
 };
