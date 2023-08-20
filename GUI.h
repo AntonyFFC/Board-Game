@@ -13,7 +13,7 @@
 
 class Gui {
 public:
-    Gui(const int screenWidth = 1300, const int screenHeight = 1000);
+    Gui(sf::RenderWindow* window, const int screenWidth = 1300, const int screenHeight = 1000);
     ~Gui();
 
     void start();

@@ -242,15 +242,26 @@ void Pawns::setChoosing(bool boolean) {
     isChoosing_ = boolean;
 }
 
-void Pawns::drawTexts()
+void Pawns::draw(bool isShift)
 {
     drawTurn();
+    drawPawns(isShift);
     if (isTrading())
     {
         tradeTable->draw();
     }
     else if (isChoosing()) {
         weaponsTable->draw();
+    }
+}
+
+void Pawns::drawPawns(bool isShift)
+{
+    for (auto& pawn : pawnDict) {
+        int x = board->hexDict[pawn->getHexCoords()]->getOrigin().x;
+        int y = board->hexDict[pawn->getHexCoords()]->getOrigin().y;
+        pawn->setPosition(x, y);
+        pawn->draw(*target, isShift);
     }
 }
 

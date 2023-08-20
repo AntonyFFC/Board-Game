@@ -3,7 +3,7 @@
 Menu::Menu(const int screenWidth, const int screenHeight) 
     : screenWidth(screenWidth), screenHeight(screenHeight) {
     initializeFont();
-    window = new sf::RenderWindow(sf::VideoMode(screenWidth, screenHeight), "Menu");
+    window = new sf::RenderWindow(sf::VideoMode(screenWidth, screenHeight), "Skirmish");
     selectedIndex = 0;
     buttonLabels = {
     "Local", "Multiplayer",
@@ -11,10 +11,12 @@ Menu::Menu(const int screenWidth, const int screenHeight)
     };
     totalHeight = buttonLabels.size() * 70; // Total height of all buttons
     startY = window->getSize().y / 2.0f - totalHeight / 2.0f;
+    interface1 = new Gui(window);
 }
 
 Menu::~Menu()
 {
+    delete interface1;
     delete window;
 }
 
@@ -116,7 +118,7 @@ void Menu::callSelected(int selected)
 {
     switch (selected) {
     case 0: // 2 Player Game Button
-        interface1.start();
+        interface1->start();
     case 1: // Multiplayer Game Button
         // Start a multiplayer game
         break;

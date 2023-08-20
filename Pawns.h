@@ -39,7 +39,7 @@ public:
 	}
 	void setTrading(bool boolean);
 	void setChoosing(bool boolean);
-	void drawTexts();
+	void draw(bool isShift);
 
 private:
 	void pawnClicked(int pawnNum);
@@ -59,6 +59,7 @@ private:
 	void placeWall(int pawnNumber, std::tuple<int, int, int> coords);
 	bool destroyWall(int pawnNumber, std::tuple<int, int, int> coords);
 	void drawTurn();
+	void drawPawns(bool isShift);
 	void resetTurn(int pawnNum);
 
 	Board* board;

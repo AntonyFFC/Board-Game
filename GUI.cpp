@@ -1,10 +1,9 @@
 #include "GUI.h"
 
-Gui::Gui(const int screenWidth, const int screenHeight)
-	: screenWidth(screenWidth), screenHeight(screenHeight)
+Gui::Gui(sf::RenderWindow* window, const int screenWidth, const int screenHeight)
+	: window(window), screenWidth(screenWidth), screenHeight(screenHeight)
 {
     initializeFont();
-	window = new sf::RenderWindow(sf::VideoMode(screenWidth, screenHeight), "Hex Board");
 	grid = new Board(13, 19, 0.8f);
     pawns = new Pawns(grid, window);
     p1 = new Pawn("Mirmil", 1, 0, 5, 4, { 2,2 }, 7, 510.f, 504.0f);
@@ -22,7 +21,6 @@ Gui::Gui(const int screenWidth, const int screenHeight)
 
 Gui::~Gui()
 {
-	delete window;
     delete grid;
     delete pawns;
 }
@@ -38,7 +36,7 @@ void Gui::start() {
     {
         window->clear(sf::Color(66, 82, 107));
         grid->drawBoard(*window, isShiftKeyPressed);
-        pawns->drawTexts();
+        pawns->draw(isShiftKeyPressed);
         window->display();
 
         sf::Event event;

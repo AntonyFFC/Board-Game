@@ -25,6 +25,6 @@ private:
     float startY;
     sf::RenderWindow* window;
     int selectedIndex;
-    Gui interface1;
+    Gui* interface1;
 
 };
