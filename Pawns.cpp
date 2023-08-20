@@ -257,7 +257,8 @@ void Pawns::draw(bool isShift)
 
 void Pawns::drawPawns(bool isShift)
 {
-    for (auto& pawn : pawnDict) {
+    for (auto it = pawnDict.rbegin(); it != pawnDict.rend(); ++it) {
+        auto& pawn = *it;
         int x = board->hexDict[pawn->getHexCoords()]->getOrigin().x;
         int y = board->hexDict[pawn->getHexCoords()]->getOrigin().y;
         pawn->setPosition(x, y);

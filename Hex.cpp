@@ -233,16 +233,8 @@ bool Hex::isClicked(sf::Vector2i mousePosition) const {
     return distance < hexRadius;
 }
 
-void Hex::draw(sf::RenderTarget& target, bool isShift) {
+void Hex::draw(sf::RenderTarget& target) {
     target.draw(getShape());
-    if (hasBody()) {
-        body->setPosition(getOrigin().x, getOrigin().y);
-        body->draw(target, isShift);
-    }
-    if (isPawn()) {
-        pawn->setPosition(getOrigin().x, getOrigin().y);
-        pawn->draw(target, isShift);
-    }
 }
 
 Grass::Grass(std::tuple<int, int, int> inCoords, float inxPos, float inyPos)

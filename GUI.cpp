@@ -35,7 +35,7 @@ void Gui::start() {
     while (window->isOpen())
     {
         window->clear(sf::Color(66, 82, 107));
-        grid->drawBoard(*window, isShiftKeyPressed);
+        grid->drawBoard(*window);
         pawns->draw(isShiftKeyPressed);
         window->display();
 

@@ -14,7 +14,7 @@ public:
 	std::map<std::tuple<int, int, int>, Hex*> hexDict; // stores al of the hexes in the dictionary with the coordinates as the index
 	std::map<std::tuple<int, int, int>, std::vector<std::tuple<int, int, int>>> hexNeighboursDict; // stores all neighbours of each hex
 
-	void drawBoard(sf::RenderTarget& target, bool isShift);
+	void drawBoard(sf::RenderTarget& target);
 private:
 	std::vector < std::tuple<int, int, int>> getNeighbours(std::tuple<int, int, int> hexCoordinates);
 	std::vector < std::tuple<int, int, int>> getInRange(std::tuple<int, int, int> hexCoordinates, int dist = 1, int minDistance = 1);

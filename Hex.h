@@ -46,7 +46,7 @@ public:
 	bool isClicked(sf::Vector2i mousePosition) const;
 
 	virtual void setHighlight(bool boolean, int col);
-	void draw(sf::RenderTarget& target, bool isShift);
+	void draw(sf::RenderTarget& target);
 	void setScl(float inS = 0.8);	
 	Pawn* pawn;
 	Pawn* body;
