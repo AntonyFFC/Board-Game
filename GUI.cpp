@@ -15,7 +15,7 @@ Gui::Gui(sf::RenderWindow* window, const int screenWidth, const int screenHeight
     e4 = new Equipment("shield", { 0,1 }, { 1, "hands" }, 2, 1, "Armour", 5, "Shield");
     e5 = new Equipment("bow", { 4,7 }, { 2, "hands" }, 1, 2, "Weapon", 5, "Ranged 2");
     e6 = new Equipment("crossbow", { 4,6 }, { 1, "hands" }, 2, 3, "Weapon", 4, "Ranged 2");
-    e7 = new Equipment("dagger", { 0,1 }, { 1, "extras" }, 5, 1, "Weapon", 2, "Single use");
+    e7 = new Equipment("war horse", { 0,1 }, { 1, "extras" }, 5, 1, "Weapon", 2, "Single use");
     e8 = new Equipment("two handed axe", { 0,2 }, { 2, "hands" }, 3, 4, "Weapon", 2, "");
 }
 

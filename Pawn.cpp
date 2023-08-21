@@ -54,12 +54,17 @@ void Pawn::createSprite()
         }
 
         sf::RenderTexture* renderTexture = new sf::RenderTexture;
-        renderTexture->create(1400, 1400);
+        renderTexture->create(1400, 1800);
 
         renderTexture->clear(sf::Color::Transparent);
         for (const auto& sprite : sortedSprites)
         {
-            renderTexture->draw(sprite);
+            sf::Vector2f renderTextureCenter(renderTexture->getSize().x / 2.0f, renderTexture->getSize().y / 2.0f);
+            sf::Vector2f spriteCenterOffset(sprite.getLocalBounds().width / 2.0f, sprite.getLocalBounds().height / 2.0f);
+            sf::Vector2f spritePosition = renderTextureCenter - spriteCenterOffset;
+            sf::Transform transform;
+            transform.translate(spritePosition);
+            renderTexture->draw(sprite, transform);
         }
         renderTexture->display();
 
@@ -458,17 +463,32 @@ void Pawn::flipSprite(Equipment* item)
 
 const std::map<std::string, int> Pawn::order = {
     {"red", 0},
-    {"blue", 1},
-    {"helmet", 2},
-    {"plate armour", 3},
-    {"leather armour", 3},
-    {"sword", 4},
-    {"shield", 5},
-    {"bow", 6},
-    {"crossbow", 7},
-    {"axe", 8},
-    {"two handed axe", 9},
-    {"dagger", 10}
+    {"blue", 0},
+    {"helmet", 1},
+    {"great helmet", 1},
+    {"plate armour", 2},
+    {"leather armour", 2},
+    {"horse", 3},
+    {"war horse", 3},
+    {"dagger", 4},
+    {"long dagger", 5},
+    {"sword", 6},
+    {"two handed sword", 7},
+    {"light shield", 8},
+    {"shield", 9},
+    {"heavy shield", 10},
+    {"bow", 11},
+    {"longbow", 12},
+    {"crossbow", 13},
+    {"heavy crossbow", 14},
+    {"axe", 15},
+    {"two handed axe", 16},
+    {"flail", 17},
+    {"fork", 18},
+    {"spear", 19},
+    {"warhammer", 20},
+    {"gauntlets", 21},
+    {"bracers", 22},
 };
 
 std::vector<sf::Texture*> Pawn::textures;
