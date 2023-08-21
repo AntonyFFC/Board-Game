@@ -350,19 +350,19 @@ void Pawn::attack(int value)
     std::vector<bool> armours = whatArmour();
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dis(1, 6);
+    std::uniform_int_distribution<int> dis(1, 8);
     int randomNumber = dis(gen);
     if (randomNumber == 1 && armours[2])
     {
         std::cout << "covering used\n";
         useArmour("Covering", armours, value);
     }
-    else if (randomNumber > 1 && randomNumber <= 4 && armours[0])
+    else if (randomNumber > 1 && randomNumber <= 6 && armours[0])
     {
         std::cout << "shield hit\n";
         useArmour("Shield", armours, value);
     }
-    else if (randomNumber <= 6 && randomNumber >= 5 && armours[1])
+    else if (randomNumber <= 8 && randomNumber >= 6 && armours[1])
     {
         std::cout << "helmet hit\n";
         useArmour("Helmet", armours, value);
