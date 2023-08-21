@@ -1,11 +1,190 @@
 [
     {
+        "additionalCapabilities": "Helmet",
+        "attackActions": 0,
+        "attackValue": 3,
+        "name": "helmet",
+        "price": 2,
+        "spaceOccupied": {
+            "numSpaces": 1,
+            "spaceType": "extras"
+        },
+        "type": "Armour"
+    },
+    {
+        "additionalCapabilities": "Helmet",
+        "attackActions": 1,
+        "attackValue": 4,
+        "name": "great helmet",
+        "price": 1,
+        "spaceOccupied": {
+            "numSpaces": 1,
+            "spaceType": "extras"
+        },
+        "type": "Armour"
+    },
+    {
+        "additionalCapabilities": "Shield -2 movement 0 with knight",
+        "attackActions": 1,
+        "attackValue": 5,
+        "name": "light shield",
+        "price": 3,
+        "spaceOccupied": {
+            "numSpaces": 1,
+            "spaceType": "hands"
+        },
+        "type": "Armour"
+    },
+    {
+        "additionalCapabilities": "Shield -2 movement, -1 with knight",
+        "attackActions": 2,
+        "attackValue": 5,
+        "name": "shield",
+        "price": 2,
+        "spaceOccupied": {
+            "numSpaces": 1,
+            "spaceType": "hands"
+        },
+        "type": "Armour"
+    },
+    {
+        "additionalCapabilities": "Shield",
+        "attackActions": 2,
+        "attackValue": 6,
+        "name": "heavy shield",
+        "price": 2,
+        "spaceOccupied": {
+            "numSpaces": 1,
+            "spaceType": "hands"
+        },
+        "type": "Armour"
+    },
+    {
+        "additionalCapabilities": "Covering",
+        "attackActions": 1,
+        "attackValue": 2,
+        "name": "leather armour",
+        "price": 1,
+        "spaceOccupied": {
+            "numSpaces": 1,
+            "spaceType": "extras"
+        },
+        "type": "Armour"
+    },
+    {
+        "additionalCapabilities": "Covering",
+        "attackActions": 1,
+        "attackValue": 3,
+        "name": "plate armour",
+        "price": 2,
+        "spaceOccupied": {
+            "numSpaces": 1,
+            "spaceType": "extras"
+        },
+        "type": "Armour"
+    },
+    {
+        "additionalCapabilities": "-1 attack, -2 with shield",
+        "attackActions": 2,
+        "attackValue": 1,
+        "name": "flail",
+        "price": 3,
+        "spaceOccupied": {
+            "numSpaces": 1,
+            "spaceType": "hands"
+        },
+        "type": "Weapon"
+    },
+    {
+        "additionalCapabilities": "misses less by 1",
+        "attackActions": 0,
+        "attackValue": 0,
+        "name": "bracers",
+        "price": 1,
+        "spaceOccupied": {
+            "numSpaces": 1,
+            "spaceType": "extras"
+        },
+        "type": "Accesory"
+    },
+    {
+        "additionalCapabilities": "adds 2 movement",
+        "attackActions": 2,
+        "attackValue": 0,
+        "name": "war horse",
+        "price": 3,
+        "spaceOccupied": {
+            "numSpaces": 1,
+            "spaceType": "extras"
+        },
+        "type": "Accesory"
+    },
+    {
+        "additionalCapabilities": "adds 1 movement",
+        "attackActions": 1,
+        "attackValue": 0,
+        "name": "horse",
+        "price": 1,
+        "spaceOccupied": {
+            "numSpaces": 1,
+            "spaceType": "extras"
+        },
+        "type": "Accesory"
+    },
+    {
+        "additionalCapabilities": "Ranged 2",
+        "attackActions": 3,
+        "attackValue": 2,
+        "name": "crossbow",
+        "price": 4,
+        "spaceOccupied": {
+            "numSpaces": 1,
+            "spaceType": "hands"
+        },
+        "type": "Weapon"
+    },
+    {
+        "additionalCapabilities": "Ranged 2",
+        "attackActions": 4,
+        "attackValue": 2,
+        "name": "heavy crossbow",
+        "price": 2,
+        "spaceOccupied": {
+            "numSpaces": 1,
+            "spaceType": "hands"
+        },
+        "type": "Weapon"
+    },
+    {
+        "additionalCapabilities": "Ranged 2",
+        "attackActions": 2,
+        "attackValue": 1,
+        "name": "bow",
+        "price": 4,
+        "spaceOccupied": {
+            "numSpaces": 2,
+            "spaceType": "hands"
+        },
+        "type": "Weapon"
+    },
+    {
+        "additionalCapabilities": "Ranged 2",
+        "attackActions": 2,
+        "attackValue": 1,
+        "name": "longbow",
+        "price": 2,
+        "spaceOccupied": {
+            "numSpaces": 2,
+            "spaceType": "hands"
+        },
+        "type": "Weapon"
+    },
+    {
         "additionalCapabilities": "",
         "attackActions": 1,
         "attackValue": 1,
-        "name": "Sword",
+        "name": "sword",
         "price": 5,
-        "range": 1,
         "spaceOccupied": {
             "numSpaces": 1,
             "spaceType": "hands"
@@ -13,12 +192,35 @@
         "type": "Weapon"
     },
     {
-        "additionalCapabilities": "2 attack with shield",
-        "attackActions": 2,
+        "additionalCapabilities": "",
+        "attackActions": 1,
         "attackValue": 1,
-        "name": "Flail",
-        "price": 3,
-        "range": 1,
+        "name": "two handed sword",
+        "price": 4,
+        "spaceOccupied": {
+            "numSpaces": 2,
+            "spaceType": "hands"
+        },
+        "type": "Weapon"
+    },
+    {
+        "additionalCapabilities": "3 attack, 4 with townsman",
+        "attackActions": 4,
+        "attackValue": 3,
+        "name": "two handed axe",
+        "price": 2,
+        "spaceOccupied": {
+            "numSpaces": 2,
+            "spaceType": "hands"
+        },
+        "type": "Weapon"
+    },
+    {
+        "additionalCapabilities": "destroys walls using 1 action, 1 range, 2 with townsman",
+        "attackActions": 4,
+        "attackValue": 2,
+        "name": "warhammer",
+        "price": 2,
         "spaceOccupied": {
             "numSpaces": 1,
             "spaceType": "hands"
@@ -26,12 +228,95 @@
         "type": "Weapon"
     },
     {
-        "additionalCapabilities": "2 range with peasant",
+        "additionalCapabilities": "Ranged 3 ,-3 actions, -2 with peasant",
+        "attackActions": 3,
+        "attackValue": 2,
+        "name": "large slingshot",
+        "price": 2,
+        "spaceOccupied": {
+            "numSpaces": 2,
+            "spaceType": "hands"
+        },
+        "type": "Weapon"
+    },
+    {
+        "additionalCapabilities": "Ranged 3 ,1 attack, 2 with peasant",
+        "attackActions": 3,
+        "attackValue": 1,
+        "name": "slingshot",
+        "price": 1,
+        "spaceOccupied": {
+            "numSpaces": 2,
+            "spaceType": "hands"
+        },
+        "type": "Weapon"
+    },
+    {
+        "additionalCapabilities": "+1 to every attack",
+        "attackActions": 0,
+        "attackValue": 1,
+        "name": "gauntlets",
+        "price": 3,
+        "spaceOccupied": {
+            "numSpaces": 1,
+            "spaceType": "extras"
+        },
+        "type": "Accesory"
+    },
+    {
+        "additionalCapabilities": "Single use, 1 range, 2 with prince",
+        "attackActions": 1,
+        "attackValue": 5,
+        "name": "long dagger",
+        "price": 2,
+        "spaceOccupied": {
+            "numSpaces": 1,
+            "spaceType": "extras"
+        },
+        "type": "Weapon"
+    },
+    {
+        "additionalCapabilities": "Single use, 4 attack, 5 with prince",
+        "attackActions": 1,
+        "attackValue": 4,
+        "name": "dagger",
+        "price": 2,
+        "spaceOccupied": {
+            "numSpaces": 1,
+            "spaceType": "extras"
+        },
+        "type": "Weapon"
+    },
+    {
+        "additionalCapabilities": "2 attack, 3 on a horse",
+        "attackActions": 3,
+        "attackValue": 2,
+        "name": "spear",
+        "price": 4,
+        "spaceOccupied": {
+            "numSpaces": 1,
+            "spaceType": "hands"
+        },
+        "type": "Weapon"
+    },
+    {
+        "additionalCapabilities": "2 attack, 3 with townsman",
+        "attackActions": 3,
+        "attackValue": 2,
+        "name": "axe",
+        "price": 3,
+        "spaceOccupied": {
+            "numSpaces": 1,
+            "spaceType": "hands"
+        },
+        "type": "Weapon"
+    },
+    {
+        "additionalCapabilities": "1 range, 2 with peasant",
         "attackActions": 2,
         "attackValue": 1,
-        "name": "Fork",
+        "name": "fork",
         "price": 3,
-        "range": 1,
         "spaceOccupied": {
             "numSpaces": 1,
             "spaceType": "hands"
