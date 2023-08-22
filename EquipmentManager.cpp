@@ -1,28 +1,27 @@
 #include "EquipmentManager.h"
 
-bool EquipmentManager::saveEquipmentToJson(const std::vector<Equipment>& equipment, const std::string& filename)
+bool EquipmentManager::saveEquipmentToJson(const std::vector<Equipment*>& equipment, const std::string& filename)
 {
-    
-
-    std::ofstream outputFile("equipment.json");
+    std::ofstream outputFile(filename+".json");
     if (outputFile.is_open()) {
         nlohmann::json equipmentData;
         for (auto& item : equipment)
         {
             nlohmann::json itemData;
-            itemData["name"] = item.getName();
+            itemData["name"] = item->getName();
             nlohmann::json range;
-                range["minRange"] = item.getRange().minRange;
-                range["maxRange"] = item.getRange().maxRange;
+                range["minRange"] = item->getRange().minRange;
+                range["maxRange"] = item->getRange().maxRange;
+            itemData["range"] = range;
             nlohmann::json space;
-                space["numSpaces"] = item.getSpaceOccupied().numSpaces;
-                space["spaceType"] = item.getSpaceOccupied().spaceType;
+                space["numSpaces"] = item->getSpaceOccupied().numSpaces;
+                space["spaceType"] = item->getSpaceOccupied().spaceType;
             itemData["spaceOccupied"] = space;
-            itemData["attackValue"] = item.getAttackValue();
-            itemData["attackActions"] = item.getAttackActions();
-            itemData["type"] = item.getType();
-            itemData["price"] = item.getPrice();
-            itemData["additionalCapabilities"] = item.getAdditionalCapabilities();
+            itemData["attackValue"] = item->getAttackValue();
+            itemData["attackActions"] = item->getAttackActions();
+            itemData["type"] = item->getType();
+            itemData["price"] = item->getPrice();
+            itemData["additionalCapabilities"] = item->getAdditionalCapabilities();
 
             equipmentData.push_back(itemData);
         }
@@ -36,10 +35,11 @@ bool EquipmentManager::saveEquipmentToJson(const std::vector<Equipment>& equipme
     }
 }
 
-std::vector<Equipment> EquipmentManager::loadEquipmentFromJson(const std::string& filename) {
-    std::vector<Equipment> equipmentList;
+std::vector<Equipment*> EquipmentManager::loadEquipmentFromJson(const std::string& filename) {
+    // remember to delete the pointers to the objects in the returned vector
+    std::vector<Equipment*> equipmentList;
 
-    std::ifstream inputFile(filename);
+    std::ifstream inputFile(filename+".json");
     if (inputFile.is_open()) {
         nlohmann::json jsonData;
         inputFile >> jsonData;
@@ -63,7 +63,7 @@ std::vector<Equipment> EquipmentManager::loadEquipmentFromJson(const std::string
             int price = item["price"];
             std::string additionalCapabilities = item["additionalCapabilities"];
 
-            Equipment equipment(name, range, spaceOccupied, attackValue, attackActions,
+            Equipment* equipment = new Equipment(name, range, spaceOccupied, attackValue, attackActions,
                 type, price, additionalCapabilities);
             equipmentList.push_back(equipment);
         }

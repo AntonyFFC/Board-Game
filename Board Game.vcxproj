@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Armory.cpp" />
     <ClCompile Include="Board Game.cpp" />
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Equipment.cpp" />
@@ -166,6 +167,7 @@
     <ClCompile Include="WeaponsTable.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Armory.h" />
     <ClInclude Include="Board.h" />
     <ClInclude Include="Equipment.h" />
     <ClInclude Include="EquipmentManager.h" />

@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "Globals.h"
 #include "GUI.h"
+#include "Armory.h"
 
 class Menu {
 public:
@@ -26,5 +27,5 @@ private:
     sf::RenderWindow* window;
     int selectedIndex;
     Gui* interface1;
-
+    Armory* armory1;
 };

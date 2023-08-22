@@ -1,7 +1,7 @@
 #include "GUI.h"
 
-Gui::Gui(sf::RenderWindow* window, const int screenWidth, const int screenHeight)
-	: window(window), screenWidth(screenWidth), screenHeight(screenHeight)
+Gui::Gui(sf::RenderWindow* window)
+	: window(window)
 {
     initializeFont();
 	grid = new Board(13, 19, 0.8f);

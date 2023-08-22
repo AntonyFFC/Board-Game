@@ -13,14 +13,12 @@
 
 class Gui {
 public:
-    Gui(sf::RenderWindow* window, const int screenWidth = 1300, const int screenHeight = 1000);
+    Gui(sf::RenderWindow* window);
     ~Gui();
 
     void start();
     void keyPressed(const sf::Event& event);
 private:
-    int screenWidth;
-    int screenHeight;
     sf::RenderWindow* window;
     Board* grid;
     Pawns* pawns;

@@ -12,11 +12,13 @@ Menu::Menu(const int screenWidth, const int screenHeight)
     totalHeight = buttonLabels.size() * 70; // Total height of all buttons
     startY = window->getSize().y / 2.0f - totalHeight / 2.0f;
     interface1 = new Gui(window);
+    armory1 = new Armory(window);
 }
 
 Menu::~Menu()
 {
     delete interface1;
+    delete armory1;
     delete window;
 }
 
@@ -126,8 +128,7 @@ void Menu::callSelected(int selected)
         // Go to the player settings
         break;
     case 3: // Armory Button
-        // Open the armory or equipment screen
-        break;
+        armory1->start();
     case 4: // Settings Button
         // Open the settings menu
         break;
