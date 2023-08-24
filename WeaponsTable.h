@@ -7,6 +7,7 @@
 #include <tuple>
 #include <functional>
 #include <iostream>
+#include "TableUtils.h"
 class WeaponsTable
 {
 public:
@@ -18,13 +19,7 @@ public:
 	Equipment* getWeapon(sf::Vector2i mousePosition);
 
 private:
-	void drawTypeIcon(std::string type);
-	void drawSpaceIcon(Equipment::SpaceOccupied space);
 	Equipment* clickOnEquipment(sf::Vector2i mousePosition);
-
-	std::map<std::string, sf::Sprite> initializeSpriteMap();
-	std::vector<std::function<std::string(const Equipment&)>> initializeFunctions();
-	sf::RectangleShape initializeCells();
 	sf::Text initializeText();
 	void setUpDimensions();
 

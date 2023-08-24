@@ -1,11 +1,29 @@
 #include "Armory.h"
 
+template <typename T, size_t N>
+int getSumOfArray(T(&arr)[N]) {
+    int sum = 0;
+    for (size_t i = 0; i < N; ++i) {
+        sum += arr[i];
+    }
+    return sum;
+}
+
 Armory::Armory(sf::RenderWindow* window)
-	:window(window)
+	:window(window), headers{ "Name","left-right-arrow-icon","circle-line-icon","bomb-blast-icon",
+ "history-icon","cube-icon","dollar-icon","Other" }, cellWidths{ 100,60,60,50,50,50,50,500 }
 {
+    fontSize = 20;
+    position = sf::Vector2f(20, 60);
     initializeFont();
 	filename = "equipment";
 	equipmentList = EquipmentManager::loadEquipmentFromJson(filename);
+    initializeText();
+    iconSprites = initializeSpriteMap(iconTextures);
+    functions = initializeFunctions();
+    cell = initializeCells();
+    cellHeight = 30;
+    sumOfCellWidths = getSumOfArray(cellWidths);
 }
 
 Armory::~Armory()
@@ -42,22 +60,74 @@ void Armory::exit()
 
 void Armory::draw()
 {
-    sf::Text titleText("Armory", globalFont2, 50);
-    titleText.setPosition(20, 10);
-    titleText.setFillColor(sf::Color::White);
     window->draw(titleText);
-    sf::Text text;
-    text.setFont(globalFont2);
-    text.setCharacterSize(50);
-    text.setFillColor(sf::Color::White);
+    cell.setPosition(position);
+    setPosSpriteMap(position.x, position.y, iconSprites);
+    setScalSpriteMap(0.04, iconSprites);
+    text.setPosition(position.x, position.y);
+    cell.setFillColor(sf::Color(156, 84, 84));
 
-    sf::Vector2f position(20, 60); // starting position for drawing
-
-    for (const Equipment* equipment : equipmentList) {
-        text.setString(equipment->getName()); // Set equipment name here
-        text.setPosition(position);
-        window->draw(text);
-
-        position.y += 40.f; // Move down for the next item
+    for (int i = 0; i < 8; i++)
+    {
+        cell.setSize(sf::Vector2f(cellWidths[i], cellHeight));
+        window->draw(cell);
+        if (headers[i].substr(headers[i].length() - 4) != "icon")
+        {
+            text.setString(headers[i]);
+            window->draw(text);
+        }
+        else
+        {
+            window->draw(iconSprites[headers[i]]);
+        }
+        cell.move(cellWidths[i], 0);
+        text.move(cellWidths[i], 0);
+        moveSpriteMap(cellWidths[i], 0, iconSprites);
     }
+    cell.setFillColor(sf::Color(200, 200, 200));
+    cell.move(-sumOfCellWidths, cellHeight);
+    text.move(-sumOfCellWidths, cellHeight);
+    moveSpriteMap(-sumOfCellWidths, cellHeight, iconSprites);
+
+    for (Equipment* item : equipmentList)
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            cell.setSize(sf::Vector2f(cellWidths[i], cellHeight));
+            window->draw(cell);
+            if (i == 2)
+            {
+                drawSpaceIcon(item->getSpaceOccupied(), window, iconSprites);
+            }
+            else if (i == 5)
+            {
+                drawTypeIcon(item->getType(), window, iconSprites);
+            }
+            else
+            {
+                text.setString(functions[i](*static_cast<const Equipment*>(item)));
+                window->draw(text);
+            }
+            cell.move(cellWidths[i], 0);
+            text.move(cellWidths[i], 0);
+            moveSpriteMap(cellWidths[i], 0, iconSprites);
+        }
+        cell.move(-sumOfCellWidths, cellHeight);
+        text.move(-sumOfCellWidths, cellHeight);
+        moveSpriteMap(-sumOfCellWidths, cellHeight, iconSprites);
+    }
+}
+
+void Armory::initializeText()
+{
+    sf::Text newText;
+    newText.setFont(globalFont2);
+    newText.setCharacterSize(fontSize);
+    newText.setFillColor(sf::Color::White);
+    text = newText;
+
+    sf::Text newTitleText("Armory", globalFont2, fontSize*1.5);
+    newTitleText.setPosition(20, 10);
+    newTitleText.setFillColor(sf::Color::White);
+    titleText = newTitleText;
 }

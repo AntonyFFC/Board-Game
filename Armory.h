@@ -4,6 +4,8 @@
 #include "Equipment.h"
 #include "EquipmentManager.h"
 #include "Globals.h"
+#include "SpriteUtils.h"
+#include "TableUtils.h"
 class Armory
 {
 public:
@@ -13,7 +15,21 @@ public:
 	void exit();
 private:
 	void draw();
+
+	void initializeText();
 	std::string filename;
 	sf::RenderWindow* window;
 	std::vector<Equipment*> equipmentList;
+	sf::RectangleShape cell;
+	sf::Text text;
+	sf::Text titleText;
+	std::map<std::string, sf::Sprite> iconSprites;
+	std::vector<sf::Texture*> iconTextures;
+	std::string headers[8];
+	std::vector<std::function<std::string(const Equipment&)>> functions;
+	int cellWidths[8];
+	int sumOfCellWidths;
+	int cellHeight;
+	int fontSize;
+	sf::Vector2f position;
 };

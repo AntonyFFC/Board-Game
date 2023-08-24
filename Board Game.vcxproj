@@ -163,6 +163,7 @@
     <ClCompile Include="Pawn.cpp" />
     <ClCompile Include="Pawns.cpp" />
     <ClCompile Include="SpriteUtils.cpp" />
+    <ClCompile Include="TableUtils.cpp" />
     <ClCompile Include="TradeTable.cpp" />
     <ClCompile Include="WeaponsTable.cpp" />
   </ItemGroup>
@@ -179,6 +180,7 @@
     <ClInclude Include="Pawn.h" />
     <ClInclude Include="Pawns.h" />
     <ClInclude Include="SpriteUtils.h" />
+    <ClInclude Include="TableUtils.h" />
     <ClInclude Include="TradeTable.h" />
     <ClInclude Include="WeaponsTable.h" />
   </ItemGroup>

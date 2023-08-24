@@ -19,7 +19,7 @@ TradeTable::TradeTable(Pawn* inPawn, Pawn* inBody, sf::RenderWindow* inWindow)
     cellHeight = 20;
     gap = 5;
     setUpDimensions();
-	iconSprites = initializeSpriteMap();
+	iconSprites = initializeSpriteMap(iconTextures);
     functions = initializeFunctions();
     cell = initializeCells();
     doneCell = initializeCells();
@@ -80,11 +80,11 @@ void TradeTable::drawTable(std::vector<Equipment*> equipment, bool bodys)
             target->draw(cell);
             if (i == 2)
             {
-                drawSpaceIcon(item->getSpaceOccupied());
+                drawSpaceIcon(item->getSpaceOccupied(), target, iconSprites);
             }
             else if (i == 5)
             {
-                drawTypeIcon(item->getType());
+                drawTypeIcon(item->getType(), target, iconSprites);
             }
             else
             {
@@ -112,50 +112,6 @@ void TradeTable::drawDoneButton()
     doneCell.setFillColor(sf::Color(109, 201, 169));
     target->draw(doneCell);
     target->draw(tradeText);
-}
-
-void TradeTable::drawSpaceIcon(Equipment::SpaceOccupied space)
-{
-    int added = 0;
-    for (int i = 0; i < space.numSpaces; i++)
-    {
-        if (space.spaceType == "hands")
-        {
-            target->draw(iconSprites["hand-line-icon"]);
-            iconSprites["hand-line-icon"].move(15, 0);
-        }
-        else
-        {
-            target->draw(iconSprites["plus-round-line-icon"]);
-            iconSprites["plus-round-line-icon"].move(15, 0);
-        }
-        added++;
-    }
-    if (space.spaceType == "hands")
-    {
-        iconSprites["hand-line-icon"].move(-15 * added, 0);
-    }
-    else
-    {
-        iconSprites["plus-round-line-icon"].move(-15 * added, 0);
-    }
-
-}
-
-void TradeTable::drawTypeIcon(std::string type)
-{
-    if (type == "Weapon")
-    {
-        target->draw(iconSprites["crossed-swords-icon"]);
-    }
-    else if (type == "Armour")
-    {
-        target->draw(iconSprites["shield-icon"]);
-    }
-    else
-    {
-        target->draw(iconSprites["four-squares-icon"]);
-    }
 }
 
 bool TradeTable::tableClicked(sf::Vector2i mousePosition)
@@ -243,69 +199,6 @@ bool TradeTable::isOnBody(sf::Vector2i mousePosition)
         return true;
     }
     return false;
-}
-
-// initializers
-std::map<std::string, sf::Sprite> TradeTable::initializeSpriteMap()
-{
-    std::string folderPath = "assets/icons/";
-    std::string searchPattern = folderPath + "*.png";
-    WIN32_FIND_DATAA findData;
-    HANDLE findHandle = FindFirstFileA(searchPattern.c_str(), &findData);
-
-    std::map<std::string, sf::Sprite> sprites;
-
-    if (findHandle != INVALID_HANDLE_VALUE)
-    {
-        do
-        {
-            std::string fileName = findData.cFileName;
-            fileName = fileName.substr(0, fileName.length() - 4);
-            std::string filePath = folderPath + fileName + ".png";
-
-            // Load the texture
-            sf::Texture* texture;
-            texture = new sf::Texture;
-            if (!texture->loadFromFile(filePath))
-            {
-                delete texture;
-                continue;
-            }
-            // This holds the textures so that the sprites work
-            iconTextures.push_back(texture);
-            sf::Sprite sprite(*texture);
-            sprites[fileName] = sprite;
-        } while (FindNextFileA(findHandle, &findData));
-        FindClose(findHandle);
-    }
-    else
-    {
-        throw std::runtime_error("Invalid handle value");
-    }
-    return sprites;
-}
-
-std::vector<std::function<std::string(const Equipment&)>> TradeTable::initializeFunctions()
-{
-    std::vector<std::function<std::string(const Equipment&)>> newFunctions;
-    newFunctions.push_back([](const Equipment& item) { return item.getName(); });
-    newFunctions.push_back([](const Equipment& item) { return item.rangeToString(); });
-    newFunctions.push_back([](const Equipment& item) { return item.spaceToString(); }); //here draw the sprite with space
-    newFunctions.push_back([](const Equipment& item) { return std::to_string(item.getAttackValue()); });
-    newFunctions.push_back([](const Equipment& item) { return std::to_string(item.getAttackActions()); });
-    newFunctions.push_back([](const Equipment& item) { return item.getType(); }); //here draw the sprite with type
-    newFunctions.push_back([](const Equipment& item) { return std::to_string(item.getPrice()); });
-    newFunctions.push_back([](const Equipment& item) { return item.getAdditionalCapabilities(); });
-    return newFunctions;
-}
-
-sf::RectangleShape TradeTable::initializeCells()
-{
-    sf::RectangleShape newCell;
-    newCell.setFillColor(sf::Color::Transparent);
-    newCell.setOutlineColor(sf::Color::White);
-    newCell.setOutlineThickness(1.f);
-    return newCell;
 }
 
 sf::Text TradeTable::initializeTradeText()

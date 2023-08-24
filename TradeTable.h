@@ -7,6 +7,7 @@
 #include <tuple>
 #include <functional>
 #include <iostream>
+#include "TableUtils.h"
 class TradeTable
 {
 public:
@@ -18,16 +19,10 @@ public:
 
 private:
 	void drawTable(std::vector<Equipment*> equipment, bool bodys);
-	void drawTypeIcon(std::string type);
-	void drawSpaceIcon(Equipment::SpaceOccupied space);
 	void drawDoneButton();
 	bool isOnBody(sf::Vector2i mousePosition);
 	Equipment* clickOnEquipment(sf::Vector2i mousePosition, std::vector<Equipment*> equipment);
 	void tradeItem(Equipment* item, bool isBodys);
-
-	std::map<std::string, sf::Sprite> initializeSpriteMap();
-	std::vector<std::function<std::string(const Equipment&)>> initializeFunctions();
-	sf::RectangleShape initializeCells();
 	sf::Text initializeTradeText();
 	void setUpDimensions();
 
