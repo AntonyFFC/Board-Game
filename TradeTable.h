@@ -18,12 +18,13 @@ public:
 	void trade(sf::Vector2i mousePosition);
 
 private:
-	void drawTable(std::vector<Equipment*> equipment, bool bodys);
+	void createTexture(std::vector<Equipment*> equipment, bool bodys);
 	void drawDoneButton();
 	bool isOnBody(sf::Vector2i mousePosition);
 	Equipment* clickOnEquipment(sf::Vector2i mousePosition, std::vector<Equipment*> equipment);
 	void tradeItem(Equipment* item, bool isBodys);
 	sf::Text initializeTradeText();
+	void initializeTexture();
 	void setUpDimensions();
 
 	Pawn* pawn;
@@ -44,5 +45,7 @@ private:
 	int sumOfCellWidths;
 	int cellHeight;
 	float gap;
+	sf::RenderTexture tableRenderTexture;
+	sf::Sprite tableSprite;
 };
 

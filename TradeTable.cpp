@@ -11,11 +11,10 @@ int getSumOfArray(T(&arr)[N]) {
 }
 
 TradeTable::TradeTable(Pawn* inPawn, Pawn* inBody, sf::RenderWindow* inWindow)
-    :pawn(inPawn), body(inBody), headers{ "Name","left-right-arrow-icon","circle-line-icon","bomb-blast-icon",
+    :pawn(inPawn), body(inBody), target(inWindow), headers{ "Name","left-right-arrow-icon","circle-line-icon","bomb-blast-icon",
  "history-icon","cube-icon","dollar-icon","Other" }, cellWidths{ 70,40,40,30,30,30,30,100 }
 {
 	sumOfCellWidths = getSumOfArray(cellWidths);
-	target = inWindow;
     cellHeight = 20;
     gap = 5;
     setUpDimensions();
@@ -24,18 +23,16 @@ TradeTable::TradeTable(Pawn* inPawn, Pawn* inBody, sf::RenderWindow* inWindow)
     cell = initializeCells();
     doneCell = initializeCells();
     tradeText = initializeTradeText();
+    tableRenderTexture.create(target->getSize().x, target->getSize().y);
+    initializeTexture();
 }
 
 void TradeTable::draw()
 {
-    std::vector<Equipment*> bodysEquipment = body->getEquipment();
-    drawTable(bodysEquipment, true);
-    std::vector<Equipment*> pawnsEquipment = pawn->getEquipment();
-    drawTable(pawnsEquipment, false);
-
+    target->draw(tableSprite);
 }
 
-void TradeTable::drawTable(std::vector<Equipment*> equipment, bool bodys)
+void TradeTable::createTexture(std::vector<Equipment*> equipment, bool bodys)
 {
     cell.setPosition(minX, minY);
     setPosSpriteMap(minX, minY, iconSprites);
@@ -53,15 +50,15 @@ void TradeTable::drawTable(std::vector<Equipment*> equipment, bool bodys)
     for (int i = 0; i < 8; i++)
     {
         cell.setSize(sf::Vector2f(cellWidths[i], cellHeight));
-        target->draw(cell);
+        tableRenderTexture.draw(cell);
         if (headers[i].substr(headers[i].length() - 4) != "icon")
         {
             tradeText.setString(headers[i]);
-            target->draw(tradeText);
+            tableRenderTexture.draw(tradeText);
         }
         else
         {
-            target->draw(iconSprites[headers[i]]);
+            tableRenderTexture.draw(iconSprites[headers[i]]);
         }
         cell.move(cellWidths[i], 0);
         tradeText.move(cellWidths[i], 0);
@@ -77,19 +74,19 @@ void TradeTable::drawTable(std::vector<Equipment*> equipment, bool bodys)
         for (int i = 0; i < 8; i++)
         {
             cell.setSize(sf::Vector2f(cellWidths[i], cellHeight));
-            target->draw(cell);
+            tableRenderTexture.draw(cell);
             if (i == 2)
             {
-                drawSpaceIcon(item->getSpaceOccupied(), target, iconSprites);
+                drawSpaceIcon(item->getSpaceOccupied(), tableRenderTexture, iconSprites);
             }
             else if (i == 5)
             {
-                drawTypeIcon(item->getType(), target, iconSprites);
+                drawTypeIcon(item->getType(), tableRenderTexture, iconSprites);
             }
             else
             {
                 tradeText.setString(functions[i](*static_cast<const Equipment*>(item)));
-                target->draw(tradeText);
+                tableRenderTexture.draw(tradeText);
             }
             cell.move(cellWidths[i], 0);
             tradeText.move(cellWidths[i], 0);
@@ -110,8 +107,8 @@ void TradeTable::drawDoneButton()
     doneCell.setPosition(minX+ sumOfCellWidths- doneCell.getSize().x/2+gap/2, minY - cellHeight - gap);
     tradeText.setPosition(minX + sumOfCellWidths - textBounds.width / 2 + gap / 2, minY - cellHeight - gap);
     doneCell.setFillColor(sf::Color(109, 201, 169));
-    target->draw(doneCell);
-    target->draw(tradeText);
+    tableRenderTexture.draw(doneCell);
+    tableRenderTexture.draw(tradeText);
 }
 
 bool TradeTable::tableClicked(sf::Vector2i mousePosition)
@@ -150,6 +147,7 @@ void TradeTable::trade(sf::Vector2i mousePosition)
     if (item != nullptr)
     {
         tradeItem(item, isBodys);
+        initializeTexture();
     }
 }
 
@@ -209,6 +207,18 @@ sf::Text TradeTable::initializeTradeText()
     text.setCharacterSize(size);
     text.setFillColor(sf::Color::Black);
     return text;
+}
+
+void TradeTable::initializeTexture()
+{
+    std::vector<Equipment*> bodysEquipment = body->getEquipment();
+    std::vector<Equipment*> pawnsEquipment = pawn->getEquipment();
+
+    tableRenderTexture.clear(sf::Color::Transparent);
+    createTexture(bodysEquipment, true);
+    createTexture(pawnsEquipment, false);
+    tableRenderTexture.display();
+    tableSprite = sf::Sprite(tableRenderTexture.getTexture());
 }
 
 void TradeTable::setUpDimensions()

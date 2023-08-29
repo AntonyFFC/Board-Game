@@ -19,8 +19,10 @@ public:
 	Equipment* getWeapon(sf::Vector2i mousePosition);
 
 private:
+	void createTexture();
 	Equipment* clickOnEquipment(sf::Vector2i mousePosition);
 	sf::Text initializeText();
+	void initializeTexture();
 	void setUpDimensions();
 
 	Pawn* attacker;
@@ -41,5 +43,7 @@ private:
 	int sumOfCellWidths;
 	int cellHeight;
 	float gap;
+	sf::RenderTexture tableRenderTexture;
+	sf::Sprite tableSprite;
 };
 

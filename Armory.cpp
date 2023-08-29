@@ -13,6 +13,7 @@ Armory::Armory(sf::RenderWindow* window)
 	:window(window), headers{ "Name","left-right-arrow-icon","circle-line-icon","bomb-blast-icon",
  "history-icon","cube-icon","dollar-icon","Other" }, cellWidths{ 100,60,60,50,50,50,50,500 }
 {
+    tableRenderTexture.create(window->getSize().x, window->getSize().y);
     fontSize = 20;
     position = sf::Vector2f(20, 60);
     initializeFont();
@@ -34,10 +35,15 @@ Armory::~Armory()
 }
 
 void Armory::start() {
+    tableRenderTexture.clear(sf::Color::Transparent);
+    createTexture();
+    tableRenderTexture.display();
+    sf::Sprite tableSprite(tableRenderTexture.getTexture());
+
     while (window->isOpen())
     {
         window->clear(sf::Color(71, 31, 16));
-        draw();
+        window->draw(tableSprite);
         window->display();
 
         /*sf::Event event;
@@ -58,9 +64,9 @@ void Armory::exit()
 {
 }
 
-void Armory::draw()
+void Armory::createTexture()
 {
-    window->draw(titleText);
+    tableRenderTexture.draw(titleText);
     cell.setPosition(position);
     setPosSpriteMap(position.x, position.y, iconSprites);
     setScalSpriteMap(0.04, iconSprites);
@@ -70,15 +76,15 @@ void Armory::draw()
     for (int i = 0; i < 8; i++)
     {
         cell.setSize(sf::Vector2f(cellWidths[i], cellHeight));
-        window->draw(cell);
+        tableRenderTexture.draw(cell);
         if (headers[i].substr(headers[i].length() - 4) != "icon")
         {
             text.setString(headers[i]);
-            window->draw(text);
+            tableRenderTexture.draw(text);
         }
         else
         {
-            window->draw(iconSprites[headers[i]]);
+            tableRenderTexture.draw(iconSprites[headers[i]]);
         }
         cell.move(cellWidths[i], 0);
         text.move(cellWidths[i], 0);
@@ -94,19 +100,19 @@ void Armory::draw()
         for (int i = 0; i < 8; i++)
         {
             cell.setSize(sf::Vector2f(cellWidths[i], cellHeight));
-            window->draw(cell);
+            tableRenderTexture.draw(cell);
             if (i == 2)
             {
-                drawSpaceIcon(item->getSpaceOccupied(), window, iconSprites);
+                drawSpaceIcon(item->getSpaceOccupied(), tableRenderTexture, iconSprites);
             }
             else if (i == 5)
             {
-                drawTypeIcon(item->getType(), window, iconSprites);
+                drawTypeIcon(item->getType(), tableRenderTexture, iconSprites);
             }
             else
             {
                 text.setString(functions[i](*static_cast<const Equipment*>(item)));
-                window->draw(text);
+                tableRenderTexture.draw(text);
             }
             cell.move(cellWidths[i], 0);
             text.move(cellWidths[i], 0);

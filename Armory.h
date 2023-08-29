@@ -14,7 +14,7 @@ public:
 	void start();
 	void exit();
 private:
-	void draw();
+	void createTexture();
 
 	void initializeText();
 	std::string filename;
@@ -32,4 +32,5 @@ private:
 	int cellHeight;
 	int fontSize;
 	sf::Vector2f position;
+	sf::RenderTexture tableRenderTexture;
 };
