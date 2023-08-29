@@ -10,8 +10,8 @@ int getSumOfArray(T(&arr)[N]) {
 }
 
 Armory::Armory(sf::RenderWindow* window)
-	:window(window), headers{ "Name","left-right-arrow-icon","circle-line-icon","bomb-blast-icon",
- "history-icon","cube-icon","dollar-icon","Other" }, cellWidths{ 100,60,60,50,50,50,50,500 }
+	:window(window), headers{ "Name","left-right-arrow-icon-white","circle-line-icon-white","bomb-blast-icon-white",
+ "history-icon-white","cube-icon-white","dollar-icon-white","Other" }, cellWidths{ 150,60,60,50,50,50,50,500 }
 {
     tableRenderTexture.create(window->getSize().x, window->getSize().y);
     fontSize = 20;
@@ -67,17 +67,23 @@ void Armory::exit()
 void Armory::createTexture()
 {
     tableRenderTexture.draw(titleText);
+    drawHeaders();
+    drawEquipment();
+}
+
+void Armory::drawHeaders()
+{
     cell.setPosition(position);
-    setPosSpriteMap(position.x, position.y, iconSprites);
+    setPosSpriteMap(position.x+3, position.y+3, iconSprites);
     setScalSpriteMap(0.04, iconSprites);
-    text.setPosition(position.x, position.y);
+    text.setPosition(position.x+5, position.y+3);
     cell.setFillColor(sf::Color(156, 84, 84));
 
     for (int i = 0; i < 8; i++)
     {
         cell.setSize(sf::Vector2f(cellWidths[i], cellHeight));
         tableRenderTexture.draw(cell);
-        if (headers[i].substr(headers[i].length() - 4) != "icon")
+        if (headers[i] == "Name" || headers[i] == "Other")
         {
             text.setString(headers[i]);
             tableRenderTexture.draw(text);
@@ -90,13 +96,17 @@ void Armory::createTexture()
         text.move(cellWidths[i], 0);
         moveSpriteMap(cellWidths[i], 0, iconSprites);
     }
-    cell.setFillColor(sf::Color(200, 200, 200));
+}
+
+void Armory::drawEquipment()
+{
     cell.move(-sumOfCellWidths, cellHeight);
     text.move(-sumOfCellWidths, cellHeight);
     moveSpriteMap(-sumOfCellWidths, cellHeight, iconSprites);
 
     for (Equipment* item : equipmentList)
     {
+        cell.setFillColor(getTypeColor(item));
         for (int i = 0; i < 8; i++)
         {
             cell.setSize(sf::Vector2f(cellWidths[i], cellHeight));
@@ -121,6 +131,21 @@ void Armory::createTexture()
         cell.move(-sumOfCellWidths, cellHeight);
         text.move(-sumOfCellWidths, cellHeight);
         moveSpriteMap(-sumOfCellWidths, cellHeight, iconSprites);
+    }
+}
+
+sf::Color Armory::getTypeColor(Equipment* item)
+{
+    std::string type = item->getType();
+
+    if (type == "Weapon") {
+        return sf::Color(46, 46, 46);
+    }
+    else if (type == "Armour") {
+        return sf::Color(122, 0, 6);
+    }
+    else {
+        return sf::Color(99, 94, 0);
     }
 }
 

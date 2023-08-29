@@ -15,6 +15,9 @@ public:
 	void exit();
 private:
 	void createTexture();
+	void drawHeaders();
+	void drawEquipment();
+	sf::Color getTypeColor(Equipment* item);
 
 	void initializeText();
 	std::string filename;

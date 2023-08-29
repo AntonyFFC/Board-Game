@@ -365,7 +365,7 @@
             "numSpaces": 1,
             "spaceType": "extras"
         },
-        "type": "Weapon"
+        "type": "Accesory"
     },
     {
         "additionalCapabilities": "Single use, 4 attack, 5 with prince",
@@ -381,7 +381,7 @@
             "numSpaces": 1,
             "spaceType": "extras"
         },
-        "type": "Weapon"
+        "type": "Accesory"
     },
     {
         "additionalCapabilities": "2 attack, 3 on a horse",
