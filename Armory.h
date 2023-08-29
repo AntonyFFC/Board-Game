@@ -18,12 +18,16 @@ private:
 	void drawHeaders();
 	void drawEquipment();
 	sf::Color getTypeColor(Equipment* item);
+	void drawBackButton();
+	void keyPressed(const sf::Event& event);
+	bool backClicked(sf::Vector2i mousePosition);
 
 	void initializeText();
 	std::string filename;
 	sf::RenderWindow* window;
 	std::vector<Equipment*> equipmentList;
 	sf::RectangleShape cell;
+	sf::RectangleShape backCell;
 	sf::Text text;
 	sf::Text titleText;
 	std::map<std::string, sf::Sprite> iconSprites;
@@ -36,4 +40,5 @@ private:
 	int fontSize;
 	sf::Vector2f position;
 	sf::RenderTexture tableRenderTexture;
+	bool closed;
 };
