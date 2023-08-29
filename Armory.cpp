@@ -19,7 +19,6 @@ Armory::Armory(sf::RenderWindow* window)
 	initializeFont();
 	filename = "equipment";
 	equipmentList = EquipmentManager::loadEquipmentFromJson(filename);
-	initializeText();
 	iconSprites = initializeSpriteMap(iconTextures);
 	functions = initializeFunctions();
 	cell = initializeCells();
@@ -35,6 +34,7 @@ Armory::~Armory()
 }
 
 void Armory::start() {
+	initializeText();
 	closed = false;
 	tableRenderTexture.clear(sf::Color::Transparent);
 	createTexture();
