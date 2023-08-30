@@ -6,9 +6,9 @@ Gui::Gui(sf::RenderWindow* window)
     initializeFont();
 	grid = new Board(13, 19, 0.8f);
     pawns = new Pawns(grid, window);
-    p1 = new Pawn("Mirmil", 1, 0, 5, 4, { 2,2 }, 7, 510.f, 504.0f);
-    p2 = new Pawn("Lucjan", 2, 1, 5, 4, { 2,2 }, 7, 510.f, 504.0f);
-    p3 = new Pawn("Zbyszko", 2, 1, 5, 4, { 2,2 }, 7, 510.f, 504.0f);
+    p1 = new Pawn("Mirmil", 1, 0, 5, 4, { 2,2 }, 7);
+    p2 = new Pawn("Lucjan", 2, 1, 5, 4, { 2,2 }, 7);
+    p3 = new Pawn("Zbyszko", 2, 1, 5, 4, { 2,2 }, 7);
     e1 = new Equipment("sword", { 0,1 }, { 1, "hands" }, 1, 1, "Weapon", 5, "");
     e2 = new Equipment("helmet", { 0,1 }, { 1, "extras" }, 1, 1, "Armour", 5, "Helmet");
     e3 = new Equipment("plate armour", { 0,1 }, { 1, "extras" }, 2, 1, "Armour", 5, "Covering");

@@ -16,7 +16,7 @@ public:
         int extras;
     };
 
-    Pawn(const std::string& name, int teamNumber, int side, int maxActions, int healthPoints, SpaceInventory space, int price, float xPos, float yPos);
+    Pawn(const std::string& name, int teamNumber, int side, int maxActions, int healthPoints, SpaceInventory space, int price);
     ~Pawn();
 
 
@@ -28,6 +28,7 @@ public:
     int getMaxActions() const;
     int getHP() const;
     SpaceInventory getSpace() const;
+    SpaceInventory getRemainingSpace() const;
     int getEquipmentCount() const;
     std::vector<Equipment*> getEquipment() const;
     int getPrice() const;

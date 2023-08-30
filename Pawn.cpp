@@ -3,8 +3,8 @@
 #include <random>
 #include <iostream>
 
-Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions, int healthPoints, SpaceInventory space, int price, float xPos, float yPos)
-    : name(name), teamNumber(teamNumber), side(side),maxActions(maxActions), remainingActions(maxActions), HP(healthPoints), space(space), price(price), xPos(xPos), yPos(yPos), combinedSprite(), equipment()
+Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions, int healthPoints, SpaceInventory space, int price)
+    : name(name), teamNumber(teamNumber), side(side),maxActions(maxActions), remainingActions(maxActions), HP(healthPoints), space(space), price(price), combinedSprite(), equipment()
 {
     scaleFactor = 0.05f;
     rotationAngle = 90.0f;
@@ -115,6 +115,11 @@ int Pawn::getHP() const {
 
 Pawn::SpaceInventory Pawn::getSpace() const {
     return space;
+}
+
+Pawn::SpaceInventory Pawn::getRemainingSpace() const
+{
+    return remainingSpace;
 }
 
 int Pawn::getEquipmentCount() const {

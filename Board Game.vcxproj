@@ -162,6 +162,7 @@
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Pawn.cpp" />
     <ClCompile Include="Pawns.cpp" />
+    <ClCompile Include="PawnsManager.cpp" />
     <ClCompile Include="SpriteUtils.cpp" />
     <ClCompile Include="TableUtils.cpp" />
     <ClCompile Include="TradeTable.cpp" />
@@ -179,6 +180,7 @@
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Pawn.h" />
     <ClInclude Include="Pawns.h" />
+    <ClInclude Include="PawnsManager.h" />
     <ClInclude Include="SpriteUtils.h" />
     <ClInclude Include="TableUtils.h" />
     <ClInclude Include="TradeTable.h" />
