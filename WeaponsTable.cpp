@@ -58,6 +58,12 @@ Equipment* WeaponsTable::getWeapon(sf::Vector2i mousePosition)
 
 void WeaponsTable::createTexture()
 {
+    drawHeaders();
+    drawEquipment();
+}
+
+void WeaponsTable::drawHeaders()
+{
     cell.setPosition(minX, minY);
     setPosSpriteMap(minX, minY, iconSprites);
     setScalSpriteMap(0.04, iconSprites);
@@ -81,6 +87,10 @@ void WeaponsTable::createTexture()
         text.move(cellWidths[i], 0);
         moveSpriteMap(cellWidths[i], 0, iconSprites);
     }
+}
+
+void WeaponsTable::drawEquipment()
+{
     cell.setFillColor(sf::Color(200, 200, 200));
     cell.move(-sumOfCellWidths, cellHeight);
     text.move(-sumOfCellWidths, cellHeight);
@@ -94,11 +104,11 @@ void WeaponsTable::createTexture()
             tableRenderTexture.draw(cell);
             if (i == 2)
             {
-                drawSpaceIcon(item->getSpaceOccupied(), tableRenderTexture, iconSprites);
+                drawSpaceIconBlack(item->getSpaceOccupied(), tableRenderTexture, iconSprites);
             }
             else if (i == 5)
             {
-                drawTypeIcon(item->getType(), tableRenderTexture, iconSprites);
+                drawTypeIconBlack(item->getType(), tableRenderTexture, iconSprites);
             }
             else
             {

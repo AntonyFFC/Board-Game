@@ -20,6 +20,8 @@ public:
 
 private:
 	void createTexture();
+	void drawHeaders();
+	void drawEquipment();
 	Equipment* clickOnEquipment(sf::Vector2i mousePosition);
 	sf::Text initializeText();
 	void initializeTexture();

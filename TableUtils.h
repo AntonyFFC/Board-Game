@@ -9,6 +9,8 @@
 
 void drawSpaceIcon(Equipment::SpaceOccupied space, sf::RenderTexture& target, std::map<std::string, sf::Sprite>& iconSprites);
 void drawTypeIcon(std::string type, sf::RenderTexture& target, std::map<std::string, sf::Sprite>& iconSprites);
+void drawSpaceIconBlack(Equipment::SpaceOccupied space, sf::RenderTexture& target, std::map<std::string, sf::Sprite>& iconSprites);
+void drawTypeIconBlack(std::string type, sf::RenderTexture& target, std::map<std::string, sf::Sprite>& iconSprites);
 
 std::map<std::string, sf::Sprite> initializeSpriteMap(std::vector<sf::Texture*> &iconTextures);
 std::vector<std::function<std::string(const Equipment&)>> initializeFunctions();

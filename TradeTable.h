@@ -19,6 +19,9 @@ public:
 
 private:
 	void createTexture(std::vector<Equipment*> equipment, bool bodys);
+	void setUpPositions(bool bodys);
+	void drawHeaders();
+	void drawEquipment(std::vector<Equipment*> equipment);
 	void drawDoneButton();
 	bool isOnBody(sf::Vector2i mousePosition);
 	Equipment* clickOnEquipment(sf::Vector2i mousePosition, std::vector<Equipment*> equipment);

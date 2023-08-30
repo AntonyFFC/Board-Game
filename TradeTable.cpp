@@ -34,6 +34,14 @@ void TradeTable::draw()
 
 void TradeTable::createTexture(std::vector<Equipment*> equipment, bool bodys)
 {
+    setUpPositions(bodys);
+    drawHeaders();
+    drawEquipment(equipment);
+    drawDoneButton();
+}
+
+void TradeTable::setUpPositions(bool bodys)
+{
     cell.setPosition(minX, minY);
     setPosSpriteMap(minX, minY, iconSprites);
     setScalSpriteMap(0.04, iconSprites);
@@ -45,6 +53,10 @@ void TradeTable::createTexture(std::vector<Equipment*> equipment, bool bodys)
         tradeText.move(xmove, 0);
         moveSpriteMap(xmove, 0, iconSprites);
     }
+}
+
+void TradeTable::drawHeaders()
+{
     cell.setFillColor(sf::Color(156, 84, 84));
 
     for (int i = 0; i < 8; i++)
@@ -64,6 +76,10 @@ void TradeTable::createTexture(std::vector<Equipment*> equipment, bool bodys)
         tradeText.move(cellWidths[i], 0);
         moveSpriteMap(cellWidths[i], 0, iconSprites);
     }
+}
+
+void TradeTable::drawEquipment(std::vector<Equipment*> equipment)
+{
     cell.setFillColor(sf::Color(200, 200, 200));
     cell.move(-sumOfCellWidths, cellHeight);
     tradeText.move(-sumOfCellWidths, cellHeight);
@@ -77,11 +93,11 @@ void TradeTable::createTexture(std::vector<Equipment*> equipment, bool bodys)
             tableRenderTexture.draw(cell);
             if (i == 2)
             {
-                drawSpaceIcon(item->getSpaceOccupied(), tableRenderTexture, iconSprites);
+                drawSpaceIconBlack(item->getSpaceOccupied(), tableRenderTexture, iconSprites);
             }
             else if (i == 5)
             {
-                drawTypeIcon(item->getType(), tableRenderTexture, iconSprites);
+                drawTypeIconBlack(item->getType(), tableRenderTexture, iconSprites);
             }
             else
             {
@@ -96,7 +112,6 @@ void TradeTable::createTexture(std::vector<Equipment*> equipment, bool bodys)
         tradeText.move(-sumOfCellWidths, cellHeight);
         moveSpriteMap(-sumOfCellWidths, cellHeight, iconSprites);
     }
-    drawDoneButton();
 }
 
 void TradeTable::drawDoneButton()

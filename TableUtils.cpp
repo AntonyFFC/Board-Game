@@ -28,6 +28,34 @@ void drawSpaceIcon(Equipment::SpaceOccupied space, sf::RenderTexture& target, st
 
 }
 
+void drawSpaceIconBlack(Equipment::SpaceOccupied space, sf::RenderTexture& target, std::map<std::string, sf::Sprite>& iconSprites)
+{
+	int added = 0;
+	for (int i = 0; i < space.numSpaces; i++)
+	{
+		if (space.spaceType == "hands")
+		{
+			target.draw(iconSprites["hand-line-icon"]);
+			iconSprites["hand-line-icon"].move(15, 0);
+		}
+		else
+		{
+			target.draw(iconSprites["plus-round-line-icon"]);
+			iconSprites["plus-round-line-icon"].move(15, 0);
+		}
+		added++;
+	}
+	if (space.spaceType == "hands")
+	{
+		iconSprites["hand-line-icon"].move(-15 * added, 0);
+	}
+	else
+	{
+		iconSprites["plus-round-line-icon"].move(-15 * added, 0);
+	}
+
+}
+
 void drawTypeIcon(std::string type, sf::RenderTexture& target, std::map<std::string, sf::Sprite>& iconSprites)
 {
 	if (type == "Weapon")
@@ -41,6 +69,22 @@ void drawTypeIcon(std::string type, sf::RenderTexture& target, std::map<std::str
 	else
 	{
 		target.draw(iconSprites["four-squares-icon-white"]);
+	}
+}
+
+void drawTypeIconBlack(std::string type, sf::RenderTexture& target, std::map<std::string, sf::Sprite>& iconSprites)
+{
+	if (type == "Weapon")
+	{
+		target.draw(iconSprites["crossed-swords-icon"]);
+	}
+	else if (type == "Armour")
+	{
+		target.draw(iconSprites["shield-icon"]);
+	}
+	else
+	{
+		target.draw(iconSprites["four-squares-icon"]);
 	}
 }
 
