@@ -24,6 +24,7 @@ Armory::Armory(sf::RenderWindow* window)
 	cell = initializeCells();
 	cellHeight = 30;
 	sumOfCellWidths = getSumOfArray(cellWidths);
+	backgroundSprite = loadBackgroundSprite();
 }
 
 Armory::~Armory()
@@ -34,6 +35,7 @@ Armory::~Armory()
 }
 
 void Armory::start() {
+	backgroundSprite.setPosition(0, 0);
 	initializeText();
 	closed = false;
 	tableRenderTexture.clear(sf::Color::Transparent);
@@ -44,6 +46,7 @@ void Armory::start() {
 	while (!closed && window->isOpen())
 	{
 		window->clear(sf::Color(71, 31, 16));
+		window->draw(backgroundSprite);
 		window->draw(tableSprite);
 		window->display();
 
@@ -194,4 +197,15 @@ void Armory::initializeText()
 	newTitleText.setPosition(20, 10);
 	newTitleText.setFillColor(sf::Color::White);
 	titleText = newTitleText;
+}
+
+sf::Sprite Armory::loadBackgroundSprite()
+{
+	sf::Sprite newSprite;
+	if (!backgroundTexture.loadFromFile("assets/backgrounds/armory.png")) {
+		throw std::runtime_error("Unable to load background");
+	}
+
+	newSprite = sf::Sprite(backgroundTexture);
+	return newSprite;
 }

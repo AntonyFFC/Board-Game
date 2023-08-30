@@ -19,6 +19,7 @@ public:
 
     void callSelected(int selected);
 private:
+    sf::Sprite loadBackground();
     std::vector<std::string> buttonLabels;
     int screenWidth;
     int screenHeight;
@@ -28,4 +29,6 @@ private:
     int selectedIndex;
     Gui* interface1;
     Armory* armory1;
+    sf::Sprite backgroundSprite;
+    sf::Texture backgroundTexture;
 };

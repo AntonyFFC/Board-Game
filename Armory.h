@@ -23,6 +23,7 @@ private:
 	bool backClicked(sf::Vector2i mousePosition);
 
 	void initializeText();
+	sf::Sprite loadBackgroundSprite();
 	std::string filename;
 	sf::RenderWindow* window;
 	std::vector<Equipment*> equipmentList;
@@ -32,6 +33,8 @@ private:
 	sf::Text titleText;
 	std::map<std::string, sf::Sprite> iconSprites;
 	std::vector<sf::Texture*> iconTextures;
+	sf::Sprite backgroundSprite;
+	sf::Texture backgroundTexture;
 	std::string headers[8];
 	std::vector<std::function<std::string(const Equipment&)>> functions;
 	int cellWidths[8];

@@ -13,6 +13,8 @@ Menu::Menu(const int screenWidth, const int screenHeight)
     startY = window->getSize().y / 2.0f - totalHeight / 2.0f;
     interface1 = new Gui(window);
     armory1 = new Armory(window);
+    backgroundSprite = loadBackground();
+    backgroundSprite.setPosition(0, 0);
 }
 
 Menu::~Menu()
@@ -26,6 +28,7 @@ void Menu::start() {
     while (window->isOpen())
     {
         window->clear(sf::Color(71, 31, 16));
+        window->draw(backgroundSprite);
         draw();
         window->display();
 
@@ -135,4 +138,15 @@ void Menu::callSelected(int selected)
     case 5:
         window->close();
     }
+}
+
+sf::Sprite Menu::loadBackground()
+{
+    sf::Sprite newSprite;
+    if (!backgroundTexture.loadFromFile("assets/backgrounds/main.png")) {
+        throw std::runtime_error("Unable to load background");
+    }
+
+    newSprite = sf::Sprite(backgroundTexture);
+    return newSprite;
 }
