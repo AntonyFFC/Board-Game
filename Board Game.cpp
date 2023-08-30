@@ -2,6 +2,8 @@
 #include "GUI.h"
 #include "Equipment.h"
 #include "EquipmentManager.h"
+#include "Pawn.h"
+#include "PawnsManager.h"
 #include <iostream>
 #include "Menu.h"
 
@@ -101,6 +103,45 @@ int main()
     delete e26;
     delete e27;*/
 
+    /*std::vector<Pawn*> pawnList;
+    Pawn* p1 = new Pawn("Peasant Horseman", 0, 0, 6, 4, { 2,2 }, 3);
+    pawnList.push_back(p1);
+    Pawn* p2 = new Pawn("Prince Horseman", 1, 0, 7, 4, { 1,2 }, 3);
+    pawnList.push_back(p2);
+    Pawn* p3 = new Pawn("Townsman Horseman", 2, 0, 7, 4, { 2,1 }, 3);
+    pawnList.push_back(p3);
+    Pawn* p4 = new Pawn("Knight Horseman", 3, 0, 7, 5, { 2,2 }, 5);
+    pawnList.push_back(p4);
+    Pawn* p5 = new Pawn("Peasant Archer", 4, 0, 6, 5, { 2,1 }, 3);
+    pawnList.push_back(p5);
+    Pawn* p6 = new Pawn("Prince Archer", 2, 0, 7, 4, { 2,2 }, 4);
+    pawnList.push_back(p6);
+    Pawn* p7 = new Pawn("Townsman Archer", 0, 0, 7, 5, { 2,1 }, 4);
+    pawnList.push_back(p7);
+    Pawn* p8 = new Pawn("Knight Archer", 2, 0, 8, 4, { 2,1 }, 5);
+    pawnList.push_back(p8);
+    Pawn* p9 = new Pawn("Knight Warrior", 5, 0, 9, 3, { 1,2 }, 4);
+    pawnList.push_back(p9);
+    Pawn* p10 = new Pawn("Prince Warrior", 4, 0, 8, 5, { 2,1 }, 5);
+    pawnList.push_back(p10);
+    Pawn* p11 = new Pawn("Townsman Warrior", 1, 0, 8, 4, { 1,2 }, 3);
+    pawnList.push_back(p11);
+    Pawn* p12 = new Pawn("Peasant Warrior", 0, 0, 8, 5, { 2,2 }, 5);
+    pawnList.push_back(p12);
+    Pawn* p13= new Pawn("Townsman Defender", 3, 0, 8, 3, { 2,1 }, 4);
+    pawnList.push_back(p13);
+    Pawn* p14= new Pawn("Prince Defender", 4, 0, 8, 3, { 2,1 }, 3);
+    pawnList.push_back(p14);
+    Pawn* p15= new Pawn("Peasant Defender", 3, 0, 7, 3, { 2,2 }, 3);
+    pawnList.push_back(p15);
+    Pawn* p16= new Pawn("Knight Defender", 1, 0, 8, 4, { 2,2 }, 5);
+    pawnList.push_back(p16);
+    std::string filename = "pawns";
+    PawnsManager::savePawnsToJson(pawnList, filename);
+
+    for (Pawn* pawn : pawnList) {
+        delete pawn;
+    }*/
 
     Menu menu1;
     menu1.start();

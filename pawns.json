@@ -1,0 +1,194 @@
+[
+    {
+        "HP": 4,
+        "maxActions": 6,
+        "name": "Peasant Horseman",
+        "price": 3,
+        "side": 0,
+        "space": {
+            "extras": 2,
+            "hands": 2
+        },
+        "teamNumber": 0
+    },
+    {
+        "HP": 4,
+        "maxActions": 7,
+        "name": "Prince Horseman",
+        "price": 3,
+        "side": 0,
+        "space": {
+            "extras": 2,
+            "hands": 1
+        },
+        "teamNumber": 1
+    },
+    {
+        "HP": 4,
+        "maxActions": 7,
+        "name": "Townsman Horseman",
+        "price": 3,
+        "side": 0,
+        "space": {
+            "extras": 1,
+            "hands": 2
+        },
+        "teamNumber": 2
+    },
+    {
+        "HP": 5,
+        "maxActions": 7,
+        "name": "Knight Horseman",
+        "price": 5,
+        "side": 0,
+        "space": {
+            "extras": 2,
+            "hands": 2
+        },
+        "teamNumber": 3
+    },
+    {
+        "HP": 5,
+        "maxActions": 6,
+        "name": "Peasant Archer",
+        "price": 3,
+        "side": 0,
+        "space": {
+            "extras": 1,
+            "hands": 2
+        },
+        "teamNumber": 4
+    },
+    {
+        "HP": 4,
+        "maxActions": 7,
+        "name": "Prince Archer",
+        "price": 4,
+        "side": 0,
+        "space": {
+            "extras": 2,
+            "hands": 2
+        },
+        "teamNumber": 2
+    },
+    {
+        "HP": 5,
+        "maxActions": 7,
+        "name": "Townsman Archer",
+        "price": 4,
+        "side": 0,
+        "space": {
+            "extras": 1,
+            "hands": 2
+        },
+        "teamNumber": 0
+    },
+    {
+        "HP": 4,
+        "maxActions": 8,
+        "name": "Knight Archer",
+        "price": 5,
+        "side": 0,
+        "space": {
+            "extras": 1,
+            "hands": 2
+        },
+        "teamNumber": 2
+    },
+    {
+        "HP": 3,
+        "maxActions": 9,
+        "name": "Knight Warrior",
+        "price": 4,
+        "side": 0,
+        "space": {
+            "extras": 2,
+            "hands": 1
+        },
+        "teamNumber": 5
+    },
+    {
+        "HP": 5,
+        "maxActions": 8,
+        "name": "Prince Warrior",
+        "price": 5,
+        "side": 0,
+        "space": {
+            "extras": 1,
+            "hands": 2
+        },
+        "teamNumber": 4
+    },
+    {
+        "HP": 4,
+        "maxActions": 8,
+        "name": "Townsman Warrior",
+        "price": 3,
+        "side": 0,
+        "space": {
+            "extras": 2,
+            "hands": 1
+        },
+        "teamNumber": 1
+    },
+    {
+        "HP": 5,
+        "maxActions": 8,
+        "name": "Peasant Warrior",
+        "price": 5,
+        "side": 0,
+        "space": {
+            "extras": 2,
+            "hands": 2
+        },
+        "teamNumber": 0
+    },
+    {
+        "HP": 3,
+        "maxActions": 8,
+        "name": "Townsman Defender",
+        "price": 4,
+        "side": 0,
+        "space": {
+            "extras": 1,
+            "hands": 2
+        },
+        "teamNumber": 3
+    },
+    {
+        "HP": 3,
+        "maxActions": 8,
+        "name": "Prince Defender",
+        "price": 3,
+        "side": 0,
+        "space": {
+            "extras": 1,
+            "hands": 2
+        },
+        "teamNumber": 4
+    },
+    {
+        "HP": 3,
+        "maxActions": 7,
+        "name": "Peasant Defender",
+        "price": 3,
+        "side": 0,
+        "space": {
+            "extras": 2,
+            "hands": 2
+        },
+        "teamNumber": 3
+    },
+    {
+        "HP": 4,
+        "maxActions": 8,
+        "name": "Knight Defender",
+        "price": 5,
+        "side": 0,
+        "space": {
+            "extras": 2,
+            "hands": 2
+        },
+        "teamNumber": 1
+    }
+]

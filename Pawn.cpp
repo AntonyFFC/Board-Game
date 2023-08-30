@@ -10,6 +10,8 @@ Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions, in
     rotationAngle = 90.0f;
     remainingSpace = space;
     createSprite();
+    xPos = 0;
+    yPos = 0;
 }
 
 Pawn::~Pawn() {
