@@ -27,6 +27,7 @@ Pawn::~Pawn() {
     }
     equipment.clear();
     delete combinedSprite;
+    delete combinedTexture;
 }
 
 std::unordered_set<std::string> Pawn::getSet() {
@@ -70,14 +71,9 @@ void Pawn::createSprite()
         }
         renderTexture->display();
 
-        sf::Texture* combinedTexture = new sf::Texture(renderTexture->getTexture());
+        combinedTexture = new sf::Texture(renderTexture->getTexture());
         delete renderTexture;
-        /*combinedTexture->copyToImage().saveToFile("assets/combined.png");*/
-        combinedSprite = new sf::Sprite(*combinedTexture);
-        combinedSprite->setScale(scaleFactor, scaleFactor);
-        sf::Vector2f finalPos(xPos + combinedSprite->getGlobalBounds().width / 2.0f, yPos - combinedSprite->getGlobalBounds().height / 2.0f);
-        combinedSprite->setPosition(finalPos.x, finalPos.y);
-        combinedSprite->setRotation(rotationAngle);
+        setUpPosition();
     }
     else
     {
@@ -288,14 +284,29 @@ void Pawn::changePos(float x, float y) {
 
 void Pawn::dead()
 {
+    delete combinedSprite;
+    sf::Sprite sprite;
+    sf::RenderTexture* renderTexture = new sf::RenderTexture;
+    renderTexture->create(1400, 1800);
     if (side == 0)
     {
-        combinedSprite->setTexture(*spriteMap["dead red"].getTexture());
+        sprite = spriteMap["dead red"];
     }
     else
     {
-        combinedSprite->setTexture(*spriteMap["dead blue"].getTexture());
+        sprite = spriteMap["dead blue"];
     }
+    sf::Vector2f renderTextureCenter(renderTexture->getSize().x / 2.0f, renderTexture->getSize().y / 2.0f);
+    sf::Vector2f spriteCenterOffset(sprite.getLocalBounds().width / 2.0f, sprite.getLocalBounds().height / 2.0f);
+    sf::Vector2f spritePosition = renderTextureCenter - spriteCenterOffset;
+    sf::Transform transform;
+    transform.translate(spritePosition);
+    renderTexture->draw(sprite, transform);
+    renderTexture->display();
+
+    combinedTexture = new sf::Texture(renderTexture->getTexture());
+    delete renderTexture;
+    setUpPosition();
 }
 
 void Pawn::draw(sf::RenderTarget& target, bool isShift)
@@ -466,6 +477,16 @@ void Pawn::flipSprite(Equipment* item)
     textureRect.width = -textureRect.width;
     flippedSprite.setTextureRect(textureRect);
     spriteMap[item->getName()] = flippedSprite;
+}
+
+void Pawn::setUpPosition()
+{
+    combinedSprite = new sf::Sprite(*combinedTexture);
+    combinedSprite->setScale(scaleFactor, scaleFactor);
+    sf::Vector2f finalPos(xPos + combinedSprite->getGlobalBounds().width / 2.0f,
+        yPos - combinedSprite->getGlobalBounds().height / 2.0f);
+    combinedSprite->setPosition(finalPos.x, finalPos.y);
+    combinedSprite->setRotation(rotationAngle);
 }
 
 const std::map<std::string, int> Pawn::order = {

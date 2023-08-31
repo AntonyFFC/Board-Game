@@ -74,6 +74,7 @@ private:
     Equipment* findArmour(const std::string& type);
     void useArmour(const std::string& type, std::vector<bool>& armours, int value);
     void flipSprite(Equipment* item);
+    void setUpPosition();
 
     std::string name;
     int teamNumber;
@@ -88,6 +89,7 @@ private:
     float scaleFactor;
     float rotationAngle;
     mutable sf::Sprite *combinedSprite;
+    sf::Texture* combinedTexture;
     float xPos;
     float yPos;
     std::tuple<int, int, int> hexCoords;
