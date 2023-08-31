@@ -10,21 +10,28 @@ int getSumOfArray(T(&arr)[N]) {
 }
 
 Armory::Armory(sf::RenderWindow* window)
-	:window(window), headers{ "Name","left-right-arrow-icon-white","circle-line-icon-white","bomb-blast-icon-white",
- "history-icon-white","cube-icon-white","dollar-icon-white","Other" }, cellWidths{ 150,60,60,50,50,50,50,500 }
+	:window(window), equipmentHeaders{ "Name","left-right-arrow-icon-white","circle-line-icon-white","bomb-blast-icon-white",
+"history-icon-white","cube-icon-white","dollar-icon-white","Other" }, pawnHeaders{ "Name","history-icon-white",
+"hand-line-icon-white","plus-round-line-icon-white","heart-line-icon-white","dollar-icon-white"}, 
+equipmentCellWidths{150,60,60,50,50,50,50,500}, pawnCellWidths{250, 50, 50,50, 50, 50}
 {
+	tableRenderTexture.create(window->getSize().x, window->getSize().y);
 	tableRenderTexture.create(window->getSize().x, window->getSize().y);
 	fontSize = 20;
 	position = sf::Vector2f(20, 60);
 	initializeFont();
-	filename = "equipment";
-	equipmentList = EquipmentManager::loadEquipmentFromJson(filename);
+	equipmentList = EquipmentManager::loadEquipmentFromJson("equipment");
+	pawnsList = PawnsManager::loadPawnsFromJson("pawns");
 	iconSprites = initializeSpriteMap(iconTextures);
-	functions = initializeFunctions();
+	equipmentFunctions = initializeFunctions();
+	pawnFunctions = initializePawnFunctions();
 	cell = initializeCells();
 	cellHeight = 30;
-	sumOfCellWidths = getSumOfArray(cellWidths);
+	sumOfEqCellWidths = getSumOfArray(equipmentCellWidths);
+	sumOfPnCellWidths = getSumOfArray(pawnCellWidths);
 	backgroundSprite = loadBackgroundSprite();
+	backgroundSprite.setPosition(0, 0);
+	initializeText();
 }
 
 Armory::~Armory()
@@ -35,19 +42,15 @@ Armory::~Armory()
 }
 
 void Armory::start() {
-	backgroundSprite.setPosition(0, 0);
-	initializeText();
 	closed = false;
-	tableRenderTexture.clear(sf::Color::Transparent);
-	createTexture();
-	tableRenderTexture.display();
-	sf::Sprite tableSprite(tableRenderTexture.getTexture());
+	initializeEquipmentTable();
+	initializePawnsTable();
 
 	while (!closed && window->isOpen())
 	{
 		window->clear(sf::Color(71, 31, 16));
 		window->draw(backgroundSprite);
-		window->draw(tableSprite);
+		window->draw(pawnsTableSprite);
 		window->display();
 
 		sf::Event event;
@@ -85,53 +88,107 @@ void Armory::exit()
 	closed = true;
 }
 
-void Armory::createTexture()
+void Armory::createEquipmentTexture()
 {
-	tableRenderTexture.draw(titleText);
-	drawHeaders();
+	drawTitleText();
+	drawHeaders('e');
 	drawEquipment();
 	drawBackButton();
 }
 
-void Armory::drawHeaders()
+void Armory::createPawnsTexture()
+{
+	drawTitleText();
+	drawHeaders('p');
+	drawPawns();
+	drawBackButton();
+}
+
+void Armory::drawHeaders(char which)
 {
 	cell.setPosition(position);
 	setPosSpriteMap(position.x + 3, position.y + 3, iconSprites);
 	setScalSpriteMap(0.04, iconSprites);
 	text.setPosition(position.x + 5, position.y + 3);
 	cell.setFillColor(sf::Color(156, 84, 84));
+	if (which == 'e')
+	{
+		drawEquipmentHeaders();
+	}
+	else if (which == 'p')
+	{
+		drawPawnsHeaders();
+	}
+	else
+	{
+		throw std::runtime_error("Invalid input");
+	}
+	
+}
 
+void Armory::drawTitleText()
+{
+	sf::Text newTitleText("Armory", globalFont2, fontSize * 1.5);
+	newTitleText.setPosition(20, 10);
+	newTitleText.setFillColor(sf::Color::White);
+	titleText = newTitleText;
+	tableRenderTexture.draw(titleText);
+}
+
+void Armory::drawEquipmentHeaders()
+{
 	for (int i = 0; i < 8; i++)
 	{
-		cell.setSize(sf::Vector2f(cellWidths[i], cellHeight));
+		cell.setSize(sf::Vector2f(equipmentCellWidths[i], cellHeight));
 		tableRenderTexture.draw(cell);
-		if (headers[i] == "Name" || headers[i] == "Other")
+		if (equipmentHeaders[i].length() < 9)
 		{
-			text.setString(headers[i]);
+			text.setString(equipmentHeaders[i]);
 			tableRenderTexture.draw(text);
 		}
 		else
 		{
-			tableRenderTexture.draw(iconSprites[headers[i]]);
+			tableRenderTexture.draw(iconSprites[equipmentHeaders[i]]);
 		}
-		cell.move(cellWidths[i], 0);
-		text.move(cellWidths[i], 0);
-		moveSpriteMap(cellWidths[i], 0, iconSprites);
+		cell.move(equipmentCellWidths[i], 0);
+		text.move(equipmentCellWidths[i], 0);
+		moveSpriteMap(equipmentCellWidths[i], 0, iconSprites);
+	}
+}
+
+void Armory::drawPawnsHeaders()
+{
+	for (int i = 0; i < 6; i++)
+	{
+		cell.setSize(sf::Vector2f(pawnCellWidths[i], cellHeight));
+		tableRenderTexture.draw(cell);
+		if (pawnHeaders[i].length() < 9)
+		{
+			text.setString(pawnHeaders[i]);
+			tableRenderTexture.draw(text);
+		}
+		else
+		{
+			tableRenderTexture.draw(iconSprites[pawnHeaders[i]]);
+		}
+		cell.move(pawnCellWidths[i], 0);
+		text.move(pawnCellWidths[i], 0);
+		moveSpriteMap(pawnCellWidths[i], 0, iconSprites);
 	}
 }
 
 void Armory::drawEquipment()
 {
-	cell.move(-sumOfCellWidths, cellHeight);
-	text.move(-sumOfCellWidths, cellHeight);
-	moveSpriteMap(-sumOfCellWidths, cellHeight, iconSprites);
+	cell.move(-sumOfEqCellWidths, cellHeight);
+	text.move(-sumOfEqCellWidths, cellHeight);
+	moveSpriteMap(-sumOfEqCellWidths, cellHeight, iconSprites);
 
 	for (Equipment* item : equipmentList)
 	{
 		cell.setFillColor(getTypeColor(item));
 		for (int i = 0; i < 8; i++)
 		{
-			cell.setSize(sf::Vector2f(cellWidths[i], cellHeight));
+			cell.setSize(sf::Vector2f(equipmentCellWidths[i], cellHeight));
 			tableRenderTexture.draw(cell);
 			if (i == 2)
 			{
@@ -143,16 +200,43 @@ void Armory::drawEquipment()
 			}
 			else
 			{
-				text.setString(functions[i](*static_cast<const Equipment*>(item)));
+				text.setString(equipmentFunctions[i](*static_cast<const Equipment*>(item)));
 				tableRenderTexture.draw(text);
 			}
-			cell.move(cellWidths[i], 0);
-			text.move(cellWidths[i], 0);
-			moveSpriteMap(cellWidths[i], 0, iconSprites);
+			cell.move(equipmentCellWidths[i], 0);
+			text.move(equipmentCellWidths[i], 0);
+			moveSpriteMap(equipmentCellWidths[i], 0, iconSprites);
 		}
-		cell.move(-sumOfCellWidths, cellHeight);
-		text.move(-sumOfCellWidths, cellHeight);
-		moveSpriteMap(-sumOfCellWidths, cellHeight, iconSprites);
+		cell.move(-sumOfEqCellWidths, cellHeight);
+		text.move(-sumOfEqCellWidths, cellHeight);
+		moveSpriteMap(-sumOfEqCellWidths, cellHeight, iconSprites);
+	}
+}
+
+void Armory::drawPawns()
+{
+	cell.move(-sumOfPnCellWidths, cellHeight);
+	text.move(-sumOfPnCellWidths, cellHeight);
+	moveSpriteMap(-sumOfPnCellWidths, cellHeight, iconSprites);
+
+	for (Pawn* pawn : pawnsList)
+	{
+		cell.setFillColor(getTeamColor(pawn->getTeamNumber()));
+		for (int i = 0; i < 6; i++)
+		{
+			cell.setSize(sf::Vector2f(pawnCellWidths[i], cellHeight));
+			tableRenderTexture.draw(cell);
+
+			text.setString(pawnFunctions[i](*static_cast<const Pawn*>(pawn)));
+			tableRenderTexture.draw(text);
+
+			cell.move(pawnCellWidths[i], 0);
+			text.move(pawnCellWidths[i], 0);
+			moveSpriteMap(pawnCellWidths[i], 0, iconSprites);
+		}
+		cell.move(-sumOfPnCellWidths, cellHeight);
+		text.move(-sumOfPnCellWidths, cellHeight);
+		moveSpriteMap(-sumOfPnCellWidths, cellHeight, iconSprites);
 	}
 }
 
@@ -168,6 +252,27 @@ sf::Color Armory::getTypeColor(Equipment* item)
 	}
 	else {
 		return sf::Color(99, 94, 0);
+	}
+}
+
+sf::Color Armory::getTeamColor(int team)
+{
+	switch (team)
+	{
+	case 0:
+		return sf::Color::Red;
+	case 1:
+		return sf::Color::Blue;
+	case 2:
+		return sf::Color::Green;
+	case 3:
+		return sf::Color::Yellow;
+	case 4:
+		return sf::Color::Magenta;
+	case 5:
+		return sf::Color::Cyan;
+	default:
+		return sf::Color::White;
 	}
 }
 
@@ -192,11 +297,6 @@ void Armory::initializeText()
 	newText.setCharacterSize(fontSize);
 	newText.setFillColor(sf::Color::White);
 	text = newText;
-
-	sf::Text newTitleText("Armory", globalFont2, fontSize * 1.5);
-	newTitleText.setPosition(20, 10);
-	newTitleText.setFillColor(sf::Color::White);
-	titleText = newTitleText;
 }
 
 sf::Sprite Armory::loadBackgroundSprite()
@@ -208,4 +308,20 @@ sf::Sprite Armory::loadBackgroundSprite()
 
 	newSprite = sf::Sprite(backgroundTexture);
 	return newSprite;
+}
+
+void Armory::initializeEquipmentTable()
+{
+	tableRenderTexture.clear(sf::Color::Transparent);
+	createEquipmentTexture();
+	tableRenderTexture.display();
+	equipmentTableSprite = sf::Sprite(tableRenderTexture.getTexture());
+}
+
+void Armory::initializePawnsTable()
+{
+	tableRenderTexture.clear(sf::Color::Transparent);
+	createPawnsTexture();
+	tableRenderTexture.display();
+	pawnsTableSprite = sf::Sprite(tableRenderTexture.getTexture());
 }

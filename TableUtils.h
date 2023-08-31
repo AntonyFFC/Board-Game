@@ -6,6 +6,7 @@
 #include "Globals.h"
 #include <functional>
 #include "Equipment.h"
+#include "Pawn.h"
 
 void drawSpaceIcon(Equipment::SpaceOccupied space, sf::RenderTexture& target, std::map<std::string, sf::Sprite>& iconSprites);
 void drawTypeIcon(std::string type, sf::RenderTexture& target, std::map<std::string, sf::Sprite>& iconSprites);
@@ -14,6 +15,7 @@ void drawTypeIconBlack(std::string type, sf::RenderTexture& target, std::map<std
 
 std::map<std::string, sf::Sprite> initializeSpriteMap(std::vector<sf::Texture*> &iconTextures);
 std::vector<std::function<std::string(const Equipment&)>> initializeFunctions();
+std::vector<std::function<std::string(const Pawn&)>> initializePawnFunctions();
 sf::RectangleShape initializeCells();
 
 void setPosCells(int x, int y, std::vector <sf::RectangleShape*>& cells);

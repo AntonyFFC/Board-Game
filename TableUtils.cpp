@@ -141,6 +141,18 @@ std::vector<std::function<std::string(const Equipment&)>> initializeFunctions()
 	return newFunctions;
 }
 
+std::vector<std::function<std::string(const Pawn&)>> initializePawnFunctions()
+{
+	std::vector<std::function<std::string(const Pawn&)>> newFunctions;
+	newFunctions.push_back([](const Pawn& pawn) { return pawn.getName(); });
+	newFunctions.push_back([](const Pawn& pawn) { return std::to_string(pawn.getMaxActions()); });
+	newFunctions.push_back([](const Pawn& pawn) { return std::to_string(pawn.getSpace().hands); });
+	newFunctions.push_back([](const Pawn& pawn) { return std::to_string(pawn.getSpace().extras); });
+	newFunctions.push_back([](const Pawn& pawn) { return std::to_string(pawn.getHP()); });
+	newFunctions.push_back([](const Pawn& pawn) { return std::to_string(pawn.getPrice()); });
+	return newFunctions;
+}
+
 sf::RectangleShape initializeCells()
 {
 	sf::RectangleShape newCell;

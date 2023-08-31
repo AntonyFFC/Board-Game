@@ -2,7 +2,9 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "Equipment.h"
+#include "Pawn.h"
 #include "EquipmentManager.h"
+#include "PawnsManager.h"
 #include "Globals.h"
 #include "SpriteUtils.h"
 #include "TableUtils.h"
@@ -14,19 +16,27 @@ public:
 	void start();
 	void exit();
 private:
-	void createTexture();
-	void drawHeaders();
+	void createEquipmentTexture();
+	void createPawnsTexture();
+	void drawHeaders(char which);
+	void drawTitleText();
+	void drawEquipmentHeaders();
+	void drawPawnsHeaders();
 	void drawEquipment();
+	void drawPawns();
 	sf::Color getTypeColor(Equipment* item);
+	sf::Color getTeamColor(int team);
 	void drawBackButton();
 	void keyPressed(const sf::Event& event);
 	bool backClicked(sf::Vector2i mousePosition);
 
 	void initializeText();
 	sf::Sprite loadBackgroundSprite();
-	std::string filename;
+	void initializeEquipmentTable();
+	void initializePawnsTable();
 	sf::RenderWindow* window;
 	std::vector<Equipment*> equipmentList;
+	std::vector<Pawn*> pawnsList;
 	sf::RectangleShape cell;
 	sf::RectangleShape backCell;
 	sf::Text text;
@@ -35,13 +45,19 @@ private:
 	std::vector<sf::Texture*> iconTextures;
 	sf::Sprite backgroundSprite;
 	sf::Texture backgroundTexture;
-	std::string headers[8];
-	std::vector<std::function<std::string(const Equipment&)>> functions;
-	int cellWidths[8];
-	int sumOfCellWidths;
+	std::string equipmentHeaders[8];
+	std::string pawnHeaders[6];
+	std::vector<std::function<std::string(const Equipment&)>> equipmentFunctions;
+	std::vector<std::function<std::string(const Pawn&)>> pawnFunctions;
+	int equipmentCellWidths[8];
+	int pawnCellWidths[6];
+	int sumOfEqCellWidths;
+	int sumOfPnCellWidths;
 	int cellHeight;
 	int fontSize;
 	sf::Vector2f position;
 	sf::RenderTexture tableRenderTexture;
+	sf::Sprite equipmentTableSprite;
+	sf::Sprite pawnsTableSprite;
 	bool closed;
 };
