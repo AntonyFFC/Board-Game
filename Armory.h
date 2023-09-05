@@ -8,6 +8,7 @@
 #include "Globals.h"
 #include "SpriteUtils.h"
 #include "TableUtils.h"
+#include "Button.h"
 class Armory
 {
 public:
@@ -19,16 +20,18 @@ private:
 	void createEquipmentTexture();
 	void createPawnsTexture();
 	void drawHeaders(char which);
-	void drawTitleText();
+	void drawTitleText(char which);
 	void drawEquipmentHeaders();
 	void drawPawnsHeaders();
 	void drawEquipment();
 	void drawPawns();
 	sf::Color getTypeColor(Equipment* item);
 	sf::Color getTeamColor(int team);
-	void drawBackButton();
+	void drawBackButton(char which);
+	void drawChangeButton(char which);
+	void drawChangeToEq();
+	void drawChangeToPn();
 	void keyPressed(const sf::Event& event);
-	bool backClicked(sf::Vector2i mousePosition);
 
 	void initializeText();
 	sf::Sprite loadBackgroundSprite();
@@ -38,7 +41,6 @@ private:
 	std::vector<Equipment*> equipmentList;
 	std::vector<Pawn*> pawnsList;
 	sf::RectangleShape cell;
-	sf::RectangleShape backCell;
 	sf::Text text;
 	sf::Text titleText;
 	std::map<std::string, sf::Sprite> iconSprites;
@@ -56,8 +58,12 @@ private:
 	int cellHeight;
 	int fontSize;
 	sf::Vector2f position;
-	sf::RenderTexture tableRenderTexture;
+	sf::RenderTexture equipmentRenderTexture;
+	sf::RenderTexture pawnsRenderTexture;
 	sf::Sprite equipmentTableSprite;
 	sf::Sprite pawnsTableSprite;
 	bool closed;
+	bool isPawnsShown;
+	Button backButton;
+	Button changeButton;
 };

@@ -12,11 +12,11 @@ int getSumOfArray(T(&arr)[N]) {
 Armory::Armory(sf::RenderWindow* window)
 	:window(window), equipmentHeaders{ "Name","left-right-arrow-icon-white","circle-line-icon-white","bomb-blast-icon-white",
 "history-icon-white","cube-icon-white","dollar-icon-white","Other" }, pawnHeaders{ "Name","history-icon-white",
-"hand-line-icon-white","plus-round-line-icon-white","heart-line-icon-white","dollar-icon-white"}, 
-equipmentCellWidths{150,60,60,50,50,50,50,500}, pawnCellWidths{250, 50, 50,50, 50, 50}
+"hand-line-icon-white","plus-round-line-icon-white","heart-line-icon-white","dollar-icon-white" },
+equipmentCellWidths{ 150,60,60,50,50,50,50,500 }, pawnCellWidths{ 250, 50, 50,50, 50, 50 }
 {
-	tableRenderTexture.create(window->getSize().x, window->getSize().y);
-	tableRenderTexture.create(window->getSize().x, window->getSize().y);
+	equipmentRenderTexture.create(window->getSize().x, window->getSize().y);
+	pawnsRenderTexture.create(window->getSize().x, window->getSize().y);
 	fontSize = 20;
 	position = sf::Vector2f(20, 60);
 	initializeFont();
@@ -32,6 +32,11 @@ equipmentCellWidths{150,60,60,50,50,50,50,500}, pawnCellWidths{250, 50, 50,50, 5
 	backgroundSprite = loadBackgroundSprite();
 	backgroundSprite.setPosition(0, 0);
 	initializeText();
+	isPawnsShown = false;
+	backButton = Button(sf::Vector2f(window->getSize().x - 80, 20), 
+		sf::Vector2f(60, cellHeight * 1.2), "back");
+	changeButton = Button(sf::Vector2f(window->getSize().x / 2 - 65, 
+		window->getSize().y - 70), sf::Vector2f(130, cellHeight * 1.2), "pawns");
 }
 
 Armory::~Armory()
@@ -42,15 +47,24 @@ Armory::~Armory()
 }
 
 void Armory::start() {
+	sf::Sprite tableSprite;
 	closed = false;
 	initializeEquipmentTable();
 	initializePawnsTable();
 
 	while (!closed && window->isOpen())
 	{
+		if (isPawnsShown)
+		{
+			tableSprite = pawnsTableSprite;
+		}
+		else
+		{
+			tableSprite = equipmentTableSprite;
+		}
 		window->clear(sf::Color(71, 31, 16));
 		window->draw(backgroundSprite);
-		window->draw(pawnsTableSprite);
+		window->draw(tableSprite);
 		window->display();
 
 		sf::Event event;
@@ -63,24 +77,19 @@ void Armory::start() {
 void Armory::keyPressed(const sf::Event& event) {
 	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
 		sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
-		if (backClicked(mousePosition))
+		if (backButton.isClicked(mousePosition))
 		{
 			exit();
+		}
+		else if (changeButton.isClicked(mousePosition))
+		{
+			isPawnsShown = !isPawnsShown;
 		}
 	}
 	else if (event.type == sf::Event::Closed)
 	{
 		window->close();
 	}
-}
-
-bool Armory::backClicked(sf::Vector2i mousePosition)
-{
-	if (backCell.getGlobalBounds().contains(static_cast<float>(mousePosition.x), static_cast<float>(mousePosition.y)))
-	{
-		return true;
-	}
-	return false;
 }
 
 void Armory::exit()
@@ -90,18 +99,20 @@ void Armory::exit()
 
 void Armory::createEquipmentTexture()
 {
-	drawTitleText();
+	drawTitleText('e');
 	drawHeaders('e');
 	drawEquipment();
-	drawBackButton();
+	drawBackButton('e');
+	drawChangeButton('e');
 }
 
 void Armory::createPawnsTexture()
 {
-	drawTitleText();
+	drawTitleText('p');
 	drawHeaders('p');
 	drawPawns();
-	drawBackButton();
+	drawBackButton('p');
+	drawChangeButton('p');
 }
 
 void Armory::drawHeaders(char which)
@@ -123,16 +134,23 @@ void Armory::drawHeaders(char which)
 	{
 		throw std::runtime_error("Invalid input");
 	}
-	
+
 }
 
-void Armory::drawTitleText()
+void Armory::drawTitleText(char which)
 {
 	sf::Text newTitleText("Armory", globalFont2, fontSize * 1.5);
 	newTitleText.setPosition(20, 10);
 	newTitleText.setFillColor(sf::Color::White);
 	titleText = newTitleText;
-	tableRenderTexture.draw(titleText);
+	if (which == 'e')
+	{
+		equipmentRenderTexture.draw(titleText);
+	}
+	else
+	{
+		pawnsRenderTexture.draw(titleText);
+	}
 }
 
 void Armory::drawEquipmentHeaders()
@@ -140,15 +158,15 @@ void Armory::drawEquipmentHeaders()
 	for (int i = 0; i < 8; i++)
 	{
 		cell.setSize(sf::Vector2f(equipmentCellWidths[i], cellHeight));
-		tableRenderTexture.draw(cell);
+		equipmentRenderTexture.draw(cell);
 		if (equipmentHeaders[i].length() < 9)
 		{
 			text.setString(equipmentHeaders[i]);
-			tableRenderTexture.draw(text);
+			equipmentRenderTexture.draw(text);
 		}
 		else
 		{
-			tableRenderTexture.draw(iconSprites[equipmentHeaders[i]]);
+			equipmentRenderTexture.draw(iconSprites[equipmentHeaders[i]]);
 		}
 		cell.move(equipmentCellWidths[i], 0);
 		text.move(equipmentCellWidths[i], 0);
@@ -161,15 +179,15 @@ void Armory::drawPawnsHeaders()
 	for (int i = 0; i < 6; i++)
 	{
 		cell.setSize(sf::Vector2f(pawnCellWidths[i], cellHeight));
-		tableRenderTexture.draw(cell);
+		pawnsRenderTexture.draw(cell);
 		if (pawnHeaders[i].length() < 9)
 		{
 			text.setString(pawnHeaders[i]);
-			tableRenderTexture.draw(text);
+			pawnsRenderTexture.draw(text);
 		}
 		else
 		{
-			tableRenderTexture.draw(iconSprites[pawnHeaders[i]]);
+			pawnsRenderTexture.draw(iconSprites[pawnHeaders[i]]);
 		}
 		cell.move(pawnCellWidths[i], 0);
 		text.move(pawnCellWidths[i], 0);
@@ -189,19 +207,19 @@ void Armory::drawEquipment()
 		for (int i = 0; i < 8; i++)
 		{
 			cell.setSize(sf::Vector2f(equipmentCellWidths[i], cellHeight));
-			tableRenderTexture.draw(cell);
+			equipmentRenderTexture.draw(cell);
 			if (i == 2)
 			{
-				drawSpaceIcon(item->getSpaceOccupied(), tableRenderTexture, iconSprites);
+				drawSpaceIcon(item->getSpaceOccupied(), equipmentRenderTexture, iconSprites);
 			}
 			else if (i == 5)
 			{
-				drawTypeIcon(item->getType(), tableRenderTexture, iconSprites);
+				drawTypeIcon(item->getType(), equipmentRenderTexture, iconSprites);
 			}
 			else
 			{
 				text.setString(equipmentFunctions[i](*static_cast<const Equipment*>(item)));
-				tableRenderTexture.draw(text);
+				equipmentRenderTexture.draw(text);
 			}
 			cell.move(equipmentCellWidths[i], 0);
 			text.move(equipmentCellWidths[i], 0);
@@ -225,10 +243,10 @@ void Armory::drawPawns()
 		for (int i = 0; i < 6; i++)
 		{
 			cell.setSize(sf::Vector2f(pawnCellWidths[i], cellHeight));
-			tableRenderTexture.draw(cell);
+			pawnsRenderTexture.draw(cell);
 
 			text.setString(pawnFunctions[i](*static_cast<const Pawn*>(pawn)));
-			tableRenderTexture.draw(text);
+			pawnsRenderTexture.draw(text);
 
 			cell.move(pawnCellWidths[i], 0);
 			text.move(pawnCellWidths[i], 0);
@@ -260,34 +278,46 @@ sf::Color Armory::getTeamColor(int team)
 	switch (team)
 	{
 	case 0:
-		return sf::Color::Red;
+		return sf::Color(145, 4, 4);
 	case 1:
-		return sf::Color::Blue;
+		return sf::Color(28, 36, 82);
 	case 2:
-		return sf::Color::Green;
+		return sf::Color(28, 82, 42);
 	case 3:
-		return sf::Color::Yellow;
+		return sf::Color(145, 145, 4);
 	case 4:
-		return sf::Color::Magenta;
+		return sf::Color(84, 6, 80);
 	case 5:
-		return sf::Color::Cyan;
+		return sf::Color(5, 121, 171);
 	default:
 		return sf::Color::White;
 	}
 }
 
-void Armory::drawBackButton()
+void Armory::drawBackButton(char which)
 {
-	titleText.setString("back");
-	sf::FloatRect textBounds = titleText.getLocalBounds();
-	backCell.setSize(sf::Vector2f(textBounds.width*1.2, cellHeight*1.2));
-	backCell.setPosition(window->getSize().x- backCell.getSize().x-20, 20);
-	titleText.setPosition(window->getSize().x - backCell.getSize().x-15, 20);
-	backCell.setFillColor(sf::Color(109, 201, 169));
-	backCell.setOutlineColor(sf::Color::White);
-	backCell.setOutlineThickness(1.f);
-	tableRenderTexture.draw(backCell);
-	tableRenderTexture.draw(titleText);
+	if (which == 'e')
+	{
+		backButton.draw(equipmentRenderTexture);
+	}
+	else
+	{
+		backButton.draw(pawnsRenderTexture);
+	}
+}
+
+void Armory::drawChangeButton(char which)
+{
+	if (which == 'e')
+	{
+		changeButton.setText("pawns");
+		changeButton.draw(equipmentRenderTexture);
+	}
+	else
+	{
+		changeButton.setText("equipment");
+		changeButton.draw(pawnsRenderTexture);
+	}
 }
 
 void Armory::initializeText()
@@ -312,16 +342,16 @@ sf::Sprite Armory::loadBackgroundSprite()
 
 void Armory::initializeEquipmentTable()
 {
-	tableRenderTexture.clear(sf::Color::Transparent);
+	equipmentRenderTexture.clear(sf::Color::Transparent);
 	createEquipmentTexture();
-	tableRenderTexture.display();
-	equipmentTableSprite = sf::Sprite(tableRenderTexture.getTexture());
+	equipmentRenderTexture.display();
+	equipmentTableSprite = sf::Sprite(equipmentRenderTexture.getTexture());
 }
 
 void Armory::initializePawnsTable()
 {
-	tableRenderTexture.clear(sf::Color::Transparent);
+	pawnsRenderTexture.clear(sf::Color::Transparent);
 	createPawnsTexture();
-	tableRenderTexture.display();
-	pawnsTableSprite = sf::Sprite(tableRenderTexture.getTexture());
+	pawnsRenderTexture.display();
+	pawnsTableSprite = sf::Sprite(pawnsRenderTexture.getTexture());
 }

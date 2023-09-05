@@ -16,7 +16,7 @@ void drawTypeIconBlack(std::string type, sf::RenderTexture& target, std::map<std
 std::map<std::string, sf::Sprite> initializeSpriteMap(std::vector<sf::Texture*> &iconTextures);
 std::vector<std::function<std::string(const Equipment&)>> initializeFunctions();
 std::vector<std::function<std::string(const Pawn&)>> initializePawnFunctions();
-sf::RectangleShape initializeCells();
+sf::RectangleShape initializeCells(float width = 1.f, float height = 1.f, float x = 1.f, float y = 1.f);
 
 void setPosCells(int x, int y, std::vector <sf::RectangleShape*>& cells);
 void setPosTexts(int x, int y, std::vector <sf::Text*>& texts);

@@ -153,12 +153,14 @@ std::vector<std::function<std::string(const Pawn&)>> initializePawnFunctions()
 	return newFunctions;
 }
 
-sf::RectangleShape initializeCells()
+sf::RectangleShape initializeCells(float width, float height, float x, float y)
 {
 	sf::RectangleShape newCell;
 	newCell.setFillColor(sf::Color::Transparent);
 	newCell.setOutlineColor(sf::Color::White);
 	newCell.setOutlineThickness(1.f);
+	newCell.setSize(sf::Vector2f(width, height));
+	newCell.setPosition(x, y);
 	return newCell;
 }
 
