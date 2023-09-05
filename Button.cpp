@@ -13,12 +13,10 @@ Button::Button(sf::Vector2f position, sf::Vector2f size, std::string text)
     buttonText.setFont(globalFont2); // You can set the font here
     buttonText.setCharacterSize(30); // Set the character size of the text
     buttonText.setFillColor(sf::Color::White); // Set the default text color
-    sf::FloatRect textBounds = buttonText.getLocalBounds();
-    float xPosition = buttonShape.getPosition().x + buttonShape.getSize().x / 2 - textBounds.width / 2;
-    buttonText.setPosition(xPosition, position.y); // Adjust text position
+    setTextPosition();
 
     // Default colors for button
-    buttonShape.setFillColor(sf::Color(109, 201, 169)); // Background color
+    buttonShape.setFillColor(sf::Color::Transparent); // Background color
     buttonShape.setOutlineColor(sf::Color::White); // Outline color
     buttonShape.setOutlineThickness(1.f); // Outline thickness
 }
@@ -37,9 +35,7 @@ bool Button::isClicked(sf::Vector2i mousePosition)
 void Button::setPosition(sf::Vector2f position)
 {
     buttonShape.setPosition(position);
-    sf::FloatRect textBounds = buttonText.getLocalBounds();
-    float xPosition = buttonShape.getPosition().x + buttonShape.getSize().x / 2 - textBounds.width / 2;
-    buttonText.setPosition(xPosition, position.y);
+    setTextPosition();
 }
 
 sf::Vector2f Button::getPosition() const
@@ -60,9 +56,7 @@ sf::Vector2f Button::getSize() const
 void Button::setText(std::string text)
 {
     buttonText.setString(text);
-    sf::FloatRect textBounds = buttonText.getLocalBounds();
-    float xPosition = buttonShape.getPosition().x + buttonShape.getSize().x / 2 - textBounds.width / 2;
-    buttonText.setPosition(xPosition, buttonText.getPosition().y);
+    setTextPosition();
 }
 
 std::string Button::getText() const
@@ -73,9 +67,7 @@ std::string Button::getText() const
 void Button::setFont(sf::Font& font)
 {
     buttonText.setFont(font);
-    sf::FloatRect textBounds = buttonText.getLocalBounds();
-    float xPosition = buttonShape.getPosition().x + buttonShape.getSize().x / 2 - textBounds.width / 2;
-    buttonText.setPosition(xPosition, buttonText.getPosition().y);
+    setTextPosition();
 }
 
 void Button::setTextColor(sf::Color color)
@@ -108,4 +100,12 @@ void Button::draw(sf::RenderWindow& window)
 {
     window.draw(buttonShape);
     window.draw(buttonText);
+}
+
+void Button::setTextPosition()
+{
+    sf::FloatRect textBounds = buttonText.getLocalBounds();
+    float xPosition = buttonShape.getPosition().x + buttonShape.getSize().x / 2 - textBounds.width / 2;
+    float yPosition = buttonShape.getPosition().y + buttonShape.getSize().y / 2.0f - textBounds.height / 2.0f;
+    buttonText.setPosition(xPosition, yPosition);
 }

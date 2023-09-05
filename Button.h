@@ -24,6 +24,7 @@ public:
     void draw(sf::RenderWindow& window);
 
 private:
+    void setTextPosition();
     sf::RectangleShape buttonShape;
     sf::Text buttonText;
 };

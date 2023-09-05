@@ -15,6 +15,7 @@ Menu::Menu(const int screenWidth, const int screenHeight)
     armory1 = new Armory(window);
     backgroundSprite = loadBackground();
     backgroundSprite.setPosition(0, 0);
+    initializeButtons();
 }
 
 Menu::~Menu()
@@ -45,29 +46,16 @@ void Menu::draw() {
     titleText.setFillColor(sf::Color::White);
     window->draw(titleText);
 
-    float totalHeight = buttonLabels.size() * 70; // Total height of all buttons
-    float startY = window->getSize().y / 2.0f - totalHeight / 2.0f;
-
-    for (size_t i = 0; i < buttonLabels.size(); ++i) {
-        sf::RectangleShape buttonRect(sf::Vector2f(250, 50)); // Adjust width and height as needed
-        buttonRect.setPosition(window->getSize().x/2.0f - buttonRect.getSize().x / 2.0f, startY + i * 70);
+    for (size_t i = 0; i < buttons.size(); i++) {
 
         if (i == getSelectedItem()) {
-            buttonRect.setFillColor(sf::Color(115, 115, 115)); // Highlight the selectedIndex button
+            buttons[i].setBackgroundColor(sf::Color(115, 115, 115)); // Highlight the selectedIndex button
         }
         else {
-            buttonRect.setFillColor(sf::Color::Blue);
+            buttons[i].setBackgroundColor(sf::Color::Transparent);
         }
-
-        buttonRect.setOutlineThickness(2); // Border thickness
-        buttonRect.setOutlineColor(sf::Color::White);
-
-        sf::Text buttonText(buttonLabels[i], globalFont2, 30);
-        buttonText.setPosition(buttonRect.getPosition().x + buttonRect.getSize().x / 2.0f - buttonText.getGlobalBounds().width / 2.0f,
-            buttonRect.getPosition().y + buttonRect.getSize().y / 2.0f - buttonText.getGlobalBounds().height / 2.0f);
-
-        window->draw(buttonRect);
-        window->draw(buttonText);
+        
+        buttons[i].draw(*window);
     }
 }
 
@@ -75,9 +63,8 @@ void Menu::handleInput(sf::Event event) {
     if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
         sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
 
-        for (size_t i = 0; i < buttonLabels.size(); ++i) {
-            sf::FloatRect buttonRect(window->getSize().x / 2.0f - 100, startY + i * 70, 200, 50); // Adjust position and size
-            if (buttonRect.contains(mousePos.x, mousePos.y)) {
+        for (size_t i = 0; i < buttons.size(); i++) {
+            if (buttons[i].isClicked(mousePos)) {
                 selectedIndex = i;
                 return;
             }
@@ -87,8 +74,7 @@ void Menu::handleInput(sf::Event event) {
         sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
 
         for (size_t i = 0; i < buttonLabels.size(); ++i) {
-            sf::FloatRect buttonRect(window->getSize().x / 2.0f - 100, startY + i * 70, 200, 50); // Adjust position and size
-            if (buttonRect.contains(mousePos.x, mousePos.y)) {
+            if (buttons[i].isClicked(mousePos)) {
                 selectedIndex = i;
                 callSelected(getSelectedItem());
                 return;
@@ -149,4 +135,14 @@ sf::Sprite Menu::loadBackground()
 
     newSprite = sf::Sprite(backgroundTexture);
     return newSprite;
+}
+
+void Menu::initializeButtons()
+{
+    for (int i =0; i <buttonLabels.size();i++)
+    {
+        sf::Vector2f position(window->getSize().x / 2.0f - 125, startY + i * 70);
+        sf::Vector2f dimensions(250, 50);
+        buttons.push_back(Button(position, dimensions, buttonLabels[i]));
+    }
 }

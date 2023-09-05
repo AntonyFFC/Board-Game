@@ -33,10 +33,10 @@ equipmentCellWidths{ 150,60,60,50,50,50,50,500 }, pawnCellWidths{ 250, 50, 50,50
 	backgroundSprite.setPosition(0, 0);
 	initializeText();
 	isPawnsShown = false;
-	backButton = Button(sf::Vector2f(window->getSize().x - 80, 20), 
-		sf::Vector2f(60, cellHeight * 1.2), "back");
-	changeButton = Button(sf::Vector2f(window->getSize().x / 2 - 65, 
-		window->getSize().y - 70), sf::Vector2f(130, cellHeight * 1.2), "pawns");
+	backButton = Button(sf::Vector2f(window->getSize().x - 220, 20), 
+		sf::Vector2f(200, 50), "Back");
+	changeButton = Button(sf::Vector2f(window->getSize().x / 2 - 100, 
+		window->getSize().y - 70), sf::Vector2f(200, 50), "-}");
 }
 
 Armory::~Armory()
@@ -310,12 +310,12 @@ void Armory::drawChangeButton(char which)
 {
 	if (which == 'e')
 	{
-		changeButton.setText("pawns");
+		changeButton.setText("-}");
 		changeButton.draw(equipmentRenderTexture);
 	}
 	else
 	{
-		changeButton.setText("equipment");
+		changeButton.setText("{-");
 		changeButton.draw(pawnsRenderTexture);
 	}
 }

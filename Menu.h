@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include "GUI.h"
 #include "Armory.h"
+#include "Button.h"
 
 class Menu {
 public:
@@ -18,9 +19,14 @@ public:
     int getSelectedItem();
 
     void callSelected(int selected);
+
 private:
     sf::Sprite loadBackground();
+
+    void initializeButtons();
+
     std::vector<std::string> buttonLabels;
+    std::vector<Button> buttons;
     int screenWidth;
     int screenHeight;
     float totalHeight;
