@@ -21,6 +21,8 @@ public:
     void callSelected(int selected);
 
 private:
+    void display();
+
     sf::Sprite loadBackground();
 
     void initializeButtons();

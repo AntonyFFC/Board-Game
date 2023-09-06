@@ -47,29 +47,17 @@ Armory::~Armory()
 }
 
 void Armory::start() {
-	sf::Sprite tableSprite;
 	closed = false;
 	initializeEquipmentTable();
 	initializePawnsTable();
+	display();
 
 	while (!closed && window->isOpen())
 	{
-		if (isPawnsShown)
-		{
-			tableSprite = pawnsTableSprite;
-		}
-		else
-		{
-			tableSprite = equipmentTableSprite;
-		}
-		window->clear(sf::Color(71, 31, 16));
-		window->draw(backgroundSprite);
-		window->draw(tableSprite);
-		window->display();
-
+		
 		sf::Event event;
 		while (!closed && window->pollEvent(event)) {
-			keyPressed(event);
+			keyPressed(event); //this also calls display
 		}
 	}
 }
@@ -80,10 +68,25 @@ void Armory::keyPressed(const sf::Event& event) {
 		if (backButton.isClicked(mousePosition))
 		{
 			exit();
+			return;
 		}
 		else if (changeButton.isClicked(mousePosition))
 		{
-			isPawnsShown = !isPawnsShown;
+			flipPage();
+			return;
+		}
+	}
+	else if (event.type == sf::Event::KeyPressed)
+	{
+		if (event.key.code == sf::Keyboard::Escape)
+		{
+			exit();
+			return;
+		}
+		else if (event.key.code == sf::Keyboard::Right || event.key.code == sf::Keyboard::Left)
+		{
+			flipPage();
+			return;
 		}
 	}
 	else if (event.type == sf::Event::Closed)
@@ -95,6 +98,21 @@ void Armory::keyPressed(const sf::Event& event) {
 void Armory::exit()
 {
 	closed = true;
+}
+
+void Armory::display()
+{
+	window->clear(sf::Color(71, 31, 16));
+	window->draw(backgroundSprite);
+	if (isPawnsShown)
+	{
+		window->draw(pawnsTableSprite);
+	}
+	else
+	{
+		window->draw(equipmentTableSprite);
+	}
+	window->display();
 }
 
 void Armory::createEquipmentTexture()
@@ -354,4 +372,10 @@ void Armory::initializePawnsTable()
 	createPawnsTexture();
 	pawnsRenderTexture.display();
 	pawnsTableSprite = sf::Sprite(pawnsRenderTexture.getTexture());
+}
+
+void Armory::flipPage()
+{
+	isPawnsShown = !isPawnsShown;
+	display();
 }

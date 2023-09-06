@@ -26,13 +26,9 @@ Menu::~Menu()
 }
 
 void Menu::start() {
+    display();
     while (window->isOpen())
     {
-        window->clear(sf::Color(71, 31, 16));
-        window->draw(backgroundSprite);
-        draw();
-        window->display();
-
         sf::Event event;
         while (window->pollEvent(event)) {
             handleInput(event);
@@ -66,6 +62,7 @@ void Menu::handleInput(sf::Event event) {
         for (size_t i = 0; i < buttons.size(); i++) {
             if (buttons[i].isClicked(mousePos)) {
                 selectedIndex = i;
+                display();
                 return;
             }
         }
@@ -76,6 +73,7 @@ void Menu::handleInput(sf::Event event) {
         for (size_t i = 0; i < buttonLabels.size(); ++i) {
             if (buttons[i].isClicked(mousePos)) {
                 selectedIndex = i;
+                display();
                 callSelected(getSelectedItem());
                 return;
             }
@@ -92,6 +90,8 @@ void Menu::handleInput(sf::Event event) {
             // Depending on the selectedIndex item, perform an action
             callSelected(getSelectedItem());
         }
+        display();
+        return;
     }
     else if (event.type == sf::Event::Closed)
     {
@@ -124,6 +124,14 @@ void Menu::callSelected(int selected)
     case 5:
         window->close();
     }
+}
+
+void Menu::display()
+{
+    window->clear(sf::Color(71, 31, 16)); 
+    window->draw(backgroundSprite);
+    draw();
+    window->display();
 }
 
 sf::Sprite Menu::loadBackground()

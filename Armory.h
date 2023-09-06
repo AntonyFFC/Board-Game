@@ -17,6 +17,8 @@ public:
 	void start();
 	void exit();
 private:
+	void display();
+
 	void createEquipmentTexture();
 	void createPawnsTexture();
 	void drawHeaders(char which);
@@ -37,6 +39,7 @@ private:
 	sf::Sprite loadBackgroundSprite();
 	void initializeEquipmentTable();
 	void initializePawnsTable();
+	void flipPage();
 	sf::RenderWindow* window;
 	std::vector<Equipment*> equipmentList;
 	std::vector<Pawn*> pawnsList;

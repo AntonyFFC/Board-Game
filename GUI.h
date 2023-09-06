@@ -19,6 +19,8 @@ public:
     void start();
     void keyPressed(const sf::Event& event);
 private:
+    void display();
+
     sf::RenderWindow* window;
     Board* grid;
     Pawns* pawns;
