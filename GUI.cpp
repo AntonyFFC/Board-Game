@@ -17,6 +17,8 @@ Gui::Gui(sf::RenderWindow* window)
     e6 = new Equipment("crossbow", { 4,6 }, { 1, "hands" }, 2, 3, "Weapon", 4, "Ranged 2");
     e7 = new Equipment("war horse", { 0,1 }, { 1, "extras" }, 5, 1, "Weapon", 2, "Single use");
     e8 = new Equipment("two handed axe", { 0,2 }, { 2, "hands" }, 3, 4, "Weapon", 2, "");
+    backgroundSprite = loadBackground();
+    backgroundSprite.setPosition(0, 0);
 }
 
 Gui::~Gui()
@@ -74,7 +76,19 @@ void Gui::keyPressed(const sf::Event& event) {
 void Gui::display()
 {
     window->clear(sf::Color(66, 82, 107));
+    window->draw(backgroundSprite);
     grid->drawBoard(*window);
     pawns->draw(isShiftKeyPressed);
     window->display();
+}
+
+sf::Sprite Gui::loadBackground()
+{
+    sf::Sprite newSprite;
+    if (!backgroundTexture.loadFromFile("assets/backgrounds/board.png")) {
+        throw std::runtime_error("Unable to load background");
+    }
+
+    newSprite = sf::Sprite(backgroundTexture);
+    return newSprite;
 }

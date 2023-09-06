@@ -20,6 +20,7 @@ public:
     void keyPressed(const sf::Event& event);
 private:
     void display();
+    sf::Sprite loadBackground();
 
     sf::RenderWindow* window;
     Board* grid;
@@ -36,4 +37,6 @@ private:
     Equipment* e7;
     Equipment* e8;
     bool isShiftKeyPressed = false;
+    sf::Sprite backgroundSprite;
+    sf::Texture backgroundTexture;
 };
