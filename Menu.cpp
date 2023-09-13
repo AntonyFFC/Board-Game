@@ -73,8 +73,8 @@ void Menu::handleInput(sf::Event event) {
         for (size_t i = 0; i < buttonLabels.size(); ++i) {
             if (buttons[i].isClicked(mousePos)) {
                 selectedIndex = i;
-                display();
                 callSelected(getSelectedItem());
+                display();
                 return;
             }
         }

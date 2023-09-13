@@ -31,8 +31,6 @@ private:
 	sf::Color getTeamColor(int team);
 	void drawBackButton(char which);
 	void drawChangeButton(char which);
-	void drawChangeToEq();
-	void drawChangeToPn();
 	void keyPressed(const sf::Event& event);
 
 	void initializeText();

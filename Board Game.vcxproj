@@ -155,6 +155,7 @@
     <ClCompile Include="Board Game.cpp" />
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="Card.cpp" />
     <ClCompile Include="Equipment.cpp" />
     <ClCompile Include="EquipmentManager.cpp" />
     <ClCompile Include="Globals.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="Armory.h" />
     <ClInclude Include="Board.h" />
     <ClInclude Include="Button.h" />
+    <ClInclude Include="Card.h" />
     <ClInclude Include="Equipment.h" />
     <ClInclude Include="EquipmentManager.h" />
     <ClInclude Include="Globals.h" />

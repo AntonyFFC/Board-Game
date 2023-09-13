@@ -1,16 +1,18 @@
 #pragma once
 #include <vector>
+#include <SFML/Graphics.hpp>
 #include <string>
 #include "Equipment.h"
 #include "Pawn.h"
+#include "Globals.h"
+#include "Card.h"
 
 class Shop {
 public:
-    // Constructor
     Shop();
-
-    // Destructor
     ~Shop();
+
+    void start();
 
     // Initialize the shop with available cards and items
     void initializeShop();
@@ -25,12 +27,16 @@ public:
     void nextTurn();
 
 private:
-    // Private member variables for shop state
+    sf::RenderWindow* window;
     std::vector<Pawn> availableCards;
+    std::vector<Equipment*> equipmentList;
+    std::vector<Pawn*> pawnsList;
     std::vector<std::string> availableItems;
     int currentRound;
     int currentPlayerIndex;
     int remainingGold;
+    sf::Sprite backgroundSprite;
+    sf::Texture backgroundTexture;
 
     // Private helper functions for managing the shop
     void resetShop();
