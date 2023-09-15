@@ -5,17 +5,49 @@
 #include "Equipment.h"
 class Card
 {
+public:
+	friend class WarriorCard;
+	friend class EquipmentCard;
+
 	Card();
 	~Card();
 
-	void draw(sf::RenderTexture& window);
-	void draw(sf::RenderWindow& window);
+	template <typename RenderType>
+	void draw(RenderType& window);
 
 	bool isClicked(sf::Vector2i mousePosition);
 private:
+	void createSprite();
 	sf::Vector2f position;
 	sf::Sprite sprite;
 	sf::Texture texture;
+	sf::RectangleShape cell;
+	sf::Text text;
 };
 
-// add child clases with either equipment or pawns as attributes in innitial constructor values
+class WarriorCard : public Card {
+public:
+    // Constructor
+    WarriorCard(Pawn* warrior);
+
+    // Destructor
+    ~WarriorCard();
+
+
+private:
+    // Private member variables
+    Pawn* warrior;
+};
+
+class EquipmentCard : public Card {
+public:
+    // Constructor
+    EquipmentCard(Equipment* item);
+
+    // Destructor
+    ~EquipmentCard();
+
+
+private:
+    Equipment* item;
+};

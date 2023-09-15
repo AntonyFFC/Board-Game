@@ -28,7 +28,7 @@ public:
 
 private:
     sf::RenderWindow* window;
-    std::vector<Pawn> availableCards;
+    std::vector<Card> availableCards;
     std::vector<Equipment*> equipmentList;
     std::vector<Pawn*> pawnsList;
     std::vector<std::string> availableItems;
