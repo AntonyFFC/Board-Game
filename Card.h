@@ -3,6 +3,9 @@
 #include <SFML/Graphics.hpp>
 #include "Pawn.h"
 #include "Equipment.h"
+#include "SpriteUtils.h"
+#include "TableUtils.h"
+#include "Globals.h"
 class Card
 {
 public:
@@ -18,14 +21,25 @@ public:
 
 	bool isClicked(sf::Vector2i mousePosition);
 private:
+	sf::Sprite loadSprite(const std::string& textureName);
 	void createSprite();
+	void createTexture();
+	virtual void drawValues();
+	void drawHeaders();
+	virtual void drawPicture();
 	sf::Vector2f position;
-	sf::Sprite sprite;
+	int fontSize;
+	int cellHeight;
+	int sumOfCellWidths;
 	sf::Texture texture;
+	sf::Sprite sprite;
+	sf::RenderTexture renderTexture;
 	sf::RectangleShape cell;
 	sf::Text text;
 	std::vector<int> cellWidths;
 	std::vector<std::string> headers;
+	std::map<std::string, sf::Sprite> iconSprites;
+	std::vector<sf::Texture*> iconTextures;
 };
 
 class WarriorCard : public Card {
@@ -36,10 +50,11 @@ public:
     // Destructor
     ~WarriorCard();
 
-
 private:
-    // Private member variables
+	void drawValues() override;
+	void drawPicture() override;
     Pawn* warrior;
+	std::vector<std::function<std::string(const Pawn&)>> functions;
 };
 
 class EquipmentCard : public Card {
@@ -50,7 +65,9 @@ public:
     // Destructor
     ~EquipmentCard();
 
-
 private:
+	void drawValues() override;
+	void drawPicture() override;
     Equipment* item;
+	std::vector<std::function<std::string(const Equipment&)>> functions;
 };
