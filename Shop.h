@@ -9,7 +9,7 @@
 
 class Shop {
 public:
-    Shop();
+    Shop(sf::RenderWindow* window);
     ~Shop();
 
     void start();

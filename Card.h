@@ -9,11 +9,12 @@ public:
 	friend class WarriorCard;
 	friend class EquipmentCard;
 
-	Card();
+	Card(const std::vector<int>& widths, const std::vector<std::string>& headers);
 	~Card();
 
 	template <typename RenderType>
-	void draw(RenderType& window);
+	void draw(RenderType* window);
+	sf::Sprite getSprite();
 
 	bool isClicked(sf::Vector2i mousePosition);
 private:
@@ -23,6 +24,8 @@ private:
 	sf::Texture texture;
 	sf::RectangleShape cell;
 	sf::Text text;
+	std::vector<int> cellWidths;
+	std::vector<std::string> headers;
 };
 
 class WarriorCard : public Card {

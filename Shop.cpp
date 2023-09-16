@@ -1,6 +1,7 @@
 #include "Shop.h"
 
-Shop::Shop()
+Shop::Shop(sf::RenderWindow* window)
+	:window(window)
 {
 	initializeFont();
 	currentRound = 0;
@@ -14,7 +15,7 @@ void Shop::displayShop()
 	window->draw(backgroundSprite);
 	for (Card& card : availableCards)
 	{
-		card.draw(window);
+		window->draw(card.getSprite());
 	}
 	window->display();
 }
