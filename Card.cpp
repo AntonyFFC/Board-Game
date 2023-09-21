@@ -37,6 +37,11 @@ sf::Sprite Card::getSprite()
 	return sprite;
 }
 
+bool Card::isClicked(sf::Vector2i mousePosition)
+{
+	return false;
+}
+
 void Card::createSprite()
 {
 	renderTexture.clear(sf::Color::Transparent);
@@ -50,7 +55,7 @@ void Card::createTexture()
 {
 	drawHeaders();
 	drawValues();
-	drawPicture();
+	//drawPicture();
 }
 
 void Card::drawHeaders()
@@ -77,6 +82,14 @@ void Card::drawHeaders()
 		text.move(cellWidths[i], 0);
 		moveSpriteMap(cellWidths[i], 0, iconSprites);
 	}
+	moveBack();
+}
+
+void Card::moveBack()
+{
+	cell.move(-sumOfCellWidths, cellHeight);
+	text.move(-sumOfCellWidths, cellHeight);
+	moveSpriteMap(-sumOfCellWidths, cellHeight, iconSprites);
 }
 
 WarriorCard::WarriorCard(Pawn* warrior)
@@ -96,6 +109,33 @@ WarriorCard::WarriorCard(Pawn* warrior)
 	}
 }
 
+WarriorCard::~WarriorCard()
+{
+}
+
+void WarriorCard::drawValues()
+{
+	cell.setFillColor(getTeamColor(warrior->getTeamNumber()));
+	for (int i = 0; i < 6; i++)
+	{
+		cell.setSize(sf::Vector2f(cellWidths[i], cellHeight));
+		renderTexture.draw(cell);
+
+		text.setString(functions[i](*static_cast<const Pawn*>(warrior)));
+		renderTexture.draw(text);
+
+		cell.move(cellWidths[i], 0);
+		text.move(cellWidths[i], 0);
+		moveSpriteMap(cellWidths[i], 0, iconSprites);
+	}
+	moveBack();
+}
+
+void WarriorCard::drawPicture()
+{
+
+}
+
 EquipmentCard::EquipmentCard(Equipment* item)
 	: Card({ 150, 60, 60, 50, 50, 50, 50, 500 }, 
 	{ "Name","left-right-arrow-icon-white","circle-line-icon-white","bomb-blast-icon-white",
@@ -104,6 +144,41 @@ EquipmentCard::EquipmentCard(Equipment* item)
 	renderTexture.create(500, 300);
 	functions = initializeFunctions();
 	sprite = loadSprite(item->getName());
+}
+
+EquipmentCard::~EquipmentCard()
+{
+}
+
+void EquipmentCard::drawValues()
+{
+	cell.setFillColor(getTypeColor(item));
+	for (int i = 0; i < 8; i++)
+	{
+		cell.setSize(sf::Vector2f(cellWidths[i], cellHeight));
+		renderTexture.draw(cell);
+		if (i == 2)
+		{
+			drawSpaceIcon(item->getSpaceOccupied(), renderTexture, iconSprites);
+		}
+		else if (i == 5)
+		{
+			drawTypeIcon(item->getType(), renderTexture, iconSprites);
+		}
+		else
+		{
+			text.setString(functions[i](*static_cast<const Equipment*>(item)));
+			renderTexture.draw(text);
+		}
+		cell.move(cellWidths[i], 0);
+		text.move(cellWidths[i], 0);
+		moveSpriteMap(cellWidths[i], 0, iconSprites);
+	}
+	moveBack();
+}
+
+void EquipmentCard::drawPicture()
+{
 }
 
 sf::Sprite Card::loadSprite(const std::string& textureName)

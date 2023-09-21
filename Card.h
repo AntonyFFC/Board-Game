@@ -24,9 +24,10 @@ private:
 	sf::Sprite loadSprite(const std::string& textureName);
 	void createSprite();
 	void createTexture();
-	virtual void drawValues();
+	virtual void drawValues() = 0;
 	void drawHeaders();
-	virtual void drawPicture();
+	virtual void drawPicture() = 0;
+	void moveBack();
 	sf::Vector2f position;
 	int fontSize;
 	int cellHeight;
