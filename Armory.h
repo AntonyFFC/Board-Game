@@ -27,8 +27,6 @@ private:
 	void drawPawnsHeaders();
 	void drawEquipment();
 	void drawPawns();
-	sf::Color getTypeColor(Equipment* item);
-	sf::Color getTeamColor(int team);
 	void drawBackButton(char which);
 	void drawChangeButton(char which);
 	void keyPressed(const sf::Event& event);

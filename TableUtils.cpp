@@ -235,3 +235,39 @@ void setFillColorCells(sf::Color color, std::vector <sf::RectangleShape*>& cells
 		currentCell->setFillColor(color);
 	}
 }
+
+sf::Color getTypeColor(Equipment* item)
+{
+	std::string type = item->getType();
+
+	if (type == "Weapon") {
+		return sf::Color(46, 46, 46);
+	}
+	else if (type == "Armour") {
+		return sf::Color(122, 0, 6);
+	}
+	else {
+		return sf::Color(99, 94, 0);
+	}
+}
+
+sf::Color getTeamColor(int team)
+{
+	switch (team)
+	{
+	case 0:
+		return sf::Color(145, 4, 4);
+	case 1:
+		return sf::Color(28, 36, 82);
+	case 2:
+		return sf::Color(28, 82, 42);
+	case 3:
+		return sf::Color(145, 145, 4);
+	case 4:
+		return sf::Color(84, 6, 80);
+	case 5:
+		return sf::Color(5, 121, 171);
+	default:
+		return sf::Color::White;
+	}
+}

@@ -24,3 +24,6 @@ void moveCells(int addx, int addy, std::vector <sf::RectangleShape*>& cells);
 void moveTexts(int addx, int addy, std::vector <sf::Text*>& texts);
 void setSizeCells(float xSiz, float ySiz, std::vector <sf::RectangleShape*>& cells);
 void setFillColorCells(sf::Color color, std::vector <sf::RectangleShape*>& cells);
+
+sf::Color getTypeColor(Equipment* item);
+sf::Color getTeamColor(int team);
