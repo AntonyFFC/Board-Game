@@ -26,14 +26,15 @@ private:
 	void createTexture();
 	virtual void drawValues() = 0;
 	void drawHeaders();
-	virtual void drawPicture() = 0;
+	void drawPicture();
 	void moveBack();
 	sf::Vector2f position;
 	int fontSize;
 	int cellHeight;
 	int sumOfCellWidths;
-	sf::Texture texture;
-	sf::Sprite sprite;
+	sf::Texture pictureTexture;
+	sf::Sprite cardSprite;
+	sf::Sprite pictureSprite;
 	sf::RenderTexture renderTexture;
 	sf::RectangleShape cell;
 	sf::Text text;
@@ -53,7 +54,6 @@ public:
 
 private:
 	void drawValues() override;
-	void drawPicture() override;
     Pawn* warrior;
 	std::vector<std::function<std::string(const Pawn&)>> functions;
 };
@@ -68,7 +68,6 @@ public:
 
 private:
 	void drawValues() override;
-	void drawPicture() override;
     Equipment* item;
 	std::vector<std::function<std::string(const Equipment&)>> functions;
 };

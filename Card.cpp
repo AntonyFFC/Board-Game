@@ -29,12 +29,12 @@ Card::~Card()
 template <typename RenderType>
 void Card::draw(RenderType* window)
 {
-	window->draw(sprite);
+	window->draw(cardSprite);
 }
 
 sf::Sprite Card::getSprite()
 {
-	return sprite;
+	return cardSprite;
 }
 
 bool Card::isClicked(sf::Vector2i mousePosition)
@@ -47,15 +47,14 @@ void Card::createSprite()
 	renderTexture.clear(sf::Color::Transparent);
 	createTexture();
 	renderTexture.display();
-	sprite = sf::Sprite(renderTexture.getTexture());
-
+	cardSprite = sf::Sprite(renderTexture.getTexture());
 }
 
 void Card::createTexture()
 {
 	drawHeaders();
 	drawValues();
-	//drawPicture();
+	drawPicture();
 }
 
 void Card::drawHeaders()
@@ -85,6 +84,12 @@ void Card::drawHeaders()
 	moveBack();
 }
 
+void Card::drawPicture()
+{
+	pictureSprite.setPosition(position.x + 3, position.y + 50);
+	renderTexture.draw(pictureSprite);
+}
+
 void Card::moveBack()
 {
 	cell.move(-sumOfCellWidths, cellHeight);
@@ -101,11 +106,11 @@ WarriorCard::WarriorCard(Pawn* warrior)
 	functions = initializePawnFunctions();
 	if (warrior->getSide() == 0)
 	{
-		sprite = loadSprite("red");
+		pictureSprite = loadSprite("red");
 	}
 	else
 	{
-		sprite = loadSprite("blue");
+		pictureSprite = loadSprite("blue");
 	}
 }
 
@@ -131,11 +136,6 @@ void WarriorCard::drawValues()
 	moveBack();
 }
 
-void WarriorCard::drawPicture()
-{
-
-}
-
 EquipmentCard::EquipmentCard(Equipment* item)
 	: Card({ 150, 60, 60, 50, 50, 50, 50, 500 }, 
 	{ "Name","left-right-arrow-icon-white","circle-line-icon-white","bomb-blast-icon-white",
@@ -143,7 +143,7 @@ EquipmentCard::EquipmentCard(Equipment* item)
 {
 	renderTexture.create(500, 300);
 	functions = initializeFunctions();
-	sprite = loadSprite(item->getName());
+	pictureSprite = loadSprite(item->getName());
 }
 
 EquipmentCard::~EquipmentCard()
@@ -177,20 +177,16 @@ void EquipmentCard::drawValues()
 	moveBack();
 }
 
-void EquipmentCard::drawPicture()
-{
-}
-
 sf::Sprite Card::loadSprite(const std::string& textureName)
 {
 	std::string folderPath = "assets/equipment/";
 	std::string filePath = folderPath + textureName + ".png";
 
-	if (!texture.loadFromFile(filePath))
+	if (!pictureTexture.loadFromFile(filePath))
 	{
 		throw std::runtime_error("Failed to load texture: " + textureName);
 	}
 
-	sf::Sprite sprite(texture);
+	sf::Sprite sprite(pictureTexture);
 	return sprite;
 }
