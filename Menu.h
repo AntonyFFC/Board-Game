@@ -23,8 +23,6 @@ public:
 private:
     void display();
 
-    sf::Sprite loadBackground();
-
     void initializeButtons();
 
     std::vector<std::string> buttonLabels;

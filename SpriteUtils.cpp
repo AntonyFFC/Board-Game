@@ -26,3 +26,14 @@ void moveSpriteMap(int addx, int addy, std::map<std::string, sf::Sprite>& sprite
         currentSprite.move(addx, addy);
     }
 }
+
+sf::Sprite loadBackgroundSprite(sf::Texture* backgroundTexture, std::string name)
+{
+    sf::Sprite newSprite;
+    if (!backgroundTexture->loadFromFile("assets/backgrounds/"+name+".png")) {
+        throw std::runtime_error("Unable to load background");
+    }
+
+    newSprite = sf::Sprite(*backgroundTexture);
+    return newSprite;
+}

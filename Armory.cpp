@@ -29,7 +29,7 @@ equipmentCellWidths{ 150,60,60,50,50,50,50,500 }, pawnCellWidths{ 250, 50, 50,50
 	cellHeight = 30;
 	sumOfEqCellWidths = getSumOfArray(equipmentCellWidths);
 	sumOfPnCellWidths = getSumOfArray(pawnCellWidths);
-	backgroundSprite = loadBackgroundSprite();
+	backgroundSprite = loadBackgroundSprite(&backgroundTexture, "armory");
 	backgroundSprite.setPosition(0, 0);
 	initializeText();
 	isPawnsShown = false;
@@ -309,17 +309,6 @@ void Armory::initializeText()
 	newText.setCharacterSize(fontSize);
 	newText.setFillColor(sf::Color::White);
 	text = newText;
-}
-
-sf::Sprite Armory::loadBackgroundSprite()
-{
-	sf::Sprite newSprite;
-	if (!backgroundTexture.loadFromFile("assets/backgrounds/armory.png")) {
-		throw std::runtime_error("Unable to load background");
-	}
-
-	newSprite = sf::Sprite(backgroundTexture);
-	return newSprite;
 }
 
 void Armory::initializeEquipmentTable()

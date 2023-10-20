@@ -7,6 +7,8 @@ Shop::Shop(sf::RenderWindow* window)
 	currentRound = 0;
 	currentPlayerIndex = 0;
 	remainingGold = 6;
+	backgroundSprite = loadBackgroundSprite(&backgroundTexture, "shop");
+	backgroundSprite.setPosition(0, 0);
 }
 
 void Shop::displayShop()

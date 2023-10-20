@@ -13,7 +13,6 @@ public:
 	friend class EquipmentCard;
 
 	Card(const std::vector<int>& widths, const std::vector<std::string>& headers);
-	~Card();
 
 	template <typename RenderType>
 	void draw(RenderType* window);
@@ -49,9 +48,6 @@ public:
     // Constructor
     WarriorCard(Pawn* warrior);
 
-    // Destructor
-    ~WarriorCard();
-
 private:
 	void drawValues() override;
     Pawn* warrior;
@@ -62,9 +58,6 @@ class EquipmentCard : public Card {
 public:
     // Constructor
     EquipmentCard(Equipment* item);
-
-    // Destructor
-    ~EquipmentCard();
 
 private:
 	void drawValues() override;

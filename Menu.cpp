@@ -13,7 +13,7 @@ Menu::Menu(const int screenWidth, const int screenHeight)
     startY = window->getSize().y / 2.0f - totalHeight / 2.0f;
     interface1 = new Gui(window);
     armory1 = new Armory(window);
-    backgroundSprite = loadBackground();
+    backgroundSprite = loadBackgroundSprite(&backgroundTexture, "main");
     backgroundSprite.setPosition(0, 0);
     initializeButtons();
 }
@@ -132,17 +132,6 @@ void Menu::display()
     window->draw(backgroundSprite);
     draw();
     window->display();
-}
-
-sf::Sprite Menu::loadBackground()
-{
-    sf::Sprite newSprite;
-    if (!backgroundTexture.loadFromFile("assets/backgrounds/main.png")) {
-        throw std::runtime_error("Unable to load background");
-    }
-
-    newSprite = sf::Sprite(backgroundTexture);
-    return newSprite;
 }
 
 void Menu::initializeButtons()

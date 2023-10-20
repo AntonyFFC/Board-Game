@@ -32,7 +32,6 @@ private:
 	void keyPressed(const sf::Event& event);
 
 	void initializeText();
-	sf::Sprite loadBackgroundSprite();
 	void initializeEquipmentTable();
 	void initializePawnsTable();
 	void flipPage();

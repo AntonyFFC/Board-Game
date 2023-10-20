@@ -37,6 +37,7 @@ private:
     int remainingGold;
     sf::Sprite backgroundSprite;
     sf::Texture backgroundTexture;
+    sf::Text titleText;
 
     // Private helper functions for managing the shop
     void resetShop();

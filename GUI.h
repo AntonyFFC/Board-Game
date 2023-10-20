@@ -10,6 +10,7 @@
 #include <tuple>
 #include <cmath>
 #include "Pawns.h"
+#include "SpriteUtils.h"
 
 class Gui {
 public:
@@ -20,7 +21,6 @@ public:
     void keyPressed(const sf::Event& event);
 private:
     void display();
-    sf::Sprite loadBackground();
 
     sf::RenderWindow* window;
     Board* grid;

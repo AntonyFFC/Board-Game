@@ -22,10 +22,6 @@ Card::Card(const std::vector<int>& widths, const std::vector<std::string>& heade
 	sumOfCellWidths = getSumOfVector(cellWidths);
 }
 
-Card::~Card()
-{
-}
-
 template <typename RenderType>
 void Card::draw(RenderType* window)
 {
@@ -39,7 +35,7 @@ sf::Sprite Card::getSprite()
 
 bool Card::isClicked(sf::Vector2i mousePosition)
 {
-	return false;
+	return false; // do this
 }
 
 void Card::createSprite()
@@ -112,10 +108,7 @@ WarriorCard::WarriorCard(Pawn* warrior)
 	{
 		pictureSprite = loadSprite("blue");
 	}
-}
-
-WarriorCard::~WarriorCard()
-{
+	createSprite();
 }
 
 void WarriorCard::drawValues()
@@ -144,10 +137,7 @@ EquipmentCard::EquipmentCard(Equipment* item)
 	renderTexture.create(500, 300);
 	functions = initializeFunctions();
 	pictureSprite = loadSprite(item->getName());
-}
-
-EquipmentCard::~EquipmentCard()
-{
+	createSprite();
 }
 
 void EquipmentCard::drawValues()
