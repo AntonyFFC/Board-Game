@@ -12,6 +12,7 @@ Menu::Menu(const int screenWidth, const int screenHeight)
     totalHeight = buttonLabels.size() * 70; // Total height of all buttons
     startY = window->getSize().y / 2.0f - totalHeight / 2.0f;
     interface1 = new Gui(window);
+    shop1 = new Shop(window);
     armory1 = new Armory(window);
     backgroundSprite = loadBackgroundSprite(&backgroundTexture, "main");
     backgroundSprite.setPosition(0, 0);
@@ -21,6 +22,7 @@ Menu::Menu(const int screenWidth, const int screenHeight)
 Menu::~Menu()
 {
     delete interface1;
+    delete shop1;
     delete armory1;
     delete window;
 }
@@ -109,7 +111,8 @@ void Menu::callSelected(int selected)
 {
     switch (selected) {
     case 0: // 2 Player Game Button
-        interface1->start();
+        //interface1->start();
+        shop1->start();
     case 1: // Multiplayer Game Button
         // Start a multiplayer game
         break;

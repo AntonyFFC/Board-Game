@@ -14,7 +14,6 @@
 class Shop {
 public:
     Shop(sf::RenderWindow* window);
-    ~Shop();
 
     void start();
 
@@ -29,7 +28,7 @@ public:
 
 private:
     sf::RenderWindow* window;
-    std::vector<Card> shownCards;
+    std::vector<std::shared_ptr<Card>> shownCards;
     std::vector<Equipment*> equipmentList;
     std::vector<Pawn*> pawnsList;
     std::vector<Equipment*> availableItems;

@@ -37,15 +37,29 @@ bool Shop::buy(int player, int card)
 	return false;
 }
 
+void Shop::nextTurn()
+{
+	currentPlayerIndex = (currentPlayerIndex + 1) % 2;
+	currentRound++;
+}
+
 void Shop::displayShop()
 {
 	window->clear(sf::Color(71, 31, 16));
 	window->draw(backgroundSprite);
-	for (Card& card : shownCards)
+	for (auto& cardPtr : shownCards)
 	{
-		window->draw(card.getSprite());
+		window->draw(cardPtr->getSprite());
 	}
 	window->display();
+}
+
+void Shop::resetShop()
+{
+}
+
+void Shop::updateShop()
+{
 }
 
 void Shop::keyPressed(const sf::Event& event)
@@ -67,9 +81,9 @@ void Shop::keyPressed(const sf::Event& event)
 int Shop::whichCardClicked(sf::Vector2i mousePosition)
 {
 	int i = 0;
-	for (const Card& card : shownCards)
+	for (const auto& cardPtr : shownCards)
 	{
-		if (card.isClicked(mousePosition))
+		if (cardPtr->isClicked(mousePosition))
 		{
 			return i;
 		}
@@ -107,4 +121,8 @@ void Shop::initializeDecks()
 
 void Shop::initializeCards()
 {
+	for (Equipment* item : availableItems)
+	{
+		shownCards.push_back(std::make_shared<EquipmentCard>(item));
+	}
 }

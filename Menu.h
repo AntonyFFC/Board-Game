@@ -4,6 +4,7 @@
 #include "GUI.h"
 #include "Armory.h"
 #include "Button.h"
+#include "Shop.h"
 
 class Menu {
 public:
@@ -34,6 +35,7 @@ private:
     sf::RenderWindow* window;
     int selectedIndex;
     Gui* interface1;
+    Shop* shop1;
     Armory* armory1;
     sf::Sprite backgroundSprite;
     sf::Texture backgroundTexture;
