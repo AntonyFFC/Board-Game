@@ -18,7 +18,7 @@ public:
 	void draw(RenderType* window);
 	sf::Sprite getSprite();
 
-	bool isClicked(sf::Vector2i mousePosition);
+	bool isClicked(sf::Vector2i mousePosition) const;
 private:
 	sf::Sprite loadSprite(const std::string& textureName);
 	void createSprite();

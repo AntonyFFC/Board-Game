@@ -68,12 +68,10 @@ void Armory::keyPressed(const sf::Event& event) {
 		if (backButton.isClicked(mousePosition))
 		{
 			exit();
-			return;
 		}
 		else if (changeButton.isClicked(mousePosition))
 		{
 			flipPage();
-			return;
 		}
 	}
 	else if (event.type == sf::Event::KeyPressed)
@@ -81,12 +79,10 @@ void Armory::keyPressed(const sf::Event& event) {
 		if (event.key.code == sf::Keyboard::Escape)
 		{
 			exit();
-			return;
 		}
 		else if (event.key.code == sf::Keyboard::Right || event.key.code == sf::Keyboard::Left)
 		{
 			flipPage();
-			return;
 		}
 	}
 	else if (event.type == sf::Event::Closed)

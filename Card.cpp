@@ -33,7 +33,7 @@ sf::Sprite Card::getSprite()
 	return cardSprite;
 }
 
-bool Card::isClicked(sf::Vector2i mousePosition)
+bool Card::isClicked(sf::Vector2i mousePosition) const
 {
 	return false; // do this
 }
