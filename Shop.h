@@ -6,6 +6,10 @@
 #include "Pawn.h"
 #include "Globals.h"
 #include "Card.h"
+#include "EquipmentManager.h"
+#include "PawnsManager.h"
+#include <algorithm>
+#include <random> 
 
 class Shop {
 public:
@@ -17,9 +21,6 @@ public:
     // Initialize the shop with available cards and items
     void initializeShop();
 
-    // Display the available cards and items in the shop
-    void displayShop();
-
     // Player buys a card or item from the shop
     bool buy(int player, int card);
 
@@ -28,10 +29,11 @@ public:
 
 private:
     sf::RenderWindow* window;
-    std::vector<Card> availableCards;
+    std::vector<Card> shownCards;
     std::vector<Equipment*> equipmentList;
     std::vector<Pawn*> pawnsList;
-    std::vector<std::string> availableItems;
+    std::vector<Equipment*> availableItems;
+    std::vector<Pawn*> availableWarriors;
     int currentRound;
     int currentPlayerIndex;
     int remainingGold;
@@ -39,9 +41,18 @@ private:
     sf::Texture backgroundTexture;
     sf::Text titleText;
 
+    // Display the available cards and items in the shop
+    void displayShop();
+
     // Private helper functions for managing the shop
     void resetShop();
     void updateShop();
+
+    void keyPressed(const sf::Event& event);
+    int whichCardClicked(sf::Vector2i mousePosition); // returns -1 id none
+
+    void initializeDecks();
+    void initializeCards();
 
     // Add more private members and methods as needed
 
