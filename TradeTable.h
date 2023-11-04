@@ -26,7 +26,6 @@ private:
 	bool isOnBody(sf::Vector2i mousePosition);
 	Equipment* clickOnEquipment(sf::Vector2i mousePosition, std::vector<Equipment*> equipment);
 	void tradeItem(Equipment* item, bool isBodys);
-	sf::Text initializeTradeText();
 	void initializeTexture();
 	void setUpDimensions();
 

@@ -22,7 +22,7 @@ TradeTable::TradeTable(Pawn* inPawn, Pawn* inBody, sf::RenderWindow* inWindow)
     functions = initializeFunctions();
     cell = initializeCells();
     doneCell = initializeCells();
-    tradeText = initializeTradeText();
+    tradeText = initializeText("trade", &globalFont2, cellHeight*3/4, sf::Color::Black);
     tableRenderTexture.create(target->getSize().x, target->getSize().y);
     initializeTexture();
 }
@@ -212,16 +212,6 @@ bool TradeTable::isOnBody(sf::Vector2i mousePosition)
         return true;
     }
     return false;
-}
-
-sf::Text TradeTable::initializeTradeText()
-{
-    sf::Text text;
-    int size = 15;
-    text.setFont(globalFont2);
-    text.setCharacterSize(size);
-    text.setFillColor(sf::Color::Black);
-    return text;
 }
 
 void TradeTable::initializeTexture()

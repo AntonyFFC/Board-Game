@@ -21,7 +21,7 @@ WeaponsTable::WeaponsTable(Pawn* inPawn, Pawn* inAttacked, std::vector<Equipment
     iconSprites = initializeSpriteMap(iconTextures);
     functions = initializeFunctions();
     cell = initializeCells();
-    text = initializeText();
+    text = initializeText("Weapons", &globalFont2, cellHeight * 3 / 4, sf::Color::Black);
     tableRenderTexture.create(target->getSize().x, target->getSize().y);
     initializeTexture();
 }
@@ -141,17 +141,6 @@ Equipment* WeaponsTable::clickOnEquipment(sf::Vector2i mousePosition)
         }
     }
     return chosen;
-}
-
-
-sf::Text WeaponsTable::initializeText()
-{
-    sf::Text text;
-    int size = 15;
-    text.setFont(globalFont2);
-    text.setCharacterSize(size);
-    text.setFillColor(sf::Color::Black);
-    return text;
 }
 
 void WeaponsTable::initializeTexture()

@@ -23,7 +23,6 @@ private:
 	void drawHeaders();
 	void drawEquipment();
 	Equipment* clickOnEquipment(sf::Vector2i mousePosition);
-	sf::Text initializeText();
 	void initializeTexture();
 	void setUpDimensions();
 
