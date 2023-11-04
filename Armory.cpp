@@ -31,7 +31,8 @@ equipmentCellWidths{ 150,60,60,50,50,50,50,500 }, pawnCellWidths{ 250, 50, 50,50
 	sumOfPnCellWidths = getSumOfArray(pawnCellWidths);
 	backgroundSprite = loadBackgroundSprite(&backgroundTexture, "armory");
 	backgroundSprite.setPosition(0, 0);
-	initializeText();
+	text = initializeText("Nothing", &globalFont2, fontSize, sf::Color::White);
+	titleText = initializeText("Armory", &globalFont2, fontSize * 1.5, sf::Color::White);
 	isPawnsShown = false;
 	backButton = Button(sf::Vector2f(window->getSize().x - 220, 20), 
 		sf::Vector2f(200, 50), "Back");
@@ -153,10 +154,7 @@ void Armory::drawHeaders(char which)
 
 void Armory::drawTitleText(char which)
 {
-	sf::Text newTitleText("Armory", globalFont2, fontSize * 1.5);
-	newTitleText.setPosition(20, 10);
-	newTitleText.setFillColor(sf::Color::White);
-	titleText = newTitleText;
+	titleText.setPosition(20, 10);
 	if (which == 'e')
 	{
 		equipmentRenderTexture.draw(titleText);
@@ -296,15 +294,6 @@ void Armory::drawChangeButton(char which)
 		changeButton.setText("{-");
 		changeButton.draw(pawnsRenderTexture);
 	}
-}
-
-void Armory::initializeText()
-{
-	sf::Text newText;
-	newText.setFont(globalFont2);
-	newText.setCharacterSize(fontSize);
-	newText.setFillColor(sf::Color::White);
-	text = newText;
 }
 
 void Armory::initializeEquipmentTable()

@@ -31,7 +31,6 @@ private:
 	void drawChangeButton(char which);
 	void keyPressed(const sf::Event& event);
 
-	void initializeText();
 	void initializeEquipmentTable();
 	void initializePawnsTable();
 	void flipPage();

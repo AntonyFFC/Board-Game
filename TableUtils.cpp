@@ -271,3 +271,10 @@ sf::Color getTeamColor(int team)
 		return sf::Color::White;
 	}
 }
+
+sf::Text initializeText(std::string content, sf::Font* font, float fontSize, sf::Color color)
+{
+	sf::Text newText(content, *font, fontSize);
+	newText.setFillColor(color);
+	return newText;
+}

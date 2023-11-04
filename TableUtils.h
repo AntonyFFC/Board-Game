@@ -27,3 +27,5 @@ void setFillColorCells(sf::Color color, std::vector <sf::RectangleShape*>& cells
 
 sf::Color getTypeColor(Equipment* item);
 sf::Color getTeamColor(int team);
+
+sf::Text initializeText(std::string content, sf::Font* font, float fontSize, sf::Color color);
