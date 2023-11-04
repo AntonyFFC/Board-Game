@@ -47,8 +47,11 @@ void Shop::displayShop()
 {
 	window->clear(sf::Color(71, 31, 16));
 	window->draw(backgroundSprite);
+	sf::Vector2f pos(50,50);
 	for (auto& cardPtr : shownCards)
 	{
+		pos += sf::Vector2f(0,100);
+		cardPtr->setPosition(pos);
 		window->draw(cardPtr->getSprite());
 	}
 	window->display();
