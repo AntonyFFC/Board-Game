@@ -9,14 +9,16 @@ int getSumOfVector(const Container& vec) {
 	return sum;
 }
 
-Card::Card(const std::vector<int>& widths, const std::vector<std::string>& headers) 
+Card::Card(const std::vector<int>& widths, const std::vector<std::string>& headers, sf::Vector2f pos)
 	: cellWidths(widths), headers(headers)
 {
 	initializeFont();
 	cell = initializeCells();
 	fontSize = 20;
 	cellHeight = 30;
-	position = sf::Vector2f(0, 0);
+	position = pos;
+	scaleFactor = 0.2f;
+	text = initializeText("card", &globalFont2, fontSize, sf::Color::White);
 	iconSprites = initializeSpriteMap(iconTextures);
 	cell = initializeCells();
 	sumOfCellWidths = getSumOfVector(cellWidths);
@@ -31,6 +33,18 @@ void Card::draw(RenderType* window)
 sf::Sprite Card::getSprite()
 {
 	return cardSprite;
+}
+
+void Card::setPosition(sf::Vector2f pos)
+{
+	position = pos;
+	createSprite();
+}
+
+void Card::movePosition(sf::Vector2f pos)
+{
+	position += pos;
+	createSprite();
 }
 
 bool Card::isClicked(sf::Vector2i mousePosition) const
@@ -82,7 +96,10 @@ void Card::drawHeaders()
 
 void Card::drawPicture()
 {
-	pictureSprite.setPosition(position.x + 3, position.y + 50);
+	pictureSprite.setScale(scaleFactor, scaleFactor);
+	sf::Vector2f finalPos(position.x + 3 + pictureSprite.getGlobalBounds().width / 2.0f,
+		position.y + 50 - pictureSprite.getGlobalBounds().height / 2.0f);
+	pictureSprite.setPosition(finalPos.x, finalPos.y);
 	renderTexture.draw(pictureSprite);
 }
 
@@ -98,7 +115,7 @@ WarriorCard::WarriorCard(Pawn* warrior)
 		"hand-line-icon-white", "plus-round-line-icon-white", 
 		"heart-line-icon-white", "dollar-icon-white" }), warrior(warrior)
 {
-	renderTexture.create(500, 300);
+	renderTexture.create(500, 300); //fix this
 	functions = initializePawnFunctions();
 	if (warrior->getSide() == 0)
 	{
@@ -134,7 +151,7 @@ EquipmentCard::EquipmentCard(Equipment* item)
 	{ "Name","left-right-arrow-icon-white","circle-line-icon-white","bomb-blast-icon-white",
 	"history-icon-white","cube-icon-white","dollar-icon-white","Other" }), item(item)
 {
-	renderTexture.create(500, 300);
+	renderTexture.create(1000, 800); //fix this so
 	functions = initializeFunctions();
 	pictureSprite = loadSprite(item->getName());
 	createSprite();

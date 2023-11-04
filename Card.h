@@ -12,12 +12,14 @@ public:
 	friend class WarriorCard;
 	friend class EquipmentCard;
 
-	Card(const std::vector<int>& widths, const std::vector<std::string>& headers);
+	Card(const std::vector<int>& widths, const std::vector<std::string>& headers, sf::Vector2f pos = sf::Vector2f(0, 0));
 
 	template <typename RenderType>
 	void draw(RenderType* window);
 	sf::Sprite getSprite();
 
+	void setPosition(sf::Vector2f pos);
+	void movePosition(sf::Vector2f pos);
 	bool isClicked(sf::Vector2i mousePosition) const;
 private:
 	sf::Sprite loadSprite(const std::string& textureName);
@@ -31,6 +33,7 @@ private:
 	int fontSize;
 	int cellHeight;
 	int sumOfCellWidths;
+	float scaleFactor;
 	sf::Texture pictureTexture;
 	sf::Sprite cardSprite;
 	sf::Sprite pictureSprite;
