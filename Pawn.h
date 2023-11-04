@@ -56,7 +56,6 @@ public:
     void reduceActions(int amount);
     void reduceHP(int amount);
     bool isAlive() const;
-    void changePos(float x, float y);
     void dead();
     void draw(sf::RenderTarget& target, bool isShift);
     void attack(int value);

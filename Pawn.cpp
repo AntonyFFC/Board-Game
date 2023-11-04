@@ -73,6 +73,7 @@ void Pawn::createSprite()
 
         combinedTexture = new sf::Texture(renderTexture->getTexture());
         delete renderTexture;
+        combinedSprite = new sf::Sprite(*combinedTexture);
         setUpPosition();
     }
     else
@@ -167,8 +168,7 @@ void Pawn::setRotationAngle(float angle) {
 void Pawn::setPosition(float inx, float iny) {
     this->xPos = inx;
     this->yPos = iny;
-    sf::Vector2f finalPos(xPos + combinedSprite->getGlobalBounds().width / 2.0f, yPos - combinedSprite->getGlobalBounds().height / 2.0f);
-    combinedSprite->setPosition(finalPos.x, finalPos.y);
+    setUpPosition();
 }
 
 void Pawn::scale(float ins) {
@@ -277,11 +277,6 @@ bool Pawn::isAlive() const {
     return HP > 0;
 }
 
-void Pawn::changePos(float x, float y) {
-    xPos = x;
-    yPos = y;
-}
-
 void Pawn::dead()
 {
     delete combinedSprite;
@@ -306,6 +301,7 @@ void Pawn::dead()
 
     combinedTexture = new sf::Texture(renderTexture->getTexture());
     delete renderTexture;
+    combinedSprite = new sf::Sprite(*combinedTexture);
     setUpPosition();
 }
 
@@ -481,7 +477,6 @@ void Pawn::flipSprite(Equipment* item)
 
 void Pawn::setUpPosition()
 {
-    combinedSprite = new sf::Sprite(*combinedTexture);
     combinedSprite->setScale(scaleFactor, scaleFactor);
     sf::Vector2f finalPos(xPos + combinedSprite->getGlobalBounds().width / 2.0f,
         yPos - combinedSprite->getGlobalBounds().height / 2.0f);
