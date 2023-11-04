@@ -20,6 +20,7 @@ public:
 
 	void setPosition(sf::Vector2f pos);
 	void movePosition(sf::Vector2f pos);
+	void setScale(float scl);
 	bool isClicked(sf::Vector2i mousePosition) const;
 private:
 	sf::Sprite loadSprite(const std::string& textureName);

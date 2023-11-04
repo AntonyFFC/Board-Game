@@ -17,7 +17,7 @@ Card::Card(const std::vector<int>& widths, const std::vector<std::string>& heade
 	fontSize = 20;
 	cellHeight = 30;
 	position = pos;
-	scaleFactor = 0.2f;
+	scaleFactor = 0.15f;
 	text = initializeText("card", &globalFont2, fontSize, sf::Color::White);
 	iconSprites = initializeSpriteMap(iconTextures);
 	cell = initializeCells();
@@ -38,13 +38,18 @@ sf::Sprite Card::getSprite()
 void Card::setPosition(sf::Vector2f pos)
 {
 	position = pos;
-	createSprite();
+	cardSprite.setPosition(position);
 }
 
 void Card::movePosition(sf::Vector2f pos)
 {
 	position += pos;
-	createSprite();
+	cardSprite.setPosition(position);
+}
+
+void Card::setScale(float scl)
+{
+	cardSprite.setScale(scl, scl);
 }
 
 bool Card::isClicked(sf::Vector2i mousePosition) const
@@ -54,10 +59,11 @@ bool Card::isClicked(sf::Vector2i mousePosition) const
 
 void Card::createSprite()
 {
-	renderTexture.clear(sf::Color::Transparent);
+	renderTexture.clear(sf::Color(158, 158, 157));
 	createTexture();
 	renderTexture.display();
 	cardSprite = sf::Sprite(renderTexture.getTexture());
+	cardSprite.setPosition(position);
 }
 
 void Card::createTexture()
@@ -69,10 +75,11 @@ void Card::createTexture()
 
 void Card::drawHeaders()
 {
-	cell.setPosition(position);
-	setPosSpriteMap(position.x + 3, position.y + 3, iconSprites);
+	sf::Vector2f initialPos(0, 0);
+	cell.setPosition(initialPos);
+	setPosSpriteMap(initialPos.x + 3, initialPos.y + 3, iconSprites);
 	setScalSpriteMap(0.04, iconSprites);
-	text.setPosition(position.x + 5, position.y + 3);
+	text.setPosition(initialPos.x + 5, initialPos.y + 3);
 	cell.setFillColor(sf::Color(156, 84, 84));
 	for (int i = 0; i < headers.size(); i++)
 	{
@@ -96,9 +103,11 @@ void Card::drawHeaders()
 
 void Card::drawPicture()
 {
+	sf::Vector2f initialPos(0, 0);
 	pictureSprite.setScale(scaleFactor, scaleFactor);
-	sf::Vector2f finalPos(position.x + 3 + pictureSprite.getGlobalBounds().width / 2.0f,
-		position.y + 50 - pictureSprite.getGlobalBounds().height / 2.0f);
+	//this is so that I set the x coordinate of the center but the y coordinate of the top edge
+	sf::Vector2f finalPos(initialPos.x + sumOfCellWidths/2 - pictureSprite.getGlobalBounds().width / 2.0f,
+		initialPos.y + 2*cellHeight);
 	pictureSprite.setPosition(finalPos.x, finalPos.y);
 	renderTexture.draw(pictureSprite);
 }
@@ -115,7 +124,7 @@ WarriorCard::WarriorCard(Pawn* warrior)
 		"hand-line-icon-white", "plus-round-line-icon-white", 
 		"heart-line-icon-white", "dollar-icon-white" }), warrior(warrior)
 {
-	renderTexture.create(500, 300); //fix this
+	renderTexture.create(sumOfCellWidths, 300);
 	functions = initializePawnFunctions();
 	if (warrior->getSide() == 0)
 	{
@@ -151,7 +160,7 @@ EquipmentCard::EquipmentCard(Equipment* item)
 	{ "Name","left-right-arrow-icon-white","circle-line-icon-white","bomb-blast-icon-white",
 	"history-icon-white","cube-icon-white","dollar-icon-white","Other" }), item(item)
 {
-	renderTexture.create(1000, 800); //fix this so
+	renderTexture.create(sumOfCellWidths, 150);
 	functions = initializeFunctions();
 	pictureSprite = loadSprite(item->getName());
 	createSprite();
