@@ -52,7 +52,7 @@ void Shop::displayShop()
 	{
 		pos += sf::Vector2f(0,170);
 		cardPtr->setPosition(pos);
-		cardPtr->setScale(0.75);
+		cardPtr->setScale(0.9);
 		window->draw(cardPtr->getSprite());
 	}
 	window->display();
@@ -125,8 +125,8 @@ void Shop::initializeDecks()
 
 void Shop::initializeCards()
 {
-	for (Equipment* item : availableItems)
+	for (Pawn* item : availableWarriors)
 	{
-		shownCards.push_back(std::make_shared<EquipmentCard>(item));
+		shownCards.push_back(std::make_shared<WarriorCard>(item));
 	}
 }

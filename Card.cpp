@@ -54,7 +54,7 @@ void Card::setScale(float scl)
 
 bool Card::isClicked(sf::Vector2i mousePosition) const
 {
-	return false; // do this
+	return cardSprite.getGlobalBounds().contains(mousePosition.x, mousePosition.y);
 }
 
 void Card::createSprite()
@@ -156,9 +156,10 @@ void WarriorCard::drawValues()
 }
 
 EquipmentCard::EquipmentCard(Equipment* item)
-	: Card({ 150, 60, 60, 50, 50, 50, 50, 500 }, 
+	: Card({ 150, 60, 60, 50, 50, 50, 50 }, 
 	{ "Name","left-right-arrow-icon-white","circle-line-icon-white","bomb-blast-icon-white",
-	"history-icon-white","cube-icon-white","dollar-icon-white","Other" }), item(item)
+	"history-icon-white","cube-icon-white","dollar-icon-white","Other" }), item(item), 
+	lowerCellWidth(470), lowerCellText("Other")
 {
 	renderTexture.create(sumOfCellWidths, 150);
 	functions = initializeFunctions();
