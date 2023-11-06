@@ -4,13 +4,18 @@ Shop::Shop(sf::RenderWindow* window)
 	:window(window)
 {
 	initializeFont();
+	fontSize = 20;
 	currentRound = 0;
 	currentPlayerIndex = 0;
 	remainingGold = 6;
+	titleText = initializeText("Shop", &globalFont2, fontSize * 1.5, sf::Color::White);
+	titleText.setPosition(20, 10);
 	equipmentList = EquipmentManager::loadEquipmentFromJson("equipment");
 	pawnsList = PawnsManager::loadPawnsFromJson("pawns");
 	backgroundSprite = loadBackgroundSprite(&backgroundTexture, "shop");
 	backgroundSprite.setPosition(0, 0);
+	changeButton = Button(sf::Vector2f(window->getSize().x / 2 - 100,
+		window->getSize().y - 70), sf::Vector2f(200, 50), "-}");
 }
 
 void Shop::start()
@@ -47,15 +52,22 @@ void Shop::displayShop()
 {
 	window->clear(sf::Color(71, 31, 16));
 	window->draw(backgroundSprite);
-	sf::Vector2f pos(50,10);
+	window->draw(titleText);
+	drawCards();
+	changeButton.draw(*window);
+	window->display();
+}
+
+void Shop::drawCards()
+{
+	sf::Vector2f pos(500, 20);
 	for (auto& cardPtr : shownCards)
 	{
-		pos += sf::Vector2f(0,170);
 		cardPtr->setPosition(pos);
 		cardPtr->setScale(0.9);
 		window->draw(cardPtr->getSprite());
+		pos += sf::Vector2f(0, cardPtr->getSprite().getTextureRect().height + 10);
 	}
-	window->display();
 }
 
 void Shop::resetShop()
@@ -125,8 +137,8 @@ void Shop::initializeDecks()
 
 void Shop::initializeCards()
 {
-	for (Pawn* item : availableWarriors)
+	for (Equipment* item : availableItems)
 	{
-		shownCards.push_back(std::make_shared<WarriorCard>(item));
+		shownCards.push_back(std::make_shared<EquipmentCard>(item));
 	}
 }

@@ -66,7 +66,5 @@ public:
 private:
 	void drawValues() override;
     Equipment* item;
-	int lowerCellWidth;
-	std::string lowerCellText;
 	std::vector<std::function<std::string(const Equipment&)>> functions;
 };

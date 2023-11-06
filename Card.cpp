@@ -120,7 +120,7 @@ void Card::moveBack()
 }
 
 WarriorCard::WarriorCard(Pawn* warrior)
-	: Card({ 250, 50, 50, 50, 50, 50 },{ "Name", "history-icon-white",
+	: Card({ 250, 40, 40, 40, 40, 40 },{ "Name", "history-icon-white",
 		"hand-line-icon-white", "plus-round-line-icon-white", 
 		"heart-line-icon-white", "dollar-icon-white" }), warrior(warrior)
 {
@@ -156,10 +156,9 @@ void WarriorCard::drawValues()
 }
 
 EquipmentCard::EquipmentCard(Equipment* item)
-	: Card({ 150, 60, 60, 50, 50, 50, 50 }, 
+	: Card({ 150, 60, 60, 40, 40, 40, 40 }, 
 	{ "Name","left-right-arrow-icon-white","circle-line-icon-white","bomb-blast-icon-white",
-	"history-icon-white","cube-icon-white","dollar-icon-white","Other" }), item(item), 
-	lowerCellWidth(470), lowerCellText("Other")
+	"history-icon-white","cube-icon-white","dollar-icon-white"}), item(item)
 {
 	renderTexture.create(sumOfCellWidths, 150);
 	functions = initializeFunctions();
@@ -170,7 +169,7 @@ EquipmentCard::EquipmentCard(Equipment* item)
 void EquipmentCard::drawValues()
 {
 	cell.setFillColor(getTypeColor(item));
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < 7; i++)
 	{
 		cell.setSize(sf::Vector2f(cellWidths[i], cellHeight));
 		renderTexture.draw(cell);
@@ -192,6 +191,9 @@ void EquipmentCard::drawValues()
 		moveSpriteMap(cellWidths[i], 0, iconSprites);
 	}
 	moveBack();
+	//This is the description below specs
+	text.setString(functions[7](*static_cast<const Equipment*>(item)));
+	renderTexture.draw(text);
 }
 
 sf::Sprite Card::loadSprite(const std::string& textureName)

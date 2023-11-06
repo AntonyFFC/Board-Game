@@ -10,6 +10,7 @@
 #include "PawnsManager.h"
 #include <algorithm>
 #include <random> 
+#include "Button.h"
 
 class Shop {
 public:
@@ -36,12 +37,15 @@ private:
     int currentRound;
     int currentPlayerIndex;
     int remainingGold;
+    int fontSize;
     sf::Sprite backgroundSprite;
     sf::Texture backgroundTexture;
     sf::Text titleText;
+    Button changeButton;
 
     // Display the available cards and items in the shop
     void displayShop();
+    void drawCards();
 
     // Private helper functions for managing the shop
     void resetShop();
