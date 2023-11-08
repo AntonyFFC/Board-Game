@@ -7,6 +7,7 @@ Shop::Shop(sf::RenderWindow* window)
 	fontSize = 20;
 	currentRound = 0;
 	currentPlayerIndex = 0;
+	currentPage = 0;
 	remainingGold = 6;
 	titleText = initializeText("Shop", &globalFont2, fontSize * 1.5, sf::Color::White);
 	titleText.setPosition(20, 10);
@@ -39,6 +40,7 @@ void Shop::initializeShop()
 
 bool Shop::buy(int player, int card)
 {
+	std::cout << "Player: " << player << "Card:" << card << std::endl;
 	return false;
 }
 
@@ -54,7 +56,7 @@ void Shop::displayShop()
 	window->draw(backgroundSprite);
 	window->draw(titleText);
 	drawCards();
-	changeButton.draw(*window);
+	drawChangeButton();
 	window->display();
 }
 
@@ -68,6 +70,19 @@ void Shop::drawCards()
 		window->draw(cardPtr->getSprite());
 		pos += sf::Vector2f(0, cardPtr->getSprite().getTextureRect().height + 10);
 	}
+}
+
+void Shop::drawChangeButton()
+{
+	if (currentPage)
+	{
+		changeButton.setText("{-");
+	}
+	else
+	{
+		changeButton.setText("-}");
+	}
+	changeButton.draw(*window);
 }
 
 void Shop::resetShop()
@@ -86,6 +101,10 @@ void Shop::keyPressed(const sf::Event& event)
 		if (cardNum != -1)
 		{
 			buy(currentPlayerIndex, cardNum);
+		}
+		else if (changeButton.isClicked(mousePosition))
+		{
+			flipPage();
 		}
 	}
 	else if (event.type == sf::Event::Closed)
@@ -137,8 +156,26 @@ void Shop::initializeDecks()
 
 void Shop::initializeCards()
 {
-	for (Equipment* item : availableItems)
+	shownCards.clear();
+	if (currentPage)
 	{
-		shownCards.push_back(std::make_shared<EquipmentCard>(item));
+		for (Pawn* warrior : availableWarriors)
+		{
+			shownCards.push_back(std::make_shared<WarriorCard>(warrior));
+		}
 	}
+	else
+	{
+		for (Equipment* item : availableItems)
+		{
+			shownCards.push_back(std::make_shared<EquipmentCard>(item));
+		}
+	}
+}
+
+void Shop::flipPage()
+{
+	currentPage = !currentPage;
+	initializeCards();
+	displayShop();
 }

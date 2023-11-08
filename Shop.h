@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <random> 
 #include "Button.h"
+#include <iostream>
 
 class Shop {
 public:
@@ -36,6 +37,7 @@ private:
     std::vector<Pawn*> availableWarriors;
     int currentRound;
     int currentPlayerIndex;
+    bool currentPage;
     int remainingGold;
     int fontSize;
     sf::Sprite backgroundSprite;
@@ -46,6 +48,7 @@ private:
     // Display the available cards and items in the shop
     void displayShop();
     void drawCards();
+    void drawChangeButton();
 
     // Private helper functions for managing the shop
     void resetShop();
@@ -56,6 +59,8 @@ private:
 
     void initializeDecks();
     void initializeCards();
+
+    void flipPage();
 
     // Add more private members and methods as needed
 
