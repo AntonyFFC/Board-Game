@@ -31,6 +31,8 @@ public:
 private:
     sf::RenderWindow* window;
     std::vector<std::shared_ptr<Card>> shownCards;
+    std::vector<std::shared_ptr<Card>> warriorsCards;
+    std::vector<std::shared_ptr<Card>> itemsCards;
     std::vector<Equipment*> equipmentList;
     std::vector<Pawn*> pawnsList;
     std::vector<Equipment*> availableItems;
@@ -61,6 +63,7 @@ private:
     void initializeCards();
 
     void flipPage();
+    void assignCards();
 
     // Add more private members and methods as needed
 

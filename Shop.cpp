@@ -36,6 +36,7 @@ void Shop::initializeShop()
 {
 	initializeDecks();
 	initializeCards();
+	assignCards();
 }
 
 bool Shop::buy(int player, int card)
@@ -156,26 +157,33 @@ void Shop::initializeDecks()
 
 void Shop::initializeCards()
 {
-	shownCards.clear();
-	if (currentPage)
+	warriorsCards.clear();
+	itemsCards.clear();
+	for (Pawn* warrior : availableWarriors)
 	{
-		for (Pawn* warrior : availableWarriors)
-		{
-			shownCards.push_back(std::make_shared<WarriorCard>(warrior));
-		}
+		warriorsCards.push_back(std::make_shared<WarriorCard>(warrior));
 	}
-	else
+	for (Equipment* item : availableItems)
 	{
-		for (Equipment* item : availableItems)
-		{
-			shownCards.push_back(std::make_shared<EquipmentCard>(item));
-		}
+		itemsCards.push_back(std::make_shared<EquipmentCard>(item));
 	}
 }
 
 void Shop::flipPage()
 {
 	currentPage = !currentPage;
-	initializeCards();
+	assignCards();
 	displayShop();
+}
+
+void Shop::assignCards()
+{
+	if (currentPage)
+	{
+		shownCards = itemsCards;
+	}
+	else
+	{
+		shownCards = warriorsCards;
+	}
 }
