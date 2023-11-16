@@ -137,6 +137,11 @@ WarriorCard::WarriorCard(Pawn* warrior)
 	createSprite();
 }
 
+int WarriorCard::getPrice() const
+{
+	return warrior->getPrice();
+}
+
 void WarriorCard::drawValues()
 {
 	cell.setFillColor(getTeamColor(warrior->getTeamNumber()));
@@ -164,6 +169,11 @@ EquipmentCard::EquipmentCard(Equipment* item)
 	functions = initializeFunctions();
 	pictureSprite = loadSprite(item->getName());
 	createSprite();
+}
+
+int EquipmentCard::getPrice() const
+{
+	return item->getPrice();
 }
 
 void EquipmentCard::drawValues()

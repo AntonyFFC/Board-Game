@@ -47,6 +47,7 @@ private:
     sf::Text titleText;
     sf::Text blueTurnText;
     sf::Text redTurnText;
+    sf::Text goldText;
     Button changeButton;
 
     // Display the available cards and items in the shop
@@ -67,6 +68,7 @@ private:
 
     void flipPage();
     void assignCards();
+    void updateGoldText();
 
     // Add more private members and methods as needed
 

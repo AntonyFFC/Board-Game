@@ -22,6 +22,7 @@ public:
 	void movePosition(sf::Vector2f pos);
 	void setScale(float scl);
 	bool isClicked(sf::Vector2i mousePosition) const;
+	virtual int getPrice() const = 0;
 private:
 	sf::Sprite loadSprite(const std::string& textureName);
 	void createSprite();
@@ -52,6 +53,8 @@ public:
     // Constructor
     WarriorCard(Pawn* warrior);
 
+	int getPrice() const;
+
 private:
 	void drawValues() override;
     Pawn* warrior;
@@ -62,6 +65,8 @@ class EquipmentCard : public Card {
 public:
     // Constructor
     EquipmentCard(Equipment* item);
+
+	int getPrice() const;
 
 private:
 	void drawValues() override;

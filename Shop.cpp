@@ -15,6 +15,8 @@ Shop::Shop(sf::RenderWindow* window)
 	blueTurnText.setPosition(10, 50);
 	redTurnText = initializeText("Turn: Red", &globalFont2, fontSize * 1.5, sf::Color::Red);
 	redTurnText.setPosition(10, 50);
+	goldText = initializeText("Gold: "+std::to_string(remainingGold), &globalFont2, fontSize * 1.5, sf::Color::Yellow);
+	goldText.setPosition(window->getSize().x-100, 10);
 	equipmentList = EquipmentManager::loadEquipmentFromJson("equipment");
 	pawnsList = PawnsManager::loadPawnsFromJson("pawns");
 	backgroundSprite = loadBackgroundSprite(&backgroundTexture, "shop");
@@ -46,6 +48,9 @@ void Shop::initializeShop()
 bool Shop::buy(int player, int card)
 {
 	std::cout << "Player: " << player << " Card:" << card << std::endl;
+	remainingGold -= shownCards[card]->getPrice();
+	updateGoldText();
+	displayShop();
 	return false;
 }
 
@@ -61,6 +66,7 @@ void Shop::displayShop()
 	window->draw(backgroundSprite);
 	window->draw(titleText);
 	drawTurn();
+	window->draw(goldText);
 	drawCards();
 	drawChangeButton();
 	window->display();
@@ -208,4 +214,10 @@ void Shop::assignCards()
 	{
 		shownCards = warriorsCards;
 	}
+}
+
+void Shop::updateGoldText()
+{
+	std::string text = "Gold: " + std::to_string(remainingGold);
+	goldText.setString(text);
 }
