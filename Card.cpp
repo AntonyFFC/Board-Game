@@ -9,17 +9,20 @@ int getSumOfVector(const Container& vec) {
 	return sum;
 }
 
+const int Card::fontSize = 20;
+const int Card::cellHeight = 30;
+const float Card::scaleFactor = 0.15f;
+std::vector<sf::Texture*> Card::iconTextures;
+std::map<std::string, sf::Sprite> Card::iconSprites = initializeSpriteMap(iconTextures);
+
+
 Card::Card(const std::vector<int>& widths, const std::vector<std::string>& headers, sf::Vector2f pos)
 	: cellWidths(widths), headers(headers)
 {
 	initializeFont();
 	cell = initializeCells();
-	fontSize = 20;
-	cellHeight = 30;
 	position = pos;
-	scaleFactor = 0.15f;
 	text = initializeText("card", &globalFont2, fontSize, sf::Color::White);
-	iconSprites = initializeSpriteMap(iconTextures);
 	cell = initializeCells();
 	sumOfCellWidths = getSumOfVector(cellWidths);
 }
@@ -142,6 +145,11 @@ int WarriorCard::getPrice() const
 	return warrior->getPrice();
 }
 
+Pawn* WarriorCard::getWarrior() const
+{
+	return warrior;
+}
+
 void WarriorCard::drawValues()
 {
 	cell.setFillColor(getTeamColor(warrior->getTeamNumber()));
@@ -174,6 +182,11 @@ EquipmentCard::EquipmentCard(Equipment* item)
 int EquipmentCard::getPrice() const
 {
 	return item->getPrice();
+}
+
+Equipment* EquipmentCard::getItem() const
+{
+	return item;
 }
 
 void EquipmentCard::drawValues()

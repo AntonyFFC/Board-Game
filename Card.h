@@ -23,6 +23,12 @@ public:
 	void setScale(float scl);
 	bool isClicked(sf::Vector2i mousePosition) const;
 	virtual int getPrice() const = 0;
+
+	static std::map<std::string, sf::Sprite> iconSprites;
+	static std::vector<sf::Texture*> iconTextures;
+	static const int fontSize;
+	static const int cellHeight;
+	static const float scaleFactor;
 private:
 	sf::Sprite loadSprite(const std::string& textureName);
 	void createSprite();
@@ -32,10 +38,7 @@ private:
 	void drawPicture();
 	void moveBack();
 	sf::Vector2f position;
-	int fontSize;
-	int cellHeight;
 	int sumOfCellWidths;
-	float scaleFactor;
 	sf::Texture pictureTexture;
 	sf::Sprite cardSprite;
 	sf::Sprite pictureSprite;
@@ -44,8 +47,6 @@ private:
 	sf::Text text;
 	std::vector<int> cellWidths;
 	std::vector<std::string> headers;
-	std::map<std::string, sf::Sprite> iconSprites;
-	std::vector<sf::Texture*> iconTextures;
 };
 
 class WarriorCard : public Card {
@@ -54,6 +55,7 @@ public:
     WarriorCard(Pawn* warrior);
 
 	int getPrice() const;
+	Pawn* getWarrior() const;
 
 private:
 	void drawValues() override;
@@ -67,6 +69,7 @@ public:
     EquipmentCard(Equipment* item);
 
 	int getPrice() const;
+	Equipment* getItem() const;
 
 private:
 	void drawValues() override;
