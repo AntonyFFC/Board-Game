@@ -22,9 +22,6 @@ public:
     // Initialize the shop with available cards and items
     void initializeShop();
 
-    // Player buys a card or item from the shop
-    bool buy(int player, int card);
-
     // Proceed to the next turn and update the shop
     void nextTurn();
 
@@ -35,8 +32,9 @@ private:
     std::vector<std::shared_ptr<Card>> itemsCards;
     std::vector<Equipment*> equipmentList;
     std::vector<Pawn*> pawnsList;
-    std::vector<Equipment*> availableItems;
-    std::vector<Pawn*> availableWarriors;
+    std::vector<Pawn*> playerWarriors[2];
+    std::vector<Equipment*> playerItems[2];
+
     int currentRound;
     int currentPlayerIndex;
     bool currentPage;
@@ -50,6 +48,12 @@ private:
     sf::Text goldText;
     Button changeButton;
 
+    // Player buys a card or item from the shop
+    bool buy(int cardNum);
+    void addCard(int cardNum);
+    void removeShopCard(int cardNum);
+    void reduceMoney(int price);
+
     // Display the available cards and items in the shop
     void displayShop();
     void drawCards();
@@ -58,13 +62,12 @@ private:
 
     // Private helper functions for managing the shop
     void resetShop();
-    void updateShop();
 
     void keyPressed(const sf::Event& event);
     int whichCardClicked(sf::Vector2i mousePosition); // returns -1 id none
 
-    void initializeDecks();
-    void initializeCards();
+    void updateDecks();
+    void initializeCards(std::vector<Equipment*> availableItems, std::vector<Pawn*> availableWarriors);
 
     void flipPage();
     void assignCards();

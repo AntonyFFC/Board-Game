@@ -40,24 +40,88 @@ void Shop::start()
 
 void Shop::initializeShop()
 {
-	initializeDecks();
-	initializeCards();
+	updateDecks();
 	assignCards();
 }
 
-bool Shop::buy(int player, int card)
+bool Shop::buy(int cardNum)
 {
-	std::cout << "Player: " << player << " Card:" << card << std::endl;
-	remainingGold -= shownCards[card]->getPrice();
+	std::cout << "Player: " << currentPlayerIndex << " Card:" << cardNum << std::endl;
+	int price = shownCards[cardNum]->getPrice();
+	if (remainingGold < price)
+	{
+		return false;
+	}
+
+	addCard(cardNum);
+	removeShopCard(cardNum);
+	reduceMoney(price);
 	updateGoldText();
 	displayShop();
-	return false;
+	return true;
+}
+
+void Shop::addCard(int cardNum)
+{
+	if (currentPage)
+	{
+		std::shared_ptr<Card> cardPtr = shownCards[cardNum];
+		EquipmentCard* itemCard = dynamic_cast<EquipmentCard*>(cardPtr.get());
+		playerItems[currentPlayerIndex].push_back(itemCard->getItem());
+	}
+	else
+	{
+		std::shared_ptr<Card> cardPtr = shownCards[cardNum];
+		WarriorCard* warriorCard = dynamic_cast<WarriorCard*>(cardPtr.get());
+		playerWarriors[currentPlayerIndex].push_back(warriorCard->getWarrior());
+	}
+}
+
+void Shop::removeShopCard(int cardNum)
+{
+	if (currentPage)
+	{
+		std::shared_ptr<Card> cardPtr = shownCards[cardNum];
+		EquipmentCard* itemCard = dynamic_cast<EquipmentCard*>(cardPtr.get());
+		//here I remove from all items so that they are not drawn again
+		equipmentList.erase(std::remove(equipmentList.begin(), equipmentList.end(), itemCard->getItem()), equipmentList.end());
+		//here I remove from the cards, which are in the shop
+		itemsCards.erase(itemsCards.begin() + cardNum);
+		shownCards = itemsCards;
+	}
+	else
+	{
+		std::shared_ptr<Card> cardPtr = shownCards[cardNum];
+		WarriorCard* warriorCard = dynamic_cast<WarriorCard*>(cardPtr.get());
+		//here I remove from all warriors so that they are not drawn again
+		pawnsList.erase(std::remove(pawnsList.begin(), pawnsList.end(), warriorCard->getWarrior()), pawnsList.end());
+		//here I remove from the cards, which are in the shop
+		warriorsCards.erase(warriorsCards.begin() + cardNum);
+		shownCards = warriorsCards;
+	}
+}
+
+void Shop::reduceMoney(int price)
+{
+	remainingGold -= price;
+	if (remainingGold == 0)
+	{
+		remainingGold = 6;
+		nextTurn();
+	}
+
 }
 
 void Shop::nextTurn()
 {
 	currentPlayerIndex = (currentPlayerIndex + 1) % 2;
-	currentRound++;
+	if (!currentPlayerIndex)
+	{
+		currentRound++;
+	}
+	updateDecks();
+	assignCards();
+	displayShop();
 }
 
 void Shop::displayShop()
@@ -74,11 +138,11 @@ void Shop::displayShop()
 
 void Shop::drawCards()
 {
-	sf::Vector2f pos(500, 20);
+	sf::Vector2f pos(window->getSize().x / 4, 20);
 	for (auto& cardPtr : shownCards)
 	{
-		cardPtr->setPosition(pos);
 		cardPtr->setScale(0.9);
+		cardPtr->setPosition(sf::Vector2f(pos.x- cardPtr->getSprite().getGlobalBounds().width / 2, pos.y));
 		window->draw(cardPtr->getSprite());
 		pos += sf::Vector2f(0, cardPtr->getSprite().getTextureRect().height + 10);
 	}
@@ -111,10 +175,6 @@ void Shop::resetShop()
 {
 }
 
-void Shop::updateShop()
-{
-}
-
 void Shop::keyPressed(const sf::Event& event)
 {
 	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
@@ -122,7 +182,7 @@ void Shop::keyPressed(const sf::Event& event)
 		int cardNum = whichCardClicked(mousePosition);
 		if (cardNum != -1)
 		{
-			buy(currentPlayerIndex, cardNum);
+			buy(cardNum);
 		}
 		else if (changeButton.isClicked(mousePosition))
 		{
@@ -156,8 +216,10 @@ int Shop::whichCardClicked(sf::Vector2i mousePosition)
 	return -1;
 }
 
-void Shop::initializeDecks()
+void Shop::updateDecks()
 {
+	std::vector<Equipment*> availableItems;
+	std::vector<Pawn*> availableWarriors;
 	// Randomly select 3 warriors from pawnsList
 	if (pawnsList.size() > 3) {
 		std::random_device rd;
@@ -181,9 +243,10 @@ void Shop::initializeDecks()
 		// Handle the case where there are fewer than 5 equipment items
 		availableItems = equipmentList;
 	}
+	initializeCards(availableItems, availableWarriors);
 }
 
-void Shop::initializeCards()
+void Shop::initializeCards(std::vector<Equipment*> availableItems, std::vector<Pawn*> availableWarriors)
 {
 	warriorsCards.clear();
 	itemsCards.clear();
