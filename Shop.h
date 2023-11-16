@@ -45,12 +45,15 @@ private:
     sf::Sprite backgroundSprite;
     sf::Texture backgroundTexture;
     sf::Text titleText;
+    sf::Text blueTurnText;
+    sf::Text redTurnText;
     Button changeButton;
 
     // Display the available cards and items in the shop
     void displayShop();
     void drawCards();
     void drawChangeButton();
+    void drawTurn();
 
     // Private helper functions for managing the shop
     void resetShop();

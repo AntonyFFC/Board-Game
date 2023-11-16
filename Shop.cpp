@@ -11,6 +11,10 @@ Shop::Shop(sf::RenderWindow* window)
 	remainingGold = 6;
 	titleText = initializeText("Shop", &globalFont2, fontSize * 1.5, sf::Color::White);
 	titleText.setPosition(20, 10);
+	blueTurnText = initializeText("Turn: Blue", &globalFont2, fontSize * 1.5, sf::Color::Blue);
+	blueTurnText.setPosition(10, 50);
+	redTurnText = initializeText("Turn: Red", &globalFont2, fontSize * 1.5, sf::Color::Red);
+	redTurnText.setPosition(10, 50);
 	equipmentList = EquipmentManager::loadEquipmentFromJson("equipment");
 	pawnsList = PawnsManager::loadPawnsFromJson("pawns");
 	backgroundSprite = loadBackgroundSprite(&backgroundTexture, "shop");
@@ -41,7 +45,7 @@ void Shop::initializeShop()
 
 bool Shop::buy(int player, int card)
 {
-	std::cout << "Player: " << player << "Card:" << card << std::endl;
+	std::cout << "Player: " << player << " Card:" << card << std::endl;
 	return false;
 }
 
@@ -56,6 +60,7 @@ void Shop::displayShop()
 	window->clear(sf::Color(71, 31, 16));
 	window->draw(backgroundSprite);
 	window->draw(titleText);
+	drawTurn();
 	drawCards();
 	drawChangeButton();
 	window->display();
@@ -86,6 +91,16 @@ void Shop::drawChangeButton()
 	changeButton.draw(*window);
 }
 
+void Shop::drawTurn()
+{
+	if (currentPlayerIndex)
+	{
+		window->draw(blueTurnText);
+		return;
+	}
+	window->draw(redTurnText);
+}
+
 void Shop::resetShop()
 {
 }
@@ -104,6 +119,13 @@ void Shop::keyPressed(const sf::Event& event)
 			buy(currentPlayerIndex, cardNum);
 		}
 		else if (changeButton.isClicked(mousePosition))
+		{
+			flipPage();
+		}
+	}
+	else if (event.type == sf::Event::KeyPressed)
+	{
+		if (event.key.code == sf::Keyboard::Right || event.key.code == sf::Keyboard::Left)
 		{
 			flipPage();
 		}
