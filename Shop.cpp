@@ -23,6 +23,7 @@ Shop::Shop(sf::RenderWindow* window)
 	backgroundSprite.setPosition(0, 0);
 	changeButton = Button(sf::Vector2f(window->getSize().x / 2 - 100,
 		window->getSize().y - 70), sf::Vector2f(200, 50), "-}");
+	wallIcon.setPosition(10, window->getSize().y / 2);
 }
 
 void Shop::start()
@@ -56,6 +57,19 @@ bool Shop::buy(int cardNum)
 	addCard(cardNum);
 	removeShopCard(cardNum);
 	reduceMoney(price);
+	updateGoldText();
+	displayShop();
+	return true;
+}
+
+bool Shop::buyWall()
+{
+	if (remainingGold < 1)
+	{
+		return false;
+	}
+	numberOfWalls[currentPlayerIndex]++;
+	reduceMoney(1);
 	updateGoldText();
 	displayShop();
 	return true;
@@ -133,6 +147,7 @@ void Shop::displayShop()
 	window->draw(goldText);
 	drawCards();
 	drawChangeButton();
+	wallIcon.draw(*window);
 	window->display();
 }
 
@@ -187,6 +202,18 @@ void Shop::keyPressed(const sf::Event& event)
 		else if (changeButton.isClicked(mousePosition))
 		{
 			flipPage();
+		}
+		else if (wallIcon.isClicked(mousePosition))
+		{
+			wallIcon.setIsBeingClicked(true);
+			displayShop();
+		}
+	} else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
+		sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
+		wallIcon.setIsBeingClicked(false);
+		if (wallIcon.isClicked(mousePosition))
+		{
+			buyWall();
 		}
 	}
 	else if (event.type == sf::Event::KeyPressed)

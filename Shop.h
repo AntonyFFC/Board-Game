@@ -12,9 +12,12 @@
 #include <random> 
 #include "Button.h"
 #include <iostream>
+#include "IconWall.h"
 
 class Shop {
 public:
+    friend class IconWall;
+
     Shop(sf::RenderWindow* window);
 
     void start();
@@ -34,6 +37,7 @@ private:
     std::vector<Pawn*> pawnsList;
     std::vector<Pawn*> playerWarriors[2];
     std::vector<Equipment*> playerItems[2];
+    int numberOfWalls[2] = { 0, 0 };
 
     int currentRound;
     int currentPlayerIndex;
@@ -46,10 +50,12 @@ private:
     sf::Text blueTurnText;
     sf::Text redTurnText;
     sf::Text goldText;
+    IconWall wallIcon;
     Button changeButton;
 
     // Player buys a card or item from the shop
     bool buy(int cardNum);
+    bool buyWall();
     void addCard(int cardNum);
     void removeShopCard(int cardNum);
     void reduceMoney(int price);
