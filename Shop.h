@@ -79,6 +79,8 @@ private:
     void assignCards();
     void updateGoldText();
 
+    void unClickAll();
+
     // Add more private members and methods as needed
 
 };

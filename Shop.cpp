@@ -58,7 +58,6 @@ bool Shop::buy(int cardNum)
 	removeShopCard(cardNum);
 	reduceMoney(price);
 	updateGoldText();
-	displayShop();
 	return true;
 }
 
@@ -71,7 +70,6 @@ bool Shop::buyWall()
 	numberOfWalls[currentPlayerIndex]++;
 	reduceMoney(1);
 	updateGoldText();
-	displayShop();
 	return true;
 }
 
@@ -135,7 +133,6 @@ void Shop::nextTurn()
 	}
 	updateDecks();
 	assignCards();
-	displayShop();
 }
 
 void Shop::displayShop()
@@ -158,7 +155,7 @@ void Shop::drawCards()
 	{
 		cardPtr->setScale(0.9);
 		cardPtr->setPosition(sf::Vector2f(pos.x- cardPtr->getSprite().getGlobalBounds().width / 2, pos.y));
-		window->draw(cardPtr->getSprite());
+		window->draw(cardPtr->getFullSprite());
 		pos += sf::Vector2f(0, cardPtr->getSprite().getTextureRect().height + 10);
 	}
 }
@@ -197,7 +194,7 @@ void Shop::keyPressed(const sf::Event& event)
 		int cardNum = whichCardClicked(mousePosition);
 		if (cardNum != -1)
 		{
-			buy(cardNum);
+			shownCards[cardNum]->click(true);
 		}
 		else if (changeButton.isClicked(mousePosition))
 		{
@@ -206,12 +203,16 @@ void Shop::keyPressed(const sf::Event& event)
 		else if (wallIcon.isClicked(mousePosition))
 		{
 			wallIcon.setIsBeingClicked(true);
-			displayShop();
 		}
 	} else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
+		unClickAll();
 		sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
-		wallIcon.setIsBeingClicked(false);
-		if (wallIcon.isClicked(mousePosition))
+		int cardNum = whichCardClicked(mousePosition);
+		if (cardNum != -1)
+		{
+			buy(cardNum);
+		}
+		else if (wallIcon.isClicked(mousePosition))
 		{
 			buyWall();
 		}
@@ -227,6 +228,7 @@ void Shop::keyPressed(const sf::Event& event)
 	{
 		window->close();
 	}
+	displayShop();
 }
 
 int Shop::whichCardClicked(sf::Vector2i mousePosition)
@@ -291,7 +293,6 @@ void Shop::flipPage()
 {
 	currentPage = !currentPage;
 	assignCards();
-	displayShop();
 }
 
 void Shop::assignCards()
@@ -310,4 +311,13 @@ void Shop::updateGoldText()
 {
 	std::string text = "Gold: " + std::to_string(remainingGold);
 	goldText.setString(text);
+}
+
+void Shop::unClickAll()
+{
+	wallIcon.setIsBeingClicked(false);
+	for (const auto& cardPtr : shownCards)
+	{
+		cardPtr->click(false);
+	}
 }

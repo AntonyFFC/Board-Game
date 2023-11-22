@@ -13,15 +13,20 @@ public:
 	friend class EquipmentCard;
 
 	Card(const std::vector<int>& widths, const std::vector<std::string>& headers, sf::Vector2f pos = sf::Vector2f(0, 0));
+	~Card();
 
 	template <typename RenderType>
 	void draw(RenderType* window);
+	sf::Sprite getFullSprite();
 	sf::Sprite getSprite();
+	sf::Sprite getHighSprite();
 
 	void setPosition(sf::Vector2f pos);
+	void click(bool boolean);
 	void movePosition(sf::Vector2f pos);
 	void setScale(float scl);
 	bool isClicked(sf::Vector2i mousePosition) const;
+	bool isBeingClkd() const;
 	virtual int getPrice() const = 0;
 
 	static std::map<std::string, sf::Sprite> iconSprites;
@@ -33,6 +38,7 @@ private:
 	sf::Sprite loadSprite(const std::string& textureName);
 	void createSprite();
 	void createTexture();
+	void createCombinedSprite();
 	virtual void drawValues() = 0;
 	void drawHeaders();
 	void drawPicture();
@@ -40,6 +46,10 @@ private:
 	sf::Vector2f position;
 	int sumOfCellWidths;
 	sf::Texture pictureTexture;
+	sf::Texture* combinedTexture;
+	sf::Color highlightColor;
+	sf::Sprite combinedSprite;
+	sf::Sprite highlightSprite;
 	sf::Sprite cardSprite;
 	sf::Sprite pictureSprite;
 	sf::RenderTexture renderTexture;
@@ -47,6 +57,7 @@ private:
 	sf::Text text;
 	std::vector<int> cellWidths;
 	std::vector<std::string> headers;
+	bool isBeingClicked;
 };
 
 class WarriorCard : public Card {

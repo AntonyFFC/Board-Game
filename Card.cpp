@@ -25,6 +25,13 @@ Card::Card(const std::vector<int>& widths, const std::vector<std::string>& heade
 	text = initializeText("card", &globalFont2, fontSize, sf::Color::White);
 	cell = initializeCells();
 	sumOfCellWidths = getSumOfVector(cellWidths);
+	highlightColor = sf::Color(255, 0, 0, 128);
+	isBeingClicked = false;
+}
+
+Card::~Card()
+{
+	delete combinedTexture;
 }
 
 template <typename RenderType>
@@ -33,15 +40,36 @@ void Card::draw(RenderType* window)
 	window->draw(cardSprite);
 }
 
+sf::Sprite Card::getFullSprite()
+{
+	if (isBeingClicked)
+	{
+		return combinedSprite;
+	}
+	return cardSprite;
+}
+
 sf::Sprite Card::getSprite()
 {
 	return cardSprite;
+}
+
+sf::Sprite Card::getHighSprite()
+{
+	return highlightSprite;
 }
 
 void Card::setPosition(sf::Vector2f pos)
 {
 	position = pos;
 	cardSprite.setPosition(position);
+	combinedSprite.setPosition(position);
+	highlightSprite.setPosition(position);
+}
+
+void Card::click(bool boolean)
+{
+	isBeingClicked = boolean;
 }
 
 void Card::movePosition(sf::Vector2f pos)
@@ -53,11 +81,18 @@ void Card::movePosition(sf::Vector2f pos)
 void Card::setScale(float scl)
 {
 	cardSprite.setScale(scl, scl);
+	combinedSprite.setScale(scl, scl);
+	highlightSprite.setScale(scl, scl);
 }
 
 bool Card::isClicked(sf::Vector2i mousePosition) const
 {
 	return cardSprite.getGlobalBounds().contains(mousePosition.x, mousePosition.y);
+}
+
+bool Card::isBeingClkd() const
+{
+	return isBeingClicked;
 }
 
 void Card::createSprite()
@@ -67,6 +102,8 @@ void Card::createSprite()
 	renderTexture.display();
 	cardSprite = sf::Sprite(renderTexture.getTexture());
 	cardSprite.setPosition(position);
+	highlightSprite = sf::Sprite(cardSprite);
+	highlightSprite.setColor(highlightColor);
 }
 
 void Card::createTexture()
@@ -74,6 +111,21 @@ void Card::createTexture()
 	drawHeaders();
 	drawValues();
 	drawPicture();
+}
+
+void Card::createCombinedSprite()
+{
+	sf::Vector2u size = renderTexture.getSize();
+	sf::RenderTexture renderTexture;
+	renderTexture.create(size.x, size.y);
+	renderTexture.clear();
+
+	renderTexture.draw(cardSprite);
+	renderTexture.draw(highlightSprite);
+	renderTexture.display();
+
+	combinedTexture = new sf::Texture(renderTexture.getTexture());
+	combinedSprite = sf::Sprite(*combinedTexture);
 }
 
 void Card::drawHeaders()
@@ -138,6 +190,7 @@ WarriorCard::WarriorCard(Pawn* warrior)
 		pictureSprite = loadSprite("blue");
 	}
 	createSprite();
+	createCombinedSprite();
 }
 
 int WarriorCard::getPrice() const
@@ -177,6 +230,7 @@ EquipmentCard::EquipmentCard(Equipment* item)
 	functions = initializeFunctions();
 	pictureSprite = loadSprite(item->getName());
 	createSprite();
+	createCombinedSprite();
 }
 
 int EquipmentCard::getPrice() const
