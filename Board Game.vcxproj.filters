@@ -75,6 +75,9 @@
     <ClCompile Include="IconWall.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="shopPawns.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Hex.h">
@@ -135,6 +138,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="IconWall.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="shopPawns.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

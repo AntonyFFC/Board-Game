@@ -150,6 +150,7 @@ void Pawn::setTeamNumber(int teamNumber) {
 
 void Pawn::setSide(int side) {
     this->side = side;
+    createSprite();
 }
 
 void Pawn::setRemainingActions(int actions) {
@@ -362,6 +363,11 @@ void Pawn::rangedAttack(int value, int missMax) // for example if is 3 then 1,2,
     {
         attack(value);
     }
+}
+
+bool Pawn::isClicked(sf::Vector2i mousePosition) const
+{
+    return combinedSprite->getGlobalBounds().contains(mousePosition.x, mousePosition.y);
 }
 
 void Pawn::attack(int value)

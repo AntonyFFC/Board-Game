@@ -11,10 +11,10 @@ Shop::Shop(sf::RenderWindow* window)
 	remainingGold = 6;
 	titleText = initializeText("Shop", &globalFont2, fontSize * 1.5, sf::Color::White);
 	titleText.setPosition(20, 10);
-	blueTurnText = initializeText("Turn: Blue", &globalFont2, fontSize * 1.5, sf::Color::Blue);
-	blueTurnText.setPosition(10, 50);
-	redTurnText = initializeText("Turn: Red", &globalFont2, fontSize * 1.5, sf::Color::Red);
-	redTurnText.setPosition(10, 50);
+	blueTurnText = initializeText("Blue", &globalFont2, fontSize * 1.5, sf::Color::Blue);
+	blueTurnText.setPosition(20, 50);
+	redTurnText = initializeText("Red", &globalFont2, fontSize * 1.5, sf::Color::Red);
+	redTurnText.setPosition(20, 50);
 	goldText = initializeText("Gold: "+std::to_string(remainingGold), &globalFont2, fontSize * 1.5, sf::Color::Yellow);
 	goldText.setPosition(window->getSize().x-100, 10);
 	equipmentList = EquipmentManager::loadEquipmentFromJson("equipment");
@@ -23,7 +23,7 @@ Shop::Shop(sf::RenderWindow* window)
 	backgroundSprite.setPosition(0, 0);
 	changeButton = Button(sf::Vector2f(window->getSize().x / 2 - 100,
 		window->getSize().y - 70), sf::Vector2f(200, 50), "-}");
-	wallIcon.setPosition(10, window->getSize().y / 2);
+	wallIcon.setPosition(20, window->getSize().y / 2);
 }
 
 void Shop::start()
@@ -80,12 +80,15 @@ void Shop::addCard(int cardNum)
 		std::shared_ptr<Card> cardPtr = shownCards[cardNum];
 		EquipmentCard* itemCard = dynamic_cast<EquipmentCard*>(cardPtr.get());
 		playerItems[currentPlayerIndex].push_back(itemCard->getItem());
+		lastItem = itemCard->getItem();
 	}
 	else
 	{
 		std::shared_ptr<Card> cardPtr = shownCards[cardNum];
 		WarriorCard* warriorCard = dynamic_cast<WarriorCard*>(cardPtr.get());
+		warriorCard->getWarrior()->setSide(currentPlayerIndex);
 		playerWarriors[currentPlayerIndex].push_back(warriorCard->getWarrior());
+		shopPawns[currentPlayerIndex].addPawn(warriorCard->getWarrior());
 	}
 }
 
@@ -96,7 +99,7 @@ void Shop::removeShopCard(int cardNum)
 		std::shared_ptr<Card> cardPtr = shownCards[cardNum];
 		EquipmentCard* itemCard = dynamic_cast<EquipmentCard*>(cardPtr.get());
 		//here I remove from all items so that they are not drawn again
-		equipmentList.erase(std::remove(equipmentList.begin(), equipmentList.end(), itemCard->getItem()), equipmentList.end());
+		//equipmentList.erase(std::remove(equipmentList.begin(), equipmentList.end(), itemCard->getItem()), equipmentList.end());
 		//here I remove from the cards, which are in the shop
 		itemsCards.erase(itemsCards.begin() + cardNum);
 		shownCards = itemsCards;
@@ -143,6 +146,7 @@ void Shop::displayShop()
 	drawTurn();
 	window->draw(goldText);
 	drawCards();
+	shopPawns[currentPlayerIndex].draw(window);
 	drawChangeButton();
 	wallIcon.draw(*window);
 	window->display();
@@ -192,6 +196,7 @@ void Shop::keyPressed(const sf::Event& event)
 	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
 		sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
 		int cardNum = whichCardClicked(mousePosition);
+		int pawnNum = shopPawns[currentPlayerIndex].whichPawnClicked(mousePosition);
 		if (cardNum != -1)
 		{
 			shownCards[cardNum]->click(true);
@@ -204,6 +209,11 @@ void Shop::keyPressed(const sf::Event& event)
 		{
 			wallIcon.setIsBeingClicked(true);
 		}
+		else if (pawnNum != -1 && lastItem != nullptr)
+		{
+			shopPawns->addEquipmentToPawn(pawnNum, lastItem);
+		}
+		displayShop();
 	} else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
 		unClickAll();
 		sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
@@ -216,6 +226,7 @@ void Shop::keyPressed(const sf::Event& event)
 		{
 			buyWall();
 		}
+		displayShop();
 	}
 	else if (event.type == sf::Event::KeyPressed)
 	{
@@ -223,12 +234,12 @@ void Shop::keyPressed(const sf::Event& event)
 		{
 			flipPage();
 		}
+		displayShop();
 	}
 	else if (event.type == sf::Event::Closed)
 	{
 		window->close();
 	}
-	displayShop();
 }
 
 int Shop::whichCardClicked(sf::Vector2i mousePosition)

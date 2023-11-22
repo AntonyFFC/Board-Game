@@ -13,6 +13,7 @@
 #include "Button.h"
 #include <iostream>
 #include "IconWall.h"
+#include "shopPawns.h"
 
 class Shop {
 public:
@@ -38,6 +39,7 @@ private:
     std::vector<Pawn*> playerWarriors[2];
     std::vector<Equipment*> playerItems[2];
     int numberOfWalls[2] = { 0, 0 };
+    Equipment* lastItem;
 
     int currentRound;
     int currentPlayerIndex;
@@ -52,6 +54,7 @@ private:
     sf::Text goldText;
     IconWall wallIcon;
     Button changeButton;
+    ShopPawns shopPawns[2];
 
     // Player buys a card or item from the shop
     bool buy(int cardNum);
