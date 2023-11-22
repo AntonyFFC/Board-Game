@@ -12,7 +12,7 @@ public:
     void draw(sf::RenderTarget* window);
     int whichPawnClicked(sf::Vector2i mousePosition);
     void addPawn(Pawn* pawn);
-    void addEquipmentToPawn(int pawnIndex, Equipment* equipment);
+    bool addEquipmentToPawn(int pawnIndex, Equipment* equipment);
 
     // Add more methods as needed
 

@@ -1,4 +1,4 @@
-#include "shopPawns.h"
+#include "ShopPawns.h"
 
 ShopPawns::ShopPawns() {
 }
@@ -15,7 +15,7 @@ void ShopPawns::draw(sf::RenderTarget* window)
         pawn->setRotationAngle(0.f);
         pawn->setPosition(pos.x - pawn->getSprite().getGlobalBounds().width / 2, pos.y);
         pawn->draw(*window, false);
-        pos += sf::Vector2f(0, 0.8 * pawn->getSprite().getGlobalBounds().height);
+        pos += sf::Vector2f(0, 0.7 * pawn->getSprite().getGlobalBounds().height);
     }
 }
 
@@ -35,9 +35,10 @@ void ShopPawns::addPawn(Pawn* pawn)
     pawns.push_back(pawn);
 }
 
-void ShopPawns::addEquipmentToPawn(int pawnIndex, Equipment* equipment) {
+bool ShopPawns::addEquipmentToPawn(int pawnIndex, Equipment* equipment) {
     // Check if the pawnIndex is valid
     if (pawnIndex >= 0 && pawnIndex < pawns.size()) {
-        pawns[pawnIndex]->addEquipment(equipment);
+        return pawns[pawnIndex]->addEquipment(equipment);
     }
+    return false;
 }

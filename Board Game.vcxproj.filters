@@ -75,7 +75,10 @@
     <ClCompile Include="IconWall.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="shopPawns.cpp">
+    <ClCompile Include="ShopPawns.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ShopStorage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -140,7 +143,10 @@
     <ClInclude Include="IconWall.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="shopPawns.h">
+    <ClInclude Include="ShopPawns.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShopStorage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

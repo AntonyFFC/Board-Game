@@ -13,33 +13,31 @@
 #include "Button.h"
 #include <iostream>
 #include "IconWall.h"
-#include "shopPawns.h"
+#include "ShopPawns.h"
+#include "ShopStorage.h"
 
 class Shop {
 public:
     friend class IconWall;
 
     Shop(sf::RenderWindow* window);
+    ~Shop();
 
     void start();
-
-    // Initialize the shop with available cards and items
-    void initializeShop();
 
     // Proceed to the next turn and update the shop
     void nextTurn();
 
 private:
     sf::RenderWindow* window;
-    std::vector<std::shared_ptr<Card>> shownCards;
-    std::vector<std::shared_ptr<Card>> warriorsCards;
-    std::vector<std::shared_ptr<Card>> itemsCards;
+    std::vector<WarriorCard*> warriorsCards;
+    std::vector<EquipmentCard*> itemsCards;
     std::vector<Equipment*> equipmentList;
     std::vector<Pawn*> pawnsList;
     std::vector<Pawn*> playerWarriors[2];
     std::vector<Equipment*> playerItems[2];
     int numberOfWalls[2] = { 0, 0 };
-    Equipment* lastItem;
+    EquipmentCard* lastItem;
 
     int currentRound;
     int currentPlayerIndex;
@@ -55,10 +53,12 @@ private:
     IconWall wallIcon;
     Button changeButton;
     ShopPawns shopPawns[2];
+    ShopStorage shopStorage[2];
 
     // Player buys a card or item from the shop
     bool buy(int cardNum);
     bool buyWall();
+    int getPrice(int cardNum);
     void addCard(int cardNum);
     void removeShopCard(int cardNum);
     void reduceMoney(int price);
@@ -79,7 +79,6 @@ private:
     void initializeCards(std::vector<Equipment*> availableItems, std::vector<Pawn*> availableWarriors);
 
     void flipPage();
-    void assignCards();
     void updateGoldText();
 
     void unClickAll();
