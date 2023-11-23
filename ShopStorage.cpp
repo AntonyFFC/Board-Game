@@ -36,6 +36,13 @@ void ShopStorage::addCard(EquipmentCard* itemCard)
 	storedItems.push_back(itemCard);
 }
 
+EquipmentCard* ShopStorage::takeItem(int index)
+{
+    EquipmentCard* card = storedItems[index];
+    removeItem(index);
+    return card;
+}
+
 void ShopStorage::removeItem(int index)
 {
     if (index >= 0 && index < storedItems.size()) {

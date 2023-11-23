@@ -220,49 +220,13 @@ void Shop::resetShop()
 
 void Shop::keyPressed(const sf::Event& event)
 {
+	sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
 	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
-		sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
-		int cardNum = whichCardClicked(mousePosition);
-		int pawnNum = shopPawns[currentPlayerIndex].whichPawnClicked(mousePosition);
-		if (cardNum != -1)
-		{
-			if (currentPage)
-			{
-				itemsCards[cardNum]->click(true);
-			}
-			else
-			{
-				warriorsCards[cardNum]->click(true);
-			}
-		}
-		else if (changeButton.isClicked(mousePosition))
-		{
-			flipPage();
-		}
-		else if (wallIcon.isClicked(mousePosition))
-		{
-			wallIcon.setIsBeingClicked(true);
-		}
-		else if (pawnNum != -1 && lastItem != nullptr)
-		{
-			if (!shopPawns[currentPlayerIndex].addEquipmentToPawn(pawnNum, lastItem->getItem()))
-			{
-				shopStorage[currentPlayerIndex].addCard(lastItem);
-			}
-		}
+		whatClicked(mousePosition);
 		displayShop();
 	} else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
 		unClickAll();
-		sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
-		int cardNum = whichCardClicked(mousePosition);
-		if (cardNum != -1)
-		{
-			buy(cardNum);
-		}
-		else if (wallIcon.isClicked(mousePosition))
-		{
-			buyWall();
-		}
+		whatOffClicked(mousePosition);
 		displayShop();
 	}
 	else if (event.type == sf::Event::KeyPressed)
@@ -276,6 +240,56 @@ void Shop::keyPressed(const sf::Event& event)
 	else if (event.type == sf::Event::Closed)
 	{
 		window->close();
+	}
+}
+
+void Shop::whatClicked(sf::Vector2i mousePosition)
+{
+	int cardNum = whichCardClicked(mousePosition);
+	int pawnNum = shopPawns[currentPlayerIndex].whichPawnClicked(mousePosition);
+	int storageCardNum = shopStorage[currentPlayerIndex].whichItemClicked(mousePosition);
+	if (cardNum != -1)
+	{
+		if (currentPage)
+		{
+			itemsCards[cardNum]->click(true);
+		}
+		else
+		{
+			warriorsCards[cardNum]->click(true);
+		}
+	}
+	else if (changeButton.isClicked(mousePosition))
+	{
+		flipPage();
+	}
+	else if (wallIcon.isClicked(mousePosition))
+	{
+		wallIcon.setIsBeingClicked(true);
+	}
+	else if (pawnNum != -1 && lastItem != nullptr)
+	{
+		if (!shopPawns[currentPlayerIndex].addEquipmentToPawn(pawnNum, lastItem->getItem()))
+		{
+			shopStorage[currentPlayerIndex].addCard(lastItem);
+		}
+	}
+	else if (storageCardNum != -1)
+	{
+		lastItem = shopStorage[currentPlayerIndex].takeItem(storageCardNum);
+	}
+}
+
+void Shop::whatOffClicked(sf::Vector2i mousePosition)
+{
+	int cardNum = whichCardClicked(mousePosition);
+	if (cardNum != -1)
+	{
+		buy(cardNum);
+	}
+	else if (wallIcon.isClicked(mousePosition))
+	{
+		buyWall();
 	}
 }
 

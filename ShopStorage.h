@@ -9,8 +9,9 @@ public:
 	void draw(sf::RenderTarget* target);
 	int whichItemClicked(sf::Vector2i mousePosition);
 	void addCard(EquipmentCard* itemCard);
-	void removeItem(int index);
+	EquipmentCard* takeItem(int index);
 private:
+	void removeItem(int index);
 	sf::RectangleShape rectangle;
 	std::vector<EquipmentCard*> storedItems;
 };

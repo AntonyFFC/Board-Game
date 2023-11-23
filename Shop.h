@@ -73,6 +73,8 @@ private:
     void resetShop();
 
     void keyPressed(const sf::Event& event);
+    void whatClicked(sf::Vector2i mousePosition);
+    void whatOffClicked(sf::Vector2i mousePosition);
     int whichCardClicked(sf::Vector2i mousePosition); // returns -1 id none
 
     void updateDecks();
