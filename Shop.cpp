@@ -5,7 +5,7 @@ Shop::Shop(sf::RenderWindow* window)
 {
 	initializeFont();
 	fontSize = 20;
-	currentRound = 0;
+	currentRound = 1;
 	currentPlayerIndex = 0;
 	currentPage = 0;
 	remainingGold = 6;
@@ -15,8 +15,10 @@ Shop::Shop(sf::RenderWindow* window)
 	blueTurnText.setPosition(20, 50);
 	redTurnText = initializeText("Red", &globalFont2, fontSize * 1.5, sf::Color::Red);
 	redTurnText.setPosition(20, 50);
-	goldText = initializeText("Gold: "+std::to_string(remainingGold), &globalFont2, fontSize * 1.5, sf::Color::Yellow);
+	goldText = initializeText("Gold: "+std::to_string(remainingGold), &globalFont2, fontSize * 1.5, sf::Color(222, 164, 38));
 	goldText.setPosition(window->getSize().x-100, 10);
+	roundText = initializeText("Round: " + std::to_string(currentRound), &globalFont2, fontSize * 1.5, sf::Color::White);
+	roundText.setPosition(window->getSize().x - 250, 10);
 	equipmentList = EquipmentManager::loadEquipmentFromJson("equipment");
 	pawnsList = PawnsManager::loadPawnsFromJson("pawns");
 	backgroundSprite = loadBackgroundSprite(&backgroundTexture, "shop");
@@ -63,11 +65,8 @@ bool Shop::buy(int cardNum)
 		return false;
 	}
 
-	if (lastItem != nullptr)
-	{
-		shopStorage[currentPlayerIndex].addCard(lastItem);
-		lastItem = nullptr;
-	}
+	addLastItemToStorage();
+
 	addCard(cardNum);
 	removeShopCard(cardNum);
 	reduceMoney(price);
@@ -81,11 +80,7 @@ bool Shop::buyWall()
 	{
 		return false;
 	}
-	if (lastItem != nullptr)
-	{
-		shopStorage[currentPlayerIndex].addCard(lastItem);
-		lastItem = nullptr;
-	}
+	addLastItemToStorage();
 	wallIcon.setIsBeingClicked(false);
 	shopStorage[currentPlayerIndex].addWall();
 	reduceMoney(1);
@@ -145,19 +140,30 @@ void Shop::reduceMoney(int price)
 	remainingGold -= price;
 }
 
-void Shop::nextTurn()
+void Shop::addLastItemToStorage()
 {
 	if (lastItem != nullptr)
 	{
 		shopStorage[currentPlayerIndex].addCard(lastItem);
 		lastItem = nullptr;
 	}
+}
+
+void Shop::nextTurn()
+{
+	addLastItemToStorage();
 	remainingGold = 6;
 	currentPlayerIndex = (currentPlayerIndex + 1) % 2;
 	if (!currentPlayerIndex)
 	{
 		currentRound++;
+		if (currentRound == 7)
+		{
+			startGame();
+		}
 	}
+	std::string text = "Round: " + std::to_string(currentRound);
+	roundText.setString(text);
 	updateDecks();
 	updateGoldText();
 }
@@ -169,6 +175,7 @@ void Shop::displayShop()
 	window->draw(titleText);
 	drawTurn();
 	window->draw(goldText);
+	window->draw(roundText);
 	drawCards();
 	shopStorage[currentPlayerIndex].draw(window);
 	shopPawns[currentPlayerIndex].draw(window);
@@ -430,4 +437,9 @@ void Shop::unClickAll()
 			cardPtr->click(false);
 		}
 	}
+}
+
+void Shop::startGame()
+{
+	//do this tomorrow
 }

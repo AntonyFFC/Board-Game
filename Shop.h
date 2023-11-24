@@ -47,6 +47,7 @@ private:
     sf::Text blueTurnText;
     sf::Text redTurnText;
     sf::Text goldText;
+    sf::Text roundText;
     IconWall wallIcon;
     Button changeButton;
     Button nextPlayer;
@@ -60,6 +61,7 @@ private:
     void addCard(int cardNum);
     void removeShopCard(int cardNum);
     void reduceMoney(int price);
+    void addLastItemToStorage();
 
     // Display the available cards and items in the shop
     void displayShop();
@@ -85,6 +87,6 @@ private:
 
     void unClickAll();
 
-    // Add more private members and methods as needed
+    void startGame();
 
 };
