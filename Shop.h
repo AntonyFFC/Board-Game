@@ -52,6 +52,7 @@ private:
     sf::Text goldText;
     IconWall wallIcon;
     Button changeButton;
+    Button nextPlayer;
     ShopPawns shopPawns[2];
     ShopStorage shopStorage[2];
 
@@ -67,6 +68,7 @@ private:
     void displayShop();
     void drawCards();
     void drawChangeButton();
+    void drawNextPlayerButton();
     void drawTurn();
 
     // Private helper functions for managing the shop
@@ -76,6 +78,7 @@ private:
     void whatClicked(sf::Vector2i mousePosition);
     void whatOffClicked(sf::Vector2i mousePosition);
     int whichCardClicked(sf::Vector2i mousePosition); // returns -1 id none
+    void clickCard(int cardNum);
 
     void updateDecks();
     void initializeCards(std::vector<Equipment*> availableItems, std::vector<Pawn*> availableWarriors);

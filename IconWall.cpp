@@ -9,7 +9,7 @@ IconWall::IconWall(float x, float y)
     // Initialize the icon shape (brown circular icon)
     iconShape.setRadius(radius);
     iconShape.setPosition(x, y);
-    iconShape.setFillColor(sf::Color(139, 69, 19));  // Brown color
+    setIsBeingClicked(false);
     // Initialize the text
     iconText.setString("1$");
     iconText.setFont(globalFont2);
@@ -40,6 +40,7 @@ void IconWall::setPosition(float x, float y)
 }
 void IconWall::setIsBeingClicked(bool boolean)
 {
+    isBeingClicked = boolean;
     if (boolean)
     {
         iconShape.setFillColor(sf::Color(138, 94, 62));

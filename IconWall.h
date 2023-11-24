@@ -20,7 +20,7 @@ public:
     
     sf::CircleShape iconShape;
     sf::Text iconText;
-    bool isBeingClicked = false;
+    bool isBeingClicked;
 
 private:
     // Private member variables

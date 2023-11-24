@@ -8,6 +8,7 @@ public:
 
 	void draw(sf::RenderTarget* target);
 	int whichItemClicked(sf::Vector2i mousePosition);
+	bool isClicked(sf::Vector2i mousePosition);
 	void addCard(EquipmentCard* itemCard);
 	EquipmentCard* takeItem(int index);
 private:

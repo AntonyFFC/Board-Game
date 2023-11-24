@@ -31,6 +31,12 @@ int ShopStorage::whichItemClicked(sf::Vector2i mousePosition)
     return -1;
 }
 
+bool ShopStorage::isClicked(sf::Vector2i mousePosition)
+{
+    sf::FloatRect bounds = rectangle.getGlobalBounds();
+    return bounds.contains(static_cast<sf::Vector2f>(mousePosition));
+}
+
 void ShopStorage::addCard(EquipmentCard* itemCard)
 {
 	storedItems.push_back(itemCard);

@@ -23,6 +23,8 @@ Shop::Shop(sf::RenderWindow* window)
 	backgroundSprite.setPosition(0, 0);
 	changeButton = Button(sf::Vector2f(window->getSize().x / 2 - 100,
 		window->getSize().y - 70), sf::Vector2f(200, 50), "-}");
+	nextPlayer = Button(sf::Vector2f(window->getSize().x / 2 + 150,
+		window->getSize().y - 70), sf::Vector2f(200, 50), "next player");
 	wallIcon.setPosition(20, window->getSize().y / 2);
 }
 
@@ -55,13 +57,17 @@ void Shop::start()
 
 bool Shop::buy(int cardNum)
 {
-	std::cout << "Player: " << currentPlayerIndex << " Card:" << cardNum << std::endl;
 	int price = getPrice(cardNum);
-	if (remainingGold < price)
+	if (remainingGold < price )
 	{
 		return false;
 	}
 
+	if (lastItem != nullptr)
+	{
+		shopStorage[currentPlayerIndex].addCard(lastItem);
+		lastItem = nullptr;
+	}
 	addCard(cardNum);
 	removeShopCard(cardNum);
 	reduceMoney(price);
@@ -75,6 +81,12 @@ bool Shop::buyWall()
 	{
 		return false;
 	}
+	if (lastItem != nullptr)
+	{
+		shopStorage[currentPlayerIndex].addCard(lastItem);
+		lastItem = nullptr;
+	}
+	wallIcon.setIsBeingClicked(false);
 	numberOfWalls[currentPlayerIndex]++;
 	reduceMoney(1);
 	updateGoldText();
@@ -133,22 +145,23 @@ void Shop::removeShopCard(int cardNum)
 void Shop::reduceMoney(int price)
 {
 	remainingGold -= price;
-	if (remainingGold == 0)
-	{
-		remainingGold = 6;
-		nextTurn();
-	}
-
 }
 
 void Shop::nextTurn()
 {
+	if (lastItem != nullptr)
+	{
+		shopStorage[currentPlayerIndex].addCard(lastItem);
+		lastItem = nullptr;
+	}
+	remainingGold = 6;
 	currentPlayerIndex = (currentPlayerIndex + 1) % 2;
 	if (!currentPlayerIndex)
 	{
 		currentRound++;
 	}
 	updateDecks();
+	updateGoldText();
 }
 
 void Shop::displayShop()
@@ -162,6 +175,7 @@ void Shop::displayShop()
 	shopStorage[currentPlayerIndex].draw(window);
 	shopPawns[currentPlayerIndex].draw(window);
 	drawChangeButton();
+	drawNextPlayerButton();
 	wallIcon.draw(*window);
 	window->display();
 }
@@ -202,6 +216,14 @@ void Shop::drawChangeButton()
 		changeButton.setText("-}");
 	}
 	changeButton.draw(*window);
+}
+
+void Shop::drawNextPlayerButton()
+{
+	if (remainingGold == 0)
+	{
+		nextPlayer.draw(*window);
+	}
 }
 
 void Shop::drawTurn()
@@ -250,18 +272,15 @@ void Shop::whatClicked(sf::Vector2i mousePosition)
 	int storageCardNum = shopStorage[currentPlayerIndex].whichItemClicked(mousePosition);
 	if (cardNum != -1)
 	{
-		if (currentPage)
-		{
-			itemsCards[cardNum]->click(true);
-		}
-		else
-		{
-			warriorsCards[cardNum]->click(true);
-		}
+		clickCard(cardNum);
 	}
 	else if (changeButton.isClicked(mousePosition))
 	{
 		flipPage();
+	}
+	else if (nextPlayer.isClicked(mousePosition) && !remainingGold)
+	{
+		nextTurn();
 	}
 	else if (wallIcon.isClicked(mousePosition))
 	{
@@ -273,10 +292,16 @@ void Shop::whatClicked(sf::Vector2i mousePosition)
 		{
 			shopStorage[currentPlayerIndex].addCard(lastItem);
 		}
+		lastItem = nullptr;
 	}
 	else if (storageCardNum != -1)
 	{
 		lastItem = shopStorage[currentPlayerIndex].takeItem(storageCardNum);
+	}
+	else if (shopStorage[currentPlayerIndex].isClicked(mousePosition) && lastItem != nullptr)
+	{
+		shopStorage[currentPlayerIndex].addCard(lastItem);
+		lastItem = nullptr;
 	}
 }
 
@@ -319,6 +344,18 @@ int Shop::whichCardClicked(sf::Vector2i mousePosition)
 		}
 	}
 	return -1;
+}
+
+void Shop::clickCard(int cardNum)
+{
+	if (currentPage)
+	{
+		itemsCards[cardNum]->click(true);
+	}
+	else
+	{
+		warriorsCards[cardNum]->click(true);
+	}
 }
 
 void Shop::updateDecks()
