@@ -34,9 +34,6 @@ private:
     std::vector<EquipmentCard*> itemsCards;
     std::vector<Equipment*> equipmentList;
     std::vector<Pawn*> pawnsList;
-    std::vector<Pawn*> playerWarriors[2];
-    std::vector<Equipment*> playerItems[2];
-    int numberOfWalls[2] = { 0, 0 };
     EquipmentCard* lastItem;
 
     int currentRound;

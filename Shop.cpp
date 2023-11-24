@@ -87,7 +87,7 @@ bool Shop::buyWall()
 		lastItem = nullptr;
 	}
 	wallIcon.setIsBeingClicked(false);
-	numberOfWalls[currentPlayerIndex]++;
+	shopStorage[currentPlayerIndex].addWall();
 	reduceMoney(1);
 	updateGoldText();
 	return true;
@@ -110,14 +110,12 @@ void Shop::addCard(int cardNum)
 	if (currentPage)
 	{
 		EquipmentCard* itemCard = itemsCards[cardNum];
-		playerItems[currentPlayerIndex].push_back(itemCard->getItem());
 		lastItem = itemCard;
 	}
 	else
 	{
 		WarriorCard* warriorCard = warriorsCards[cardNum];
 		warriorCard->getWarrior()->setSide(currentPlayerIndex);
-		playerWarriors[currentPlayerIndex].push_back(warriorCard->getWarrior());
 		shopPawns[currentPlayerIndex].addPawn(warriorCard->getWarrior());
 	}
 }
