@@ -15,6 +15,7 @@
 #include "IconWall.h"
 #include "ShopPawns.h"
 #include "ShopStorage.h"
+#include "GUI.h"
 
 class Shop {
 public:
@@ -30,11 +31,12 @@ public:
 
 private:
     sf::RenderWindow* window;
-    std::vector<WarriorCard*> warriorsCards;
-    std::vector<EquipmentCard*> itemsCards;
-    std::vector<Equipment*> equipmentList;
-    std::vector<Pawn*> pawnsList;
+    std::vector<WarriorCard*> warriorsCards; //shownWarriots
+    std::vector<EquipmentCard*> itemsCards; //shownItems
+    std::vector<Equipment*> equipmentList; //loaded equipment
+    std::vector<Pawn*> pawnsList; //loaded pawns
     EquipmentCard* lastItem;
+    Gui* interface1;
 
     int currentRound;
     int currentPlayerIndex;

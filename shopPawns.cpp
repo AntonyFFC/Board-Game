@@ -42,3 +42,8 @@ bool ShopPawns::addEquipmentToPawn(int pawnIndex, Equipment* equipment) {
     }
     return false;
 }
+
+std::vector<Pawn*> ShopPawns::getPawns()
+{
+    return pawns;
+}

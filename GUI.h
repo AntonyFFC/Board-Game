@@ -11,6 +11,7 @@
 #include <cmath>
 #include "Pawns.h"
 #include "SpriteUtils.h"
+#include "WarriorPrep.h"
 
 class Gui {
 public:
@@ -19,12 +20,14 @@ public:
 
     void start();
     void keyPressed(const sf::Event& event);
+    void addPawns(std::vector<Pawn*> pawns);
 private:
     void display();
 
     sf::RenderWindow* window;
     Board* grid;
     Pawns* pawns;
+    WarriorPrep* warriorPrep;
     Pawn* p1;
     Pawn* p2;
     Pawn* p3;

@@ -13,6 +13,7 @@ public:
     int whichPawnClicked(sf::Vector2i mousePosition);
     void addPawn(Pawn* pawn);
     bool addEquipmentToPawn(int pawnIndex, Equipment* equipment);
+    std::vector<Pawn*> getPawns();
 
     // Add more methods as needed
 

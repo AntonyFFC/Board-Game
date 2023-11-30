@@ -28,10 +28,12 @@ Shop::Shop(sf::RenderWindow* window)
 	nextPlayer = Button(sf::Vector2f(window->getSize().x / 2 + 150,
 		window->getSize().y - 70), sf::Vector2f(200, 50), "next player");
 	wallIcon.setPosition(20, window->getSize().y / 2);
+	interface1 = new Gui(window);
 }
 
 Shop::~Shop()
 {
+	delete interface1;
 	for (WarriorCard* warriorCard : warriorsCards)
 	{
 		delete warriorCard;
@@ -160,6 +162,7 @@ void Shop::nextTurn()
 		if (currentRound == 7)
 		{
 			startGame();
+			return;
 		}
 	}
 	std::string text = "Round: " + std::to_string(currentRound);
@@ -441,5 +444,6 @@ void Shop::unClickAll()
 
 void Shop::startGame()
 {
-	//do this tomorrow
+	interface1->addPawns(shopPawns->getPawns());
+	interface1->start();
 }

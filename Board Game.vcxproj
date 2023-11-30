@@ -172,6 +172,7 @@
     <ClCompile Include="SpriteUtils.cpp" />
     <ClCompile Include="TableUtils.cpp" />
     <ClCompile Include="TradeTable.cpp" />
+    <ClCompile Include="WarriorPrep.cpp" />
     <ClCompile Include="WeaponsTable.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -196,6 +197,7 @@
     <ClInclude Include="SpriteUtils.h" />
     <ClInclude Include="TableUtils.h" />
     <ClInclude Include="TradeTable.h" />
+    <ClInclude Include="WarriorPrep.h" />
     <ClInclude Include="WeaponsTable.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

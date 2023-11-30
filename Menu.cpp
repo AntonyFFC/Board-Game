@@ -111,7 +111,6 @@ void Menu::callSelected(int selected)
 {
     switch (selected) {
     case 0: // 2 Player Game Button
-        //interface1->start();
         shop1->start();
     case 1: // Multiplayer Game Button
         // Start a multiplayer game

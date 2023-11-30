@@ -6,6 +6,7 @@ Gui::Gui(sf::RenderWindow* window)
     initializeFont();
 	grid = new Board(13, 19, 0.8f);
     pawns = new Pawns(grid, window);
+    warriorPrep = new WarriorPrep();
     p1 = new Pawn("Mirmil", 1, 0, 5, 4, { 2,2 }, 7);
     p2 = new Pawn("Lucjan", 2, 1, 5, 4, { 2,2 }, 7);
     p3 = new Pawn("Zbyszko", 2, 1, 5, 4, { 2,2 }, 7);
@@ -25,6 +26,7 @@ Gui::~Gui()
 {
     delete grid;
     delete pawns;
+    delete warriorPrep;
 }
 
 void Gui::start() {
@@ -71,6 +73,11 @@ void Gui::keyPressed(const sf::Event& event) {
         window->close();
     }
     if (changesOccurred) display();
+}
+
+void Gui::addPawns(std::vector<Pawn*> pawns)
+{
+    warriorPrep->addPawns(pawns);
 }
 
 void Gui::display()
