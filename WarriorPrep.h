@@ -16,5 +16,6 @@ private:
 	std::vector<Pawn*> pawnDict;
 	sf::Text text;
 	int fontSize;
+
 };
 
