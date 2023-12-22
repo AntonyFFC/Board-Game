@@ -20,7 +20,7 @@ public:
 
     void start();
     void keyPressed(const sf::Event& event);
-    void addPawns(std::vector<Pawn*> pawns);
+    void addPawns(std::vector<Pawn*> pawns, int playerIndx);
 private:
     void display();
 

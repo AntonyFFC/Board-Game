@@ -159,7 +159,7 @@ void Shop::nextTurn()
 	if (!currentPlayerIndex)
 	{
 		currentRound++;
-		if (currentRound == 7)
+		if (currentRound == 2)//shold be 7
 		{
 			startGame();
 			return;
@@ -444,6 +444,7 @@ void Shop::unClickAll()
 
 void Shop::startGame()
 {
-	interface1->addPawns(shopPawns->getPawns());
+	interface1->addPawns(shopPawns[0].getPawns(), 0);
+	interface1->addPawns(shopPawns[1].getPawns(), 1);
 	interface1->start();
 }

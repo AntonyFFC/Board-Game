@@ -4,18 +4,32 @@
 #include <SFML/Graphics.hpp>
 #include "Globals.h"
 #include "TableUtils.h"
+#include "SpriteUtils.h"
+#include "Board.h"
+#include "Pawns.h"
 class WarriorPrep
 {
 public:
-	WarriorPrep();
+	WarriorPrep(sf::RenderWindow* window, Board* grid, Pawns* pawns);
 	~WarriorPrep();
 
 	void start();
-	void addPawns(std::vector<Pawn*> pawns);
+	void addPawns(std::vector<Pawn*> pawns, int playerIndx);
 private:
-	std::vector<Pawn*> pawnDict;
+	void display();
+	void eventHandler(sf::Event event);
+	void handleClick(sf::Vector2i mousePosition);
+	void putPawn(std::tuple<int, int, int> coordinates);
+	
+	sf::RenderWindow* window;
+	std::vector<Pawn*> pawnDict[2];
 	sf::Text text;
 	int fontSize;
-
+	sf::Sprite backgroundSprite;
+	sf::Texture backgroundTexture;
+	Board* grid;
+	Pawns* pawns;
+	int currentPlayer;
+	bool preperationDone;
 };
 

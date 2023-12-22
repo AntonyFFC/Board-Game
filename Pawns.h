@@ -17,7 +17,7 @@ public:
 
 	void handleClick(sf::Vector2i mousePosition);
 	void handleClickRight(sf::Vector2i mousePosition);
-	void addPawn(Pawn* inPawn, std::tuple<int, int, int> coords);
+	void addPawn(Pawn* inPawn);
 	void handleShiftOn();
 	void handleShiftOff();
 	bool isTrading() const;

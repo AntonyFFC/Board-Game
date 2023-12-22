@@ -6,7 +6,7 @@ Gui::Gui(sf::RenderWindow* window)
     initializeFont();
 	grid = new Board(13, 19, 0.8f);
     pawns = new Pawns(grid, window);
-    warriorPrep = new WarriorPrep();
+    warriorPrep = new WarriorPrep(window, grid, pawns);
     p1 = new Pawn("Mirmil", 1, 0, 5, 4, { 2,2 }, 7);
     p2 = new Pawn("Lucjan", 2, 1, 5, 4, { 2,2 }, 7);
     p3 = new Pawn("Zbyszko", 2, 1, 5, 4, { 2,2 }, 7);
@@ -30,13 +30,16 @@ Gui::~Gui()
 }
 
 void Gui::start() {
-    pawns->addPawn(p1, { -7, 5, 2 });
+   /* pawns->addPawn(p1, { -7, 5, 2 });
     pawns->addPawn(p2, { 9, -6, -3 });
     pawns->addPawn(p3, { 9, -5, -4 });
     pawns->addItemToPawn(0, e8, e7);
     pawns->addItemToPawn(1, e5, e2);
-    pawns->addItemToPawn(2, e6, e4);
-    display();
+    pawns->addItemToPawn(2, e6, e4);*/
+
+    //display();
+    warriorPrep->start();
+
     while (window->isOpen())
     {
         sf::Event event;
@@ -75,9 +78,9 @@ void Gui::keyPressed(const sf::Event& event) {
     if (changesOccurred) display();
 }
 
-void Gui::addPawns(std::vector<Pawn*> pawns)
+void Gui::addPawns(std::vector<Pawn*> pawns, int playerIndx)
 {
-    warriorPrep->addPawns(pawns);
+    warriorPrep->addPawns(pawns, playerIndx);
 }
 
 void Gui::display()

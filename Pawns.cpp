@@ -181,10 +181,10 @@ bool Pawns::destroyWall(int pawnNumber, std::tuple<int, int, int> coords)
     return true;
 }
 
-void Pawns::addPawn(Pawn* inPawn, std::tuple<int, int, int> coords)
+void Pawns::addPawn(Pawn* inPawn)
 {
     pawnDict.push_back(inPawn);
-    board->hexDict[coords]->setPawn(true, inPawn);
+    board->hexDict[inPawn->getHexCoords()]->setPawn(true, inPawn);
 }
 
 void Pawns::handleShiftOn()

@@ -1,11 +1,16 @@
 #include "WarriorPrep.h"
 
-WarriorPrep::WarriorPrep()
+WarriorPrep::WarriorPrep(sf::RenderWindow* window, Board* grid, Pawns* pawns)
+	: window(window), grid(grid), pawns(pawns)
 {
-	fontSize = 20;
+	fontSize = 40;
 	text = initializeText("Blue choose your staring positions", &globalFont2, 
 		fontSize, sf::Color::White);
-	text.setPosition(20, 10);
+	text.setPosition(30, 20);
+	backgroundSprite = loadBackgroundSprite(&backgroundTexture, "board");
+	backgroundSprite.setPosition(0, 0);
+	currentPlayer = 0;
+	preperationDone = false;
 }
 
 WarriorPrep::~WarriorPrep()
@@ -17,11 +22,20 @@ public:
 	static std::vector<std::tuple<int, int, int>> blueCoordinates;
 	static std::vector<std::tuple<int, int, int>> redCoordinates;
 
-	static std::vector<std::tuple<int, int, int>> GetBlueCoordinates() {
+	static std::vector<std::tuple<int, int, int>> getBlueCoordinates() {
 		return blueCoordinates;
 	}
 
-	static std::vector<std::tuple<int, int, int>> GetRedCoordinates() {
+	static std::vector<std::tuple<int, int, int>> getRedCoordinates() {
+		return redCoordinates;
+	}
+	
+	static std::vector<std::tuple<int, int, int>> getCoordinatesOf(int playerIndx)
+	{
+		if (playerIndx)
+		{
+			return blueCoordinates;
+		}
 		return redCoordinates;
 	}
 };
@@ -37,9 +51,74 @@ std::vector<std::tuple<int, int, int>> StartCoordinates::redCoordinates = {
 
 void WarriorPrep::start()
 {
+	display();
+
+	while (window->isOpen() && !preperationDone)
+	{
+		sf::Event event;
+		while (window->pollEvent(event)) {
+			eventHandler(event);
+		}
+	}
+}
+void WarriorPrep::eventHandler(sf::Event event)
+{
+	if (event.type == sf::Event::Closed) {
+		window->close();
+	}
+	else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+		sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
+		handleClick(mousePosition);
+		display();
+	}
 }
 
-void WarriorPrep::addPawns(std::vector<Pawn*> pawns)
+void WarriorPrep::handleClick(sf::Vector2i mousePosition)
 {
-	pawnDict = pawns;
+	std::vector<std::tuple<int, int, int>> startCoordinates = StartCoordinates::getCoordinatesOf(currentPlayer);
+	for (std::tuple<int, int, int> coordinates : startCoordinates)
+	{
+		if (grid->hexDict[coordinates]->isClicked(mousePosition))
+		{
+			putPawn(coordinates);
+			break;
+		}
+	}
 }
+
+void WarriorPrep::putPawn(std::tuple<int, int, int> coordinates)
+{
+	Pawn* currentPawn = pawnDict[currentPlayer].back();
+	pawnDict[currentPlayer].pop_back();
+	currentPawn->scale(0.05f);
+	currentPawn->setRotationAngle(90.0f);
+	currentPawn->setHexCoords(coordinates);
+	pawns->addPawn(currentPawn);
+	if (pawnDict[currentPlayer].empty())
+	{
+		if (currentPlayer == 1)
+		{
+			preperationDone = true;
+		}
+		else
+		{
+			currentPlayer = 1;
+		}
+	}
+}
+
+void WarriorPrep::addPawns(std::vector<Pawn*> pawns, int playerIndx)
+{
+	pawnDict[playerIndx] = pawns;
+}
+
+void WarriorPrep::display()
+{
+	window->clear(sf::Color(66, 82, 107));
+	window->draw(backgroundSprite);
+	grid->drawBoard(*window);
+	pawns->draw(false);
+	window->draw(text);
+	window->display();
+}
+
