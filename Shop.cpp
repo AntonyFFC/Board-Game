@@ -159,7 +159,7 @@ void Shop::nextTurn()
 	if (!currentPlayerIndex)
 	{
 		currentRound++;
-		if (currentRound == 2)//shold be 7
+		if (currentRound == 7)
 		{
 			startGame();
 			return;

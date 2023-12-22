@@ -4,9 +4,12 @@ WarriorPrep::WarriorPrep(sf::RenderWindow* window, Board* grid, Pawns* pawns)
 	: window(window), grid(grid), pawns(pawns)
 {
 	fontSize = 40;
-	text = initializeText("Blue choose your staring positions", &globalFont2, 
+	blueText = initializeText("Blue choose your staring positions", &globalFont2, 
 		fontSize, sf::Color::White);
-	text.setPosition(30, 20);
+	blueText.setPosition(30, 40);
+	redText = initializeText("Red choose your staring positions", &globalFont2,
+		fontSize, sf::Color::White);
+	redText.setPosition(30, 40);
 	backgroundSprite = loadBackgroundSprite(&backgroundTexture, "board");
 	backgroundSprite.setPosition(0, 0);
 	currentPlayer = 0;
@@ -118,7 +121,17 @@ void WarriorPrep::display()
 	window->draw(backgroundSprite);
 	grid->drawBoard(*window);
 	pawns->draw(false);
-	window->draw(text);
+	drawText();
 	window->display();
+}
+
+void WarriorPrep::drawText()
+{
+	if (currentPlayer)
+	{
+		window->draw(blueText);
+		return;
+	}
+	window->draw(redText);
 }
 

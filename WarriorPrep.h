@@ -17,13 +17,15 @@ public:
 	void addPawns(std::vector<Pawn*> pawns, int playerIndx);
 private:
 	void display();
+	void drawText();
 	void eventHandler(sf::Event event);
 	void handleClick(sf::Vector2i mousePosition);
 	void putPawn(std::tuple<int, int, int> coordinates);
 	
 	sf::RenderWindow* window;
 	std::vector<Pawn*> pawnDict[2];
-	sf::Text text;
+	sf::Text blueText;
+	sf::Text redText;
 	int fontSize;
 	sf::Sprite backgroundSprite;
 	sf::Texture backgroundTexture;
