@@ -7,7 +7,6 @@ Shop::Shop(sf::RenderWindow* window)
 	fontSize = 20;
 	currentRound = 1;
 	currentPlayerIndex = 0;
-	currentPage = 0;
 	remainingGold = 6;
 	titleText = initializeText("Shop", &globalFont2, fontSize * 1.5, sf::Color::White);
 	titleText.setPosition(20, 10);
@@ -19,8 +18,6 @@ Shop::Shop(sf::RenderWindow* window)
 	goldText.setPosition(window->getSize().x-100, 10);
 	roundText = initializeText("Round: " + std::to_string(currentRound), &globalFont2, fontSize * 1.5, sf::Color::White);
 	roundText.setPosition(window->getSize().x - 250, 10);
-	equipmentList = EquipmentManager::loadEquipmentFromJson("equipment");
-	pawnsList = PawnsManager::loadPawnsFromJson("pawns");
 	backgroundSprite = loadBackgroundSprite(&backgroundTexture, "shop");
 	backgroundSprite.setPosition(0, 0);
 	changeButton = Button(sf::Vector2f(window->getSize().x / 2 - 100,
@@ -29,26 +26,18 @@ Shop::Shop(sf::RenderWindow* window)
 		window->getSize().y - 70), sf::Vector2f(200, 50), "next player");
 	wallIcon.setPosition(20, window->getSize().y / 2);
 	interface1 = new Gui(window);
+	shopCards = new ShopCards();
 }
 
 Shop::~Shop()
 {
 	delete interface1;
-	for (WarriorCard* warriorCard : warriorsCards)
-	{
-		delete warriorCard;
-	}
-	warriorsCards.clear();
-	for (EquipmentCard* itemCard : itemsCards)
-	{
-		delete itemCard;
-	}
-	itemsCards.clear();
+	delete shopCards;
 }
 
 void Shop::start()
 {
-	updateDecks();
+	shopCards->updateDecks();
 	displayShop();
 	while (window->isOpen())
 	{
@@ -61,7 +50,7 @@ void Shop::start()
 
 bool Shop::buy(int cardNum)
 {
-	int price = getPrice(cardNum);
+	int price = shopCards->getPriceOfCard(cardNum);
 	if (remainingGold < price )
 	{
 		return false;
@@ -70,7 +59,7 @@ bool Shop::buy(int cardNum)
 	addLastItemToStorage();
 
 	addCard(cardNum);
-	removeShopCard(cardNum);
+	shopCards->removeCard(cardNum);
 	reduceMoney(price);
 	updateGoldText();
 	return true;
@@ -90,52 +79,20 @@ bool Shop::buyWall()
 	return true;
 }
 
-int Shop::getPrice(int cardNum)
-{
-	if (currentPage)
-	{
-		return itemsCards[cardNum]->getPrice();
-	}
-	else
-	{
-		return warriorsCards[cardNum]->getPrice();
-	}
-}
-
 void Shop::addCard(int cardNum)
 {
-	if (currentPage)
+	if (shopCards->currentPage)
 	{
-		EquipmentCard* itemCard = itemsCards[cardNum];
-		lastItem = itemCard;
+		lastItem = shopCards->getCard<EquipmentCard>(cardNum);
 	}
 	else
 	{
-		WarriorCard* warriorCard = warriorsCards[cardNum];
+		WarriorCard* warriorCard = shopCards->getCard<WarriorCard>(cardNum);
 		warriorCard->getWarrior()->setSide(currentPlayerIndex);
 		shopPawns[currentPlayerIndex].addPawn(warriorCard->getWarrior());
 	}
 }
 
-void Shop::removeShopCard(int cardNum)
-{
-	if (currentPage)
-	{
-		EquipmentCard* itemCard = itemsCards[cardNum];
-		//here I remove from all items so that they are not drawn again
-		equipmentList.erase(std::remove(equipmentList.begin(), equipmentList.end(), itemCard->getItem()), equipmentList.end());
-		//here I remove from the cards, which are in the shop
-		itemsCards.erase(itemsCards.begin() + cardNum);
-	}
-	else
-	{
-		WarriorCard* warriorCard = warriorsCards[cardNum];
-		//here I remove from all warriors so that they are not drawn again
-		pawnsList.erase(std::remove(pawnsList.begin(), pawnsList.end(), warriorCard->getWarrior()), pawnsList.end());
-		//here I remove from the cards, which are in the shop
-		warriorsCards.erase(warriorsCards.begin() + cardNum);
-	}
-}
 
 void Shop::reduceMoney(int price)
 {
@@ -167,7 +124,7 @@ void Shop::nextTurn()
 	}
 	std::string text = "Round: " + std::to_string(currentRound);
 	roundText.setString(text);
-	updateDecks();
+	shopCards->updateDecks();
 	updateGoldText();
 }
 
@@ -179,7 +136,7 @@ void Shop::displayShop()
 	drawTurn();
 	window->draw(goldText);
 	window->draw(roundText);
-	drawCards();
+	shopCards->draw(window);
 	shopStorage[currentPlayerIndex].draw(window);
 	shopPawns[currentPlayerIndex].draw(window);
 	drawChangeButton();
@@ -188,34 +145,9 @@ void Shop::displayShop()
 	window->display();
 }
 
-void Shop::drawCards()
-{
-	sf::Vector2f pos(window->getSize().x / 4, 20);
-	if (currentPage)
-	{
-		for (auto& itemCard : itemsCards)
-		{
-			itemCard->setScale(0.9);
-			itemCard->setPosition(sf::Vector2f(pos.x - itemCard->getSprite().getGlobalBounds().width / 2, pos.y));
-			window->draw(itemCard->getFullSprite());
-			pos += sf::Vector2f(0, itemCard->getSprite().getTextureRect().height + 10);
-		}
-	}
-	else
-	{
-		for (auto& warriorCard : warriorsCards)
-		{
-			warriorCard->setScale(0.9);
-			warriorCard->setPosition(sf::Vector2f(pos.x - warriorCard->getSprite().getGlobalBounds().width / 2, pos.y));
-			window->draw(warriorCard->getFullSprite());
-			pos += sf::Vector2f(0, warriorCard->getSprite().getTextureRect().height + 10);
-		}
-	}
-}
-
 void Shop::drawChangeButton()
 {
-	if (currentPage)
+	if (shopCards->currentPage)
 	{
 		changeButton.setText("{-");
 	}
@@ -263,7 +195,7 @@ void Shop::keyPressed(const sf::Event& event)
 	{
 		if (event.key.code == sf::Keyboard::Right || event.key.code == sf::Keyboard::Left)
 		{
-			flipPage();
+			shopCards->flipPage();
 		}
 		displayShop();
 	}
@@ -275,16 +207,16 @@ void Shop::keyPressed(const sf::Event& event)
 
 void Shop::whatClicked(sf::Vector2i mousePosition)
 {
-	int cardNum = whichCardClicked(mousePosition);
+	int cardNum = shopCards->whichCardClicked(mousePosition);
 	int pawnNum = shopPawns[currentPlayerIndex].whichPawnClicked(mousePosition);
 	int storageCardNum = shopStorage[currentPlayerIndex].whichItemClicked(mousePosition);
 	if (cardNum != -1)
 	{
-		clickCard(cardNum);
+		shopCards->clickCard(cardNum);
 	}
 	else if (changeButton.isClicked(mousePosition))
 	{
-		flipPage();
+		shopCards->flipPage();
 	}
 	else if (nextPlayer.isClicked(mousePosition) && !remainingGold)
 	{
@@ -315,7 +247,7 @@ void Shop::whatClicked(sf::Vector2i mousePosition)
 
 void Shop::whatOffClicked(sf::Vector2i mousePosition)
 {
-	int cardNum = whichCardClicked(mousePosition);
+	int cardNum = shopCards->whichCardClicked(mousePosition);
 	if (cardNum != -1)
 	{
 		buy(cardNum);
@@ -324,97 +256,6 @@ void Shop::whatOffClicked(sf::Vector2i mousePosition)
 	{
 		buyWall();
 	}
-}
-
-int Shop::whichCardClicked(sf::Vector2i mousePosition)
-{
-	int i = 0;
-	if (currentPage)
-	{
-		for (const auto& cardPtr : itemsCards)
-		{
-			if (cardPtr->isClicked(mousePosition))
-			{
-				return i;
-			}
-			i++;
-		}
-	}
-	else
-	{
-		for (const auto& cardPtr : warriorsCards)
-		{
-			if (cardPtr->isClicked(mousePosition))
-			{
-				return i;
-			}
-			i++;
-		}
-	}
-	return -1;
-}
-
-void Shop::clickCard(int cardNum)
-{
-	if (currentPage)
-	{
-		itemsCards[cardNum]->click(true);
-	}
-	else
-	{
-		warriorsCards[cardNum]->click(true);
-	}
-}
-
-void Shop::updateDecks()
-{
-	std::vector<Equipment*> availableItems;
-	std::vector<Pawn*> availableWarriors;
-	// Randomly select 3 warriors from pawnsList
-	if (pawnsList.size() > 3) {
-		std::random_device rd;
-		std::mt19937 gen(rd());
-		std::shuffle(pawnsList.begin(), pawnsList.end(), gen);
-		availableWarriors.assign(pawnsList.begin(), pawnsList.begin() + 3);
-	}
-	else {
-		// Handle the case where there are fewer than 3 pawns
-		availableWarriors = pawnsList;
-	}
-
-	// Randomly select 5 equipment items from equipmentList
-	if (equipmentList.size() > 5) {
-		std::random_device rd;
-		std::mt19937 gen(rd());
-		std::shuffle(equipmentList.begin(), equipmentList.end(), gen);
-		availableItems.assign(equipmentList.begin(), equipmentList.begin() + 5);
-	}
-	else {
-		// Handle the case where there are fewer than 5 equipment items
-		availableItems = equipmentList;
-	}
-	initializeCards(availableItems, availableWarriors);
-}
-
-void Shop::initializeCards(std::vector<Equipment*> availableItems, std::vector<Pawn*> availableWarriors)
-{
-	warriorsCards.clear();
-	itemsCards.clear();
-	for (Pawn* warrior : availableWarriors)
-	{
-		WarriorCard* warriorCard = new WarriorCard(warrior);
-		warriorsCards.push_back(warriorCard);
-	}
-	for (Equipment* item : availableItems)
-	{
-		EquipmentCard* equipmentCard = new EquipmentCard(item);
-		itemsCards.push_back(equipmentCard);
-	}
-}
-
-void Shop::flipPage()
-{
-	currentPage = !currentPage;
 }
 
 void Shop::updateGoldText()
@@ -426,20 +267,7 @@ void Shop::updateGoldText()
 void Shop::unClickAll()
 {
 	wallIcon.setIsBeingClicked(false);
-	if (currentPage)
-	{
-		for (const auto& cardPtr : itemsCards)
-		{
-			cardPtr->click(false);
-		}
-	}
-	else
-	{
-		for (const auto& cardPtr : warriorsCards)
-		{
-			cardPtr->click(false);
-		}
-	}
+	shopCards->unClickAll();
 }
 
 void Shop::startGame()

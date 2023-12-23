@@ -84,6 +84,9 @@
     <ClCompile Include="WarriorPrep.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ShopCards.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Hex.h">
@@ -153,6 +156,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="WarriorPrep.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShopCards.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

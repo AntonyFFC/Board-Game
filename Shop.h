@@ -9,13 +9,13 @@
 #include "EquipmentManager.h"
 #include "PawnsManager.h"
 #include <algorithm>
-#include <random> 
 #include "Button.h"
 #include <iostream>
 #include "IconWall.h"
 #include "ShopPawns.h"
 #include "ShopStorage.h"
 #include "GUI.h"
+#include "ShopCards.h"
 
 class Shop {
 public:
@@ -31,16 +31,12 @@ public:
 
 private:
     sf::RenderWindow* window;
-    std::vector<WarriorCard*> warriorsCards; //shownWarriots
-    std::vector<EquipmentCard*> itemsCards; //shownItems
-    std::vector<Equipment*> equipmentList; //loaded equipment
-    std::vector<Pawn*> pawnsList; //loaded pawns
     EquipmentCard* lastItem;
     Gui* interface1;
+    ShopCards* shopCards;
 
     int currentRound;
     int currentPlayerIndex;
-    bool currentPage;
     int remainingGold;
     int fontSize;
     sf::Sprite backgroundSprite;
@@ -59,15 +55,12 @@ private:
     // Player buys a card or item from the shop
     bool buy(int cardNum);
     bool buyWall();
-    int getPrice(int cardNum);
     void addCard(int cardNum);
-    void removeShopCard(int cardNum);
     void reduceMoney(int price);
     void addLastItemToStorage();
 
     // Display the available cards and items in the shop
     void displayShop();
-    void drawCards();
     void drawChangeButton();
     void drawNextPlayerButton();
     void drawTurn();
@@ -78,13 +71,6 @@ private:
     void keyPressed(const sf::Event& event);
     void whatClicked(sf::Vector2i mousePosition);
     void whatOffClicked(sf::Vector2i mousePosition);
-    int whichCardClicked(sf::Vector2i mousePosition); // returns -1 id none
-    void clickCard(int cardNum);
-
-    void updateDecks();
-    void initializeCards(std::vector<Equipment*> availableItems, std::vector<Pawn*> availableWarriors);
-
-    void flipPage();
     void updateGoldText();
 
     void unClickAll();
