@@ -4,11 +4,13 @@ Pawns::Pawns(Board* board,sf::RenderWindow* window)
     :board(board),target(window)
 {
     tradeTable = nullptr;
-    previous = empty;
+    previousHex = empty;
     wasShift = false;
     isTrading_ = false;
     whosTurn = 0;
     whichPawn = 0;
+    previousWarrior[0] = -1;
+    previousWarrior[1] = -1;
     setupText();
 }
 
@@ -62,17 +64,17 @@ void Pawns::handleClick(sf::Vector2i mousePosition)
                 if ((!board->hexDict[present]->isPawn() || !board->hexDict[present]->pawn->isAlive()) && !board->hexDict[present]->isHigh(0))
                 {
                     board->clearHighlight();
-                    previous = empty;
+                    previousHex = empty;
                 }
                 else if (board->hexDict[present]->isPawn() && board->hexDict[present]->pawn->isAlive())
                 {
-                    if (previous != empty)
+                    if (previousHex != empty)
                     {
                         pawnSecond(whichPawn, present);
                     }
                     else
                     {
-                        if (!pawnFirst(whichPawn, present))
+                        if (!pawnFirst(present))
                         {
                             break;
                         }
@@ -108,18 +110,19 @@ void Pawns::pawnSecond(int pawnNum, std::tuple<int, int, int> current)
     }
 }
 
-bool Pawns::pawnFirst(int pawnNum, std::tuple<int, int, int> current)
+bool Pawns::pawnFirst(std::tuple<int, int, int> current)
 {
-    if (whosTurn == board->hexDict[current]->pawn->getSide())
+    whichPawn = numberOfPawn(current);
+    if (whosTurn == pawnDict[whichPawn]->getSide() && whichPawn != previousWarrior[whosTurn])
     {
-        whichPawn = numberOfPawn(current);
         pawnClicked(whichPawn);
-        previous = current;
+        previousHex = current;
+        previousWarrior[whosTurn] = whichPawn;
         return true;
     }
     else {
         board->clearHighlight();
-        previous = empty;
+        previousHex = empty;
         return false; //stop the loop
     }
 }
@@ -144,7 +147,7 @@ void Pawns::handleClickRight(sf::Vector2i mousePosition)
                     if (!board->hexDict[coords]->isWall() || !destroyWall(whichPawn, coords))
                     {
                         board->clearHighlight();
-                        previous = empty;
+                        previousHex = empty;
                     }
                 }
                 else
@@ -316,9 +319,9 @@ void Pawns::pawnMoved(int pawnNum, std::tuple<int, int, int> where)
 {
     Pawn* pawn = pawnDict[pawnNum];
     pawn->reduceActions(board->hexDict[where]->getPawnDist());
-    board->hexDict[previous]->setPawn(false);
+    board->hexDict[previousHex]->setPawn(false);
     board->hexDict[where]->setPawn(true, pawn);
-    previous = where;
+    previousHex = where;
     resetTurn(pawnNum);
 }
 
@@ -428,7 +431,7 @@ void Pawns::resetTurn(int pawnNum)
     if (pawnDict[pawnNum]->getRemainingActions() == 0)
     {
         pawnDict[pawnNum]->setRemainingActions(pawnDict[pawnNum]->getMaxActions());
-        previous = empty;
+        previousHex = empty;
         flipTurn();
     }
     else

@@ -48,7 +48,7 @@ private:
 	void pawnMoved(int pawnNum, std::tuple<int, int, int> where);
 	void attack(int pawnNum, int attackedNum, Equipment* weapon);
 	std::vector<Equipment*> getWeaponsInUse(int pawnNum, int attackedNum);
-	bool pawnFirst(int pawnNum, std::tuple<int, int, int> current);
+	bool pawnFirst(std::tuple<int, int, int> current);
 	void pawnSecond(int pawnNum, std::tuple<int, int, int> current);
 	std::vector<std::tuple<int, int, int>> getViewOfWeapon(int pawnNum, Equipment* weapon);
 	std::vector<std::tuple<int, int, int>> getViewOfPawn(int pawnNum);
@@ -66,7 +66,7 @@ private:
 	TradeTable* tradeTable;
 	WeaponsTable* weaponsTable;
 	sf::RenderWindow* target;
-	std::tuple<int, int, int> previous;
+	std::tuple<int, int, int> previousHex;
 	bool wasShift;
 	std::tuple<int, int, int> empty = { -9, -9, -9 };
 	std::vector<Pawn*> pawnDict;
@@ -75,5 +75,6 @@ private:
 	sf::Text turnText;
 	bool isTrading_;
 	bool isChoosing_;
+	int previousWarrior[2];
 };
 
