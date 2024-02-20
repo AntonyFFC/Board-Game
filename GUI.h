@@ -28,17 +28,6 @@ private:
     Board* grid;
     Pawns* pawns;
     WarriorPrep* warriorPrep;
-    Pawn* p1;
-    Pawn* p2;
-    Pawn* p3;
-    Equipment* e1;
-    Equipment* e2;
-    Equipment* e3;
-    Equipment* e4;
-    Equipment* e5;
-    Equipment* e6;
-    Equipment* e7;
-    Equipment* e8;
     bool isShiftKeyPressed = false;
     sf::Sprite backgroundSprite;
     sf::Texture backgroundTexture;
