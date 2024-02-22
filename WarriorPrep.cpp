@@ -6,10 +6,10 @@ WarriorPrep::WarriorPrep(sf::RenderWindow* window, Board* grid, Pawns* pawns)
 	fontSize = 40;
 	blueText = initializeText("Blue choose your starting positions", &globalFont2, 
 		fontSize, sf::Color::White);
-	blueText.setPosition(30, 40);
+	blueText.setPosition(window->getSize().x/2 - 200, window->getSize().y / 3);
 	redText = initializeText("Red choose your starting positions", &globalFont2,
 		fontSize, sf::Color::White);
-	redText.setPosition(30, 40);
+	redText.setPosition(window->getSize().x / 2 - 200, window->getSize().y / 3);
 	backgroundSprite = loadBackgroundSprite(&backgroundTexture, "board");
 	backgroundSprite.setPosition(0, 0);
 	currentPlayer = 0;
@@ -94,7 +94,10 @@ void WarriorPrep::putPawn(std::tuple<int, int, int> coordinates)
 	Pawn* currentPawn = pawnDict[currentPlayer].back();
 	pawnDict[currentPlayer].pop_back();
 	currentPawn->scale(0.05f);
-	currentPawn->setRotationAngle(90.0f);
+	if (currentPlayer)
+		currentPawn->setRotationAngle(90.0f);
+	else
+		currentPawn->setRotationAngle(-90.0f);
 	currentPawn->setHexCoords(coordinates);
 	pawns->addPawn(currentPawn);
 	if (pawnDict[currentPlayer].empty())

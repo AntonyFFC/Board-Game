@@ -487,6 +487,7 @@ void Pawn::setUpPosition()
     sf::Vector2f finalPos(xPos + combinedSprite->getGlobalBounds().width / 2.0f,
         yPos - combinedSprite->getGlobalBounds().height / 2.0f);
     combinedSprite->setPosition(finalPos.x, finalPos.y);
+    combinedSprite->setOrigin(combinedSprite->getLocalBounds().width / 2, combinedSprite->getLocalBounds().height / 2);
     combinedSprite->setRotation(rotationAngle);
 }
 
