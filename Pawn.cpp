@@ -163,6 +163,7 @@ void Pawn::setHP(int healthPoints) {
 
 void Pawn::setRotationAngle(float angle) {
     this->rotationAngle = angle;
+    setUpPosition();
 }
 
 void Pawn::setPosition(float inx, float iny) {
@@ -173,7 +174,7 @@ void Pawn::setPosition(float inx, float iny) {
 
 void Pawn::scale(float ins) {
     this->scaleFactor = ins;
-    combinedSprite->scale(scaleFactor, scaleFactor);
+    setUpPosition();
 }
 
 void Pawn::setHexCoords(std::tuple<int, int, int> coords)
@@ -279,7 +280,7 @@ bool Pawn::isAlive() const {
 
 void Pawn::dead()
 {
-    delete combinedSprite;
+    //delete combinedSprite;
     sf::Sprite sprite;
     sf::RenderTexture* renderTexture = new sf::RenderTexture;
     renderTexture->create(1400, 1800);
@@ -403,6 +404,13 @@ void Pawn::attack(int value)
     }
 }
 
+std::string getFirstWord(const std::string& str) {
+    std::istringstream iss(str);
+    std::string firstWord;
+    iss >> firstWord;
+    return firstWord;
+}
+
 std::vector<bool> Pawn::whatArmour()
 {
     int size = 3;
@@ -411,11 +419,11 @@ std::vector<bool> Pawn::whatArmour()
     {
         if (item->getType() == "Armour")
         {
-            if (item->getAdditionalCapabilities() == "Shield")
+            if (getFirstWord(item->getAdditionalCapabilities()) == "Shield")
             {
                 types[0] = true;
             }
-            else if (item->getAdditionalCapabilities() == "Helmet")
+            else if (getFirstWord(item->getAdditionalCapabilities()) == "Helmet")
             {
                 types[1] = true;
             }
@@ -460,7 +468,7 @@ Equipment* Pawn::findArmour(const std::string& type)
     {
         if (item->getType() == "Armour")
         {
-            if (item->getAdditionalCapabilities() == type)
+            if (getFirstWord(item->getAdditionalCapabilities()) == type)
             {
                 return item;
             }
