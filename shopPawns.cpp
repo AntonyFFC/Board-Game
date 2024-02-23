@@ -13,7 +13,7 @@ void ShopPawns::draw(sf::RenderTarget* window)
     for (Pawn* pawn : pawns) {
         pawn->scale(0.2);
         pawn->setRotationAngle(0.f);
-        pawn->setPosition(pos.x - pawn->getSprite().getGlobalBounds().width / 2, pos.y);
+        pawn->setPosition(pos.x, pos.y);
         pawn->draw(*window, false);
         pos += sf::Vector2f(0, 0.7 * pawn->getSprite().getGlobalBounds().height);
     }
