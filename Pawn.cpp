@@ -163,7 +163,6 @@ void Pawn::setHP(int healthPoints) {
 
 void Pawn::setRotationAngle(float angle) {
     this->rotationAngle = angle;
-    combinedSprite->setRotation(rotationAngle);
 }
 
 void Pawn::setPosition(float inx, float iny) {
@@ -484,10 +483,9 @@ void Pawn::flipSprite(Equipment* item)
 void Pawn::setUpPosition()
 {
     combinedSprite->setScale(scaleFactor, scaleFactor);
-    sf::Vector2f finalPos(xPos + combinedSprite->getGlobalBounds().width / 2.0f,
-        yPos - combinedSprite->getGlobalBounds().height / 2.0f);
-    combinedSprite->setPosition(finalPos.x, finalPos.y);
-    combinedSprite->setOrigin(combinedSprite->getLocalBounds().width / 2, combinedSprite->getLocalBounds().height / 2);
+    combinedSprite->setPosition(xPos, yPos);
+    combinedSprite->setOrigin(combinedSprite->getLocalBounds().width / 2, 
+        combinedSprite->getLocalBounds().height / 2);
     combinedSprite->setRotation(rotationAngle);
 }
 

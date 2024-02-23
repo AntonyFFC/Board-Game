@@ -9,7 +9,7 @@ ShopPawns::~ShopPawns() {
 
 void ShopPawns::draw(sf::RenderTarget* window)
 {
-    sf::Vector2f pos(window->getSize().x *0.45, 130);
+    sf::Vector2f pos(window->getSize().x *0.65, 130);
     for (Pawn* pawn : pawns) {
         pawn->scale(0.2);
         pawn->setRotationAngle(0.f);
