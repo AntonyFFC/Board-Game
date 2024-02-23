@@ -11,6 +11,8 @@ Pawns::Pawns(Board* board,sf::RenderWindow* window)
     whichPawn = 0;
     previousWarrior[0] = -1;
     previousWarrior[1] = -1;
+    numberOfPawns[0] = 0;
+    numberOfPawns[1] = 0;
     setupText();
 }
 
@@ -113,7 +115,8 @@ void Pawns::pawnSecond(int pawnNum, std::tuple<int, int, int> current)
 bool Pawns::pawnFirst(std::tuple<int, int, int> current)
 {
     whichPawn = numberOfPawn(current);
-    if (whosTurn == pawnDict[whichPawn]->getSide() && whichPawn != previousWarrior[whosTurn])
+    if (whosTurn == pawnDict[whichPawn]->getSide() 
+        && (whichPawn != previousWarrior[whosTurn] || numberOfPawns[whosTurn]==1))
     {
         pawnClicked(whichPawn);
         previousHex = current;
@@ -188,6 +191,7 @@ void Pawns::addPawn(Pawn* inPawn)
 {
     pawnDict.push_back(inPawn);
     board->hexDict[inPawn->getHexCoords()]->setPawn(true, inPawn);
+    numberOfPawns[inPawn->getSide()]++;
 }
 
 void Pawns::handleShiftOn()
@@ -341,9 +345,7 @@ void Pawns::attack(int pawnNum, int attackedNum, Equipment* weapon)
         }
         if (!attacked->isAlive())
         {
-            board->hexDict[attacked->getHexCoords()]->setPawn(false);
-            attacked->addSpace(8, 8); //this is so the body does not have a low limit of space
-            board->hexDict[attacked->getHexCoords()]->setBody(true, attacked);
+            death(pawnNum);
         }
         attacker->reduceActions(weapon->getAttackActions());
         resetTurn(pawnNum);
@@ -352,6 +354,15 @@ void Pawns::attack(int pawnNum, int attackedNum, Equipment* weapon)
     {
         std::cout << "Not enough actions\n";
     }
+}
+
+void Pawns::death(int attackedNum)
+{
+    Pawn* attacked = pawnDict[attackedNum];
+    board->hexDict[attacked->getHexCoords()]->setPawn(false);
+    attacked->addSpace(10, 10); //this is so the body does not have a low limit of space
+    board->hexDict[attacked->getHexCoords()]->setBody(true, attacked);
+    numberOfPawns[attacked->getSide()]--;
 }
 
 std::vector<Equipment*> Pawns::getWeaponsInUse(int pawnNum, int attackedNum)
