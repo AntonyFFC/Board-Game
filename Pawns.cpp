@@ -343,9 +343,10 @@ void Pawns::attack(int pawnNum, int attackedNum, Equipment* weapon)
         {
             attacked->attack(weapon->getAttackValue());
         }
+
         if (!attacked->isAlive())
         {
-            death(pawnNum);
+            death(attacked);
         }
         attacker->reduceActions(weapon->getAttackActions());
         resetTurn(pawnNum);
@@ -356,9 +357,8 @@ void Pawns::attack(int pawnNum, int attackedNum, Equipment* weapon)
     }
 }
 
-void Pawns::death(int attackedNum)
+void Pawns::death(Pawn* attacked)
 {
-    Pawn* attacked = pawnDict[attackedNum];
     board->hexDict[attacked->getHexCoords()]->setPawn(false);
     attacked->addSpace(10, 10); //this is so the body does not have a low limit of space
     board->hexDict[attacked->getHexCoords()]->setBody(true, attacked);
