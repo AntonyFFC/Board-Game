@@ -9,8 +9,8 @@ int getSumOfVector(const Container& vec) {
 	return sum;
 }
 
-const int Card::fontSize = 20;
-const int Card::cellHeight = 30;
+const int Card::fontSize = 23;
+const int Card::cellHeight = 35;
 const float Card::scaleFactor = 0.15f;
 std::vector<sf::Texture*> Card::iconTextures;
 std::map<std::string, sf::Sprite> Card::iconSprites = initializeSpriteMap(iconTextures);
@@ -133,7 +133,7 @@ void Card::drawHeaders()
 	sf::Vector2f initialPos(0, 0);
 	cell.setPosition(initialPos);
 	setPosSpriteMap(initialPos.x + 3, initialPos.y + 3, iconSprites);
-	setScalSpriteMap(0.04, iconSprites);
+	setScalSpriteMap(0.06, iconSprites);
 	text.setPosition(initialPos.x + 5, initialPos.y + 3);
 	cell.setFillColor(sf::Color(156, 84, 84));
 	for (int i = 0; i < headers.size(); i++)
@@ -161,8 +161,8 @@ void Card::drawPicture()
 	sf::Vector2f initialPos(0, 0);
 	pictureSprite.setScale(scaleFactor, scaleFactor);
 	//this is so that I set the x coordinate of the center but the y coordinate of the top edge
-	sf::Vector2f finalPos(initialPos.x + sumOfCellWidths/2 - pictureSprite.getGlobalBounds().width / 2.0f,
-		initialPos.y + 2*cellHeight);
+	sf::Vector2f finalPos(initialPos.x + (sumOfCellWidths)/2 - pictureSprite.getGlobalBounds().width / 2.0f,
+		initialPos.y + 1.5*cellHeight);
 	pictureSprite.setPosition(finalPos.x, finalPos.y);
 	renderTexture.draw(pictureSprite);
 }
@@ -175,11 +175,11 @@ void Card::moveBack()
 }
 
 WarriorCard::WarriorCard(Pawn* warrior)
-	: Card({ 250, 40, 40, 40, 40, 40 },{ "Name", "history-icon-white",
+	: Card({ 220, 40, 40, 40, 40, 40 },{ "Name", "history-icon-white",
 		"hand-line-icon-white", "plus-round-line-icon-white", 
 		"heart-line-icon-white", "dollar-icon-white" }), warrior(warrior)
 {
-	renderTexture.create(sumOfCellWidths, 300);
+	renderTexture.create(sumOfCellWidths, 230);
 	functions = initializePawnFunctions();
 	if (warrior->getSide() == 0)
 	{

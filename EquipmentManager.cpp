@@ -74,3 +74,45 @@ std::vector<Equipment*> EquipmentManager::loadEquipmentFromJson(const std::strin
 
     return equipmentList;
 }
+
+std::vector<Equipment*> EquipmentManager::loadWeaponsFromJson(const std::string& filename)
+{
+    std::vector<Equipment*> weaponsList;
+    std::vector<Equipment*> equipmentList = loadEquipmentFromJson(filename);
+    for (Equipment* item : equipmentList)
+    {
+        if (item->getType() == "Weapon")
+        {
+            weaponsList.push_back(item);
+        }
+    }
+    return weaponsList;
+}
+
+std::vector<Equipment*> EquipmentManager::loadArmourFromJson(const std::string& filename)
+{
+    std::vector<Equipment*> armourList;
+    std::vector<Equipment*> equipmentList = loadEquipmentFromJson(filename);
+    for (Equipment* item : equipmentList)
+    {
+        if (item->getType() == "Armour")
+        {
+            armourList.push_back(item);
+        }
+    }
+    return armourList;
+}
+
+std::vector<Equipment*> EquipmentManager::loadAccesoriesFromJson(const std::string& filename)
+{
+    std::vector<Equipment*> accesoryList;
+    std::vector<Equipment*> equipmentList = loadEquipmentFromJson(filename);
+    for (Equipment* item : equipmentList)
+    {
+        if (item->getType() == "Accesory")
+        {
+            accesoryList.push_back(item);
+        }
+    }
+    return accesoryList;
+}

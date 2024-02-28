@@ -30,10 +30,18 @@ public:
     // Add more methods as needed
     bool currentPage;
 private:
+    void sortEquipment(std::vector<Equipment*>& equipmentList);
+    void sortWarriors(std::vector<Pawn*>& pawnsList);
+
     std::vector<WarriorCard*> warriorsCards; //shownWarriots
     std::vector<EquipmentCard*> itemsCards; //shownItems
     std::vector<Equipment*> equipmentList; //loaded equipment
+    std::vector<Equipment*> armourList; //loaded armour
+    std::vector<Equipment*> weaponsList; //loaded weapons
+    std::vector<Equipment*> accesoriesList; //loaded accesories
     std::vector<Pawn*> pawnsList; //loaded pawns
+    std::vector<Pawn*> cheapPawnsList; //loaded cheap pawns
+    std::vector<Pawn*> expensivePawnsList; //loaded expensive pawns
 };
 
 template<typename T>

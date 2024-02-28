@@ -4,7 +4,9 @@ ShopCards::ShopCards()
 {
 	currentPage = 0;
 	equipmentList = EquipmentManager::loadEquipmentFromJson("equipment");
+	sortEquipment(equipmentList);
 	pawnsList = PawnsManager::loadPawnsFromJson("pawns");
+	sortWarriors(pawnsList);
 }
 
 ShopCards::~ShopCards()
@@ -14,11 +16,13 @@ ShopCards::~ShopCards()
 		delete warriorCard;
 	}
 	warriorsCards.clear();
+	pawnsList.clear();
 	for (EquipmentCard* itemCard : itemsCards)
 	{
 		delete itemCard;
 	}
 	itemsCards.clear();
+	equipmentList.clear();
 }
 
 void ShopCards::draw(sf::RenderTarget* window)
@@ -28,20 +32,20 @@ void ShopCards::draw(sf::RenderTarget* window)
 	{
 		for (auto& itemCard : itemsCards)
 		{
-			itemCard->setScale(0.9);
+			itemCard->setScale(0.8);
 			itemCard->setPosition(sf::Vector2f(pos.x - itemCard->getSprite().getGlobalBounds().width / 2, pos.y));
 			window->draw(itemCard->getFullSprite());
-			pos += sf::Vector2f(0, itemCard->getSprite().getTextureRect().height + 10);
+			pos += sf::Vector2f(0, itemCard->getSprite().getGlobalBounds().height + 5);
 		}
 	}
 	else
 	{
 		for (auto& warriorCard : warriorsCards)
 		{
-			warriorCard->setScale(0.9);
+			warriorCard->setScale(0.75);
 			warriorCard->setPosition(sf::Vector2f(pos.x - warriorCard->getSprite().getGlobalBounds().width / 2, pos.y));
 			window->draw(warriorCard->getFullSprite());
-			pos += sf::Vector2f(0, warriorCard->getSprite().getTextureRect().height + 10);
+			pos += sf::Vector2f(0, warriorCard->getSprite().getGlobalBounds().height + 5);
 		}
 	}
 }
@@ -66,29 +70,27 @@ void ShopCards::updateDecks()
 {
 	std::vector<Equipment*> availableItems;
 	std::vector<Pawn*> availableWarriors;
-	// Randomly select 3 warriors from pawnsList
-	if (pawnsList.size() > 3) {
-		std::random_device rd;
-		std::mt19937 gen(rd());
-		std::shuffle(pawnsList.begin(), pawnsList.end(), gen);
-		availableWarriors.assign(pawnsList.begin(), pawnsList.begin() + 3);
-	}
-	else {
-		// Handle the case where there are fewer than 3 pawns
-		availableWarriors = pawnsList;
-	}
 
-	// Randomly select 5 equipment items from equipmentList
-	if (equipmentList.size() > 5) {
-		std::random_device rd;
-		std::mt19937 gen(rd());
-		std::shuffle(equipmentList.begin(), equipmentList.end(), gen);
-		availableItems.assign(equipmentList.begin(), equipmentList.begin() + 5);
-	}
-	else {
-		// Handle the case where there are fewer than 5 equipment items
-		availableItems = equipmentList;
-	}
+	// Shuffle the lists
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::shuffle(expensivePawnsList.begin(), expensivePawnsList.end(), gen);
+	std::shuffle(cheapPawnsList.begin(), cheapPawnsList.end(), gen);
+
+	// Select 2 armours, 3 weapons, and 2 accessories randomly
+	availableWarriors.clear();
+	availableWarriors.insert(availableWarriors.end(), expensivePawnsList.begin(), expensivePawnsList.begin() + 2);
+	availableWarriors.insert(availableWarriors.end(), cheapPawnsList.begin(), cheapPawnsList.begin() + 3);
+
+	std::shuffle(armourList.begin(), armourList.end(), gen);
+	std::shuffle(weaponsList.begin(), weaponsList.end(), gen);
+	std::shuffle(accesoriesList.begin(), accesoriesList.end(), gen);
+
+	// Select 2 armours, 3 weapons, and 2 accessories randomly
+	availableItems.clear();
+	availableItems.insert(availableItems.end(), armourList.begin(), armourList.begin() + 2);
+	availableItems.insert(availableItems.end(), weaponsList.begin(), weaponsList.begin() + 3);
+	availableItems.insert(availableItems.end(), accesoriesList.begin(), accesoriesList.begin() + 2);
 	makeCards(availableItems, availableWarriors);
 }
 
@@ -184,5 +186,42 @@ void ShopCards::removeCard(int cardNum)
 		pawnsList.erase(std::remove(pawnsList.begin(), pawnsList.end(), warriorCard->getWarrior()), pawnsList.end());
 		//here I remove from the cards, which are in the shop
 		warriorsCards.erase(warriorsCards.begin() + cardNum);
+	}
+}
+
+void ShopCards::sortEquipment(std::vector<Equipment*>& equipmentList)
+{
+	for (Equipment* equip : equipmentList)
+	{
+		std::string type = equip->getType();
+		if (type == "Weapon") {
+			weaponsList.push_back(equip);
+		}
+		else if (type == "Armour") {
+			armourList.push_back(equip);
+		}
+		else if (type == "Accesory") {
+			accesoriesList.push_back(equip);
+		}
+		else {
+			// Handle unexpected types if needed
+		}
+	}
+}
+
+void ShopCards::sortWarriors(std::vector<Pawn*>& pawnsList)
+{
+	for (Pawn* pawn : pawnsList)
+	{
+		int price = pawn->getPrice();
+		std::string name = pawn->getName();
+		if (price < 4 || name == "Townsman Defender")
+		{
+			cheapPawnsList.push_back(pawn);
+		}
+		else
+		{
+			expensivePawnsList.push_back(pawn);
+		}
 	}
 }
