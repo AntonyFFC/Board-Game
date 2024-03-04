@@ -27,26 +27,37 @@ ShopCards::~ShopCards()
 
 void ShopCards::draw(sf::RenderTarget* window)
 {
-	sf::Vector2f pos(window->getSize().x / 4, 20);
 	if (currentPage)
 	{
 		for (auto& itemCard : itemsCards)
 		{
-			itemCard->setScale(0.8);
-			itemCard->setPosition(sf::Vector2f(pos.x - itemCard->getSprite().getGlobalBounds().width / 2, pos.y));
 			window->draw(itemCard->getFullSprite());
-			pos += sf::Vector2f(0, itemCard->getSprite().getGlobalBounds().height + 5);
 		}
 	}
 	else
 	{
 		for (auto& warriorCard : warriorsCards)
 		{
-			warriorCard->setScale(0.75);
-			warriorCard->setPosition(sf::Vector2f(pos.x - warriorCard->getSprite().getGlobalBounds().width / 2, pos.y));
 			window->draw(warriorCard->getFullSprite());
-			pos += sf::Vector2f(0, warriorCard->getSprite().getGlobalBounds().height + 5);
 		}
+	}
+}
+
+void ShopCards::setPositions(sf::RenderTarget* window)
+{
+	sf::Vector2f pos(window->getSize().x / 4, 20);
+	for (auto& itemCard : itemsCards)
+	{
+		itemCard->setScale(0.8);
+		itemCard->setPosition(sf::Vector2f(pos.x - itemCard->getSprite().getGlobalBounds().width / 2, pos.y));
+		pos += sf::Vector2f(0, itemCard->getSprite().getGlobalBounds().height + 5);
+	}
+	pos = sf::Vector2f(window->getSize().x / 4, 20);
+	for (auto& warriorCard : warriorsCards)
+	{
+		warriorCard->setScale(0.75);
+		warriorCard->setPosition(sf::Vector2f(pos.x - warriorCard->getSprite().getGlobalBounds().width / 2, pos.y));
+		pos += sf::Vector2f(0, warriorCard->getSprite().getGlobalBounds().height + 5);
 	}
 }
 
@@ -66,7 +77,7 @@ void ShopCards::makeCards(std::vector<Equipment*> availableItems, std::vector<Pa
 	}
 }
 
-void ShopCards::updateDecks()
+void ShopCards::updateDecks(sf::RenderTarget* window)
 {
 	std::vector<Equipment*> availableItems;
 	std::vector<Pawn*> availableWarriors;
@@ -92,6 +103,7 @@ void ShopCards::updateDecks()
 	availableItems.insert(availableItems.end(), weaponsList.begin(), weaponsList.begin() + 3);
 	availableItems.insert(availableItems.end(), accesoriesList.begin(), accesoriesList.begin() + 2);
 	makeCards(availableItems, availableWarriors);
+	setPositions(window);
 }
 
 int ShopCards::whichCardClicked(sf::Vector2i mousePosition)

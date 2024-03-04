@@ -39,8 +39,10 @@ private:
     int currentPlayerIndex;
     int remainingGold;
     int fontSize;
-    sf::Sprite backgroundSprite;
-    sf::Texture backgroundTexture;
+    sf::Sprite backgroundSprite1;
+    sf::Texture backgroundTexture1;
+    sf::Sprite backgroundSprite2;
+    sf::Texture backgroundTexture2;
     sf::Text titleText;
     sf::Text blueTurnText;
     sf::Text redTurnText;
@@ -64,6 +66,7 @@ private:
     void drawChangeButton();
     void drawNextPlayerButton();
     void drawTurn();
+    void drawBackground();
 
     // Private helper functions for managing the shop
     void resetShop();

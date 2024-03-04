@@ -18,8 +18,10 @@ Shop::Shop(sf::RenderWindow* window)
 	goldText.setPosition(window->getSize().x-100, 10);
 	roundText = initializeText("Round: " + std::to_string(currentRound), &globalFont2, fontSize * 1.5, sf::Color::White);
 	roundText.setPosition(window->getSize().x - 250, 10);
-	backgroundSprite = loadBackgroundSprite(&backgroundTexture, "shop");
-	backgroundSprite.setPosition(0, 0);
+	backgroundSprite1 = loadBackgroundSprite(&backgroundTexture1, "shop1");
+	backgroundSprite1.setPosition(0, 0);
+	backgroundSprite2 = loadBackgroundSprite(&backgroundTexture2, "shop2");
+	backgroundSprite2.setPosition(0, 0);
 	changeButton = Button(sf::Vector2f(window->getSize().x / 2 - 100,
 		window->getSize().y - 70), sf::Vector2f(200, 50), "-}");
 	nextPlayer = Button(sf::Vector2f(window->getSize().x / 2 + 150,
@@ -37,7 +39,7 @@ Shop::~Shop()
 
 void Shop::start()
 {
-	shopCards->updateDecks();
+	shopCards->updateDecks(window);
 	displayShop();
 	while (window->isOpen())
 	{
@@ -124,14 +126,14 @@ void Shop::nextTurn()
 	}
 	std::string text = "Round: " + std::to_string(currentRound);
 	roundText.setString(text);
-	shopCards->updateDecks();
+	shopCards->updateDecks(window);
 	updateGoldText();
 }
 
 void Shop::displayShop()
 {
 	window->clear(sf::Color(71, 31, 16));
-	window->draw(backgroundSprite);
+	drawBackground();
 	window->draw(titleText);
 	drawTurn();
 	window->draw(goldText);
@@ -174,6 +176,18 @@ void Shop::drawTurn()
 		return;
 	}
 	window->draw(redTurnText);
+}
+
+void Shop::drawBackground()
+{
+	if (shopCards->currentPage)
+	{
+		window->draw(backgroundSprite2);
+	}
+	else
+	{
+		window->draw(backgroundSprite1);
+	}
 }
 
 void Shop::resetShop()
