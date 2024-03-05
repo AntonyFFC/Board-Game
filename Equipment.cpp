@@ -23,12 +23,12 @@ int getMissValueFromString(const std::string& text)
     return 0;
 }
 
-Equipment::Equipment(const std::string& name, Range range, const SpaceOccupied& spaceOccupied, int attackValue,
-    int attackActions,const std::string& type, int price,
-    const std::string& additionalCapabilities)
+Equipment::Equipment(const std::string& name, Range range, const SpaceOccupied& spaceOccupied, 
+    int attackValue, int attackActions,const std::string& type, int price,
+    const std::string& additionalCapabilities, const int numInDeck)
     : name(name), range(range), spaceOccupied(spaceOccupied), attackValue(attackValue),
     attackActions(attackActions), type(type), price(price),
-    additionalCapabilities(additionalCapabilities) 
+    additionalCapabilities(additionalCapabilities), numInDeck(numInDeck)
 {
     ranged = isStringRanged(additionalCapabilities);
     miss = 0;
@@ -72,6 +72,11 @@ std::string Equipment::getAdditionalCapabilities() const {
 
 int Equipment::getMissMax() const {
     return miss;
+}
+
+int Equipment::getNumInDeck() const
+{
+    return numInDeck;
 }
 
 int Equipment::reduceDurability(int value)

@@ -22,6 +22,7 @@ bool EquipmentManager::saveEquipmentToJson(const std::vector<Equipment*>& equipm
             itemData["type"] = item->getType();
             itemData["price"] = item->getPrice();
             itemData["additionalCapabilities"] = item->getAdditionalCapabilities();
+            itemData["numInDeck"] = item->getNumInDeck();
 
             equipmentData.push_back(itemData);
         }
@@ -62,9 +63,10 @@ std::vector<Equipment*> EquipmentManager::loadEquipmentFromJson(const std::strin
             std::string type = item["type"];
             int price = item["price"];
             std::string additionalCapabilities = item["additionalCapabilities"];
+            int numInDeck = item["numInDeck"];
 
             Equipment* equipment = new Equipment(name, range, spaceOccupied, attackValue, attackActions,
-                type, price, additionalCapabilities);
+                type, price, additionalCapabilities, numInDeck);
             equipmentList.push_back(equipment);
         }
     }

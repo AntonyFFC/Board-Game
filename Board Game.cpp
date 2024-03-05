@@ -10,27 +10,27 @@
 int main()
 {
     /*std::vector<Equipment*> equipmentList;
-    Equipment* e1 = new Equipment("helmet", { 0,0 }, {1, "extras"}, 3, 0, "Armour", 2, "Helmet");
+    Equipment* e1 = new Equipment("helmet", { 0,0 }, {1, "extras"}, 3, 0, "Armour", 2, "Helmet", 2);
     equipmentList.push_back(e1);
     Equipment* e2 = new Equipment("great helmet", { 0,0 }, { 1, "extras" }, 4, 1, "Armour", 1, "Helmet");
     equipmentList.push_back(e2);
     Equipment* e3 = new Equipment("light shield", { 0,0 }, { 1, "hands" }, 5, 1, "Armour", 3,
-        "Shield -2 movement 0 with knight");
+        "Shield -2 movement 0 with knight", 2);
     equipmentList.push_back(e3);
     Equipment* e4 = new Equipment("shield", { 0,0 }, { 1, "hands" }, 5, 2, "Armour", 2,
         "Shield -2 movement, -1 with knight");
     equipmentList.push_back(e4);
-    Equipment* e5 = new Equipment("heavy shield", { 0,0 }, { 1, "hands" }, 6, 2, "Armour", 2, "Shield");
+    Equipment* e5 = new Equipment("heavy shield", { 0,0 }, { 1, "hands" }, 6, 2, "Armour", 2, "Shield", 2);
     equipmentList.push_back(e5);
     Equipment* e6 = new Equipment("leather armour", { 0,0 }, { 1, "extras" }, 2, 1, "Armour", 1, "Covering");
     equipmentList.push_back(e6);
-    Equipment* e7 = new Equipment("plate armour", { 0,0 }, { 1, "extras" }, 3, 1, "Armour", 2, "Covering");
+    Equipment* e7 = new Equipment("plate armour", { 0,0 }, { 1, "extras" }, 3, 1, "Armour", 2, "Covering", 2);
     equipmentList.push_back(e7);
     Equipment* e8 = new Equipment("flail", { 0,1 }, { 1, "hands" }, 1, 2, "Weapon", 3, "-1 attack, -2 with shield");
     equipmentList.push_back(e8);
-    Equipment* e9 = new Equipment("bracers", { 0,0 }, { 1, "extras" }, 0, 0, "Accesory", 1, "misses less by 1");
+    Equipment* e9 = new Equipment("bracers", { 0,0 }, { 1, "extras" }, 0, 0, "Accesory", 1, "misses less by 1", 2);
     equipmentList.push_back(e9);
-    Equipment* e10 = new Equipment("war horse", { 0,0 }, { 1, "extras" }, 0, 2, "Accesory", 3, "adds 2 movement");
+    Equipment* e10 = new Equipment("war horse", { 0,0 }, { 1, "extras" }, 0, 2, "Accesory", 3, "adds 2 movement", 2);
     equipmentList.push_back(e10);
     Equipment* e11 = new Equipment("horse", { 0,0 }, { 1, "extras" }, 0, 1, "Accesory", 1, "adds 1 movement");
     equipmentList.push_back(e11);
@@ -58,12 +58,12 @@ int main()
     Equipment* e21 = new Equipment("slingshot", { 2,4 }, { 2, "hands" }, 1, 3, "Weapon", 1,
         "Ranged 3 ,1 attack, 2 with peasant");
     equipmentList.push_back(e21);
-    Equipment* e22 = new Equipment("gauntlets", { 0,0 }, { 1, "extras" }, 1, 0, "Accesory", 3, "+1 to every attack");
+    Equipment* e22 = new Equipment("gauntlets", { 0,0 }, { 1, "extras" }, 1, 0, "Accesory", 3, "+1 to every attack", 2);
     equipmentList.push_back(e22);
-    Equipment* e23 = new Equipment("long dagger", { 0,1 }, { 1, "extras" }, 5, 1, "Weapon", 2,
+    Equipment* e23 = new Equipment("long dagger", { 0,1 }, { 1, "extras" }, 5, 1, "Accesory", 2,
         "Single use, 1 range, 2 with prince");
     equipmentList.push_back(e23);
-    Equipment* e24 = new Equipment("dagger", { 0,1 }, { 1, "extras" }, 4, 1, "Weapon", 2,
+    Equipment* e24 = new Equipment("dagger", { 0,1 }, { 1, "extras" }, 4, 1, "Accesory", 2,
         "Single use, 4 attack, 5 with prince");
     equipmentList.push_back(e24);
     Equipment* e25 = new Equipment("spear", { 0,2 }, { 1, "hands" }, 2, 3, "Weapon", 4,

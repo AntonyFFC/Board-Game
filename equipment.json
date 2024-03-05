@@ -4,6 +4,7 @@
         "attackActions": 0,
         "attackValue": 3,
         "name": "helmet",
+        "numInDeck": 2,
         "price": 2,
         "range": {
             "maxRange": 0,
@@ -20,6 +21,7 @@
         "attackActions": 1,
         "attackValue": 4,
         "name": "great helmet",
+        "numInDeck": 1,
         "price": 1,
         "range": {
             "maxRange": 0,
@@ -36,6 +38,7 @@
         "attackActions": 1,
         "attackValue": 5,
         "name": "light shield",
+        "numInDeck": 2,
         "price": 3,
         "range": {
             "maxRange": 0,
@@ -52,6 +55,7 @@
         "attackActions": 2,
         "attackValue": 5,
         "name": "shield",
+        "numInDeck": 1,
         "price": 2,
         "range": {
             "maxRange": 0,
@@ -68,6 +72,7 @@
         "attackActions": 2,
         "attackValue": 6,
         "name": "heavy shield",
+        "numInDeck": 2,
         "price": 2,
         "range": {
             "maxRange": 0,
@@ -84,6 +89,7 @@
         "attackActions": 1,
         "attackValue": 2,
         "name": "leather armour",
+        "numInDeck": 1,
         "price": 1,
         "range": {
             "maxRange": 0,
@@ -100,6 +106,7 @@
         "attackActions": 1,
         "attackValue": 3,
         "name": "plate armour",
+        "numInDeck": 2,
         "price": 2,
         "range": {
             "maxRange": 0,
@@ -116,6 +123,7 @@
         "attackActions": 2,
         "attackValue": 1,
         "name": "flail",
+        "numInDeck": 1,
         "price": 3,
         "range": {
             "maxRange": 1,
@@ -132,6 +140,7 @@
         "attackActions": 0,
         "attackValue": 0,
         "name": "bracers",
+        "numInDeck": 2,
         "price": 1,
         "range": {
             "maxRange": 0,
@@ -148,6 +157,7 @@
         "attackActions": 2,
         "attackValue": 0,
         "name": "war horse",
+        "numInDeck": 2,
         "price": 3,
         "range": {
             "maxRange": 0,
@@ -164,6 +174,7 @@
         "attackActions": 1,
         "attackValue": 0,
         "name": "horse",
+        "numInDeck": 1,
         "price": 1,
         "range": {
             "maxRange": 0,
@@ -180,6 +191,7 @@
         "attackActions": 3,
         "attackValue": 2,
         "name": "crossbow",
+        "numInDeck": 1,
         "price": 4,
         "range": {
             "maxRange": 6,
@@ -196,6 +208,7 @@
         "attackActions": 4,
         "attackValue": 2,
         "name": "heavy crossbow",
+        "numInDeck": 1,
         "price": 2,
         "range": {
             "maxRange": 6,
@@ -212,6 +225,7 @@
         "attackActions": 2,
         "attackValue": 1,
         "name": "bow",
+        "numInDeck": 1,
         "price": 4,
         "range": {
             "maxRange": 7,
@@ -228,6 +242,7 @@
         "attackActions": 2,
         "attackValue": 1,
         "name": "longbow",
+        "numInDeck": 1,
         "price": 2,
         "range": {
             "maxRange": 7,
@@ -244,6 +259,7 @@
         "attackActions": 1,
         "attackValue": 1,
         "name": "sword",
+        "numInDeck": 1,
         "price": 5,
         "range": {
             "maxRange": 1,
@@ -260,6 +276,7 @@
         "attackActions": 1,
         "attackValue": 1,
         "name": "two handed sword",
+        "numInDeck": 1,
         "price": 4,
         "range": {
             "maxRange": 2,
@@ -276,6 +293,7 @@
         "attackActions": 4,
         "attackValue": 3,
         "name": "two handed axe",
+        "numInDeck": 1,
         "price": 2,
         "range": {
             "maxRange": 2,
@@ -292,6 +310,7 @@
         "attackActions": 4,
         "attackValue": 2,
         "name": "warhammer",
+        "numInDeck": 1,
         "price": 2,
         "range": {
             "maxRange": 1,
@@ -308,6 +327,7 @@
         "attackActions": 3,
         "attackValue": 2,
         "name": "large slingshot",
+        "numInDeck": 1,
         "price": 2,
         "range": {
             "maxRange": 4,
@@ -324,6 +344,7 @@
         "attackActions": 3,
         "attackValue": 1,
         "name": "slingshot",
+        "numInDeck": 1,
         "price": 1,
         "range": {
             "maxRange": 4,
@@ -340,6 +361,7 @@
         "attackActions": 0,
         "attackValue": 1,
         "name": "gauntlets",
+        "numInDeck": 2,
         "price": 3,
         "range": {
             "maxRange": 0,
@@ -356,6 +378,7 @@
         "attackActions": 1,
         "attackValue": 5,
         "name": "long dagger",
+        "numInDeck": 1,
         "price": 2,
         "range": {
             "maxRange": 1,
@@ -372,6 +395,7 @@
         "attackActions": 1,
         "attackValue": 4,
         "name": "dagger",
+        "numInDeck": 1,
         "price": 2,
         "range": {
             "maxRange": 1,
@@ -388,6 +412,7 @@
         "attackActions": 3,
         "attackValue": 2,
         "name": "spear",
+        "numInDeck": 1,
         "price": 4,
         "range": {
             "maxRange": 2,
@@ -404,6 +429,7 @@
         "attackActions": 3,
         "attackValue": 2,
         "name": "axe",
+        "numInDeck": 1,
         "price": 3,
         "range": {
             "maxRange": 1,
@@ -420,6 +446,7 @@
         "attackActions": 2,
         "attackValue": 1,
         "name": "fork",
+        "numInDeck": 1,
         "price": 3,
         "range": {
             "maxRange": 1,

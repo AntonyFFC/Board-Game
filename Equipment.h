@@ -15,7 +15,8 @@ public:
     };
 
     Equipment(const std::string& name, Range range, const SpaceOccupied& spaceOccupied, int attackValue,
-        int attackActions,const std::string& type, int price, const std::string& additionalCapabilities);
+        int attackActions,const std::string& type, int price, const std::string& additionalCapabilities,
+        const int numInDeck=1);
 
     // getters
     std::string getName() const;
@@ -27,6 +28,7 @@ public:
     int getPrice() const;
     std::string getAdditionalCapabilities() const;
     int getMissMax() const;
+    int getNumInDeck() const;
     int reduceDurability(int value);
     bool isRanged();
     std::string rangeToString() const;
@@ -42,4 +44,5 @@ private:
     std::string additionalCapabilities;
     bool ranged;
     int miss;
+    int numInDeck;
 };
