@@ -187,17 +187,36 @@ void ShopCards::removeCard(int cardNum)
 {
 	if (currentPage)
 	{
-		EquipmentCard* itemCard = itemsCards[cardNum];
-		//here I remove from all items so that they are not drawn again
-		equipmentList.erase(std::remove(equipmentList.begin(), equipmentList.end(), itemCard->getItem()), equipmentList.end());
+		Equipment* item = itemsCards[cardNum]->getItem();
+		std::string type = item->getType();
+		if (type == "Weapon") {
+			weaponsList.erase(std::find(weaponsList.begin(), weaponsList.end(), item));
+		}
+		else if (type == "Armour") {
+			armourList.erase(std::find(armourList.begin(), armourList.end(), item));
+		}
+		else if (type == "Accesory") {
+			accesoriesList.erase(std::find(accesoriesList.begin(), accesoriesList.end(), item));
+		}
+		else {
+			// Handle unexpected types if needed
+		}
 		//here I remove from the cards, which are in the shop
 		itemsCards.erase(itemsCards.begin() + cardNum);
 	}
 	else
 	{
-		WarriorCard* warriorCard = warriorsCards[cardNum];
-		//here I remove from all warriors so that they are not drawn again
-		pawnsList.erase(std::remove(pawnsList.begin(), pawnsList.end(), warriorCard->getWarrior()), pawnsList.end());
+		Pawn* warrior = warriorsCards[cardNum]->getWarrior();
+		int price = warrior->getPrice();
+		std::string name = warrior->getName();
+		if (price < 4 || name == "Townsman Defender")
+		{
+			cheapPawnsList.erase(std::find(cheapPawnsList.begin(), cheapPawnsList.end(), warrior));
+		}
+		else
+		{
+			expensivePawnsList.erase(std::find(expensivePawnsList.begin(), expensivePawnsList.end(), warrior));
+		}
 		//here I remove from the cards, which are in the shop
 		warriorsCards.erase(warriorsCards.begin() + cardNum);
 	}
@@ -259,5 +278,4 @@ void ShopCards::implicateNumInDeck()
 		}
 	}
 	pawnsList = replicatedListPw;
-} //The problem with the code below is that even if I have two pointers in the list 
-//they still piont to the same object and when it is deleted it
+}

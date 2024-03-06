@@ -4,8 +4,10 @@
 #include <iostream>
 
 Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions, 
-    int healthPoints, SpaceInventory space, int price, int NumInDeck)
-    : name(name), teamNumber(teamNumber), side(side),maxActions(maxActions), remainingActions(maxActions), HP(healthPoints), space(space), price(price), combinedSprite(), equipment()
+    int healthPoints, SpaceInventory space, int price, int numInDeck)
+    : name(name), teamNumber(teamNumber), side(side),maxActions(maxActions), 
+    remainingActions(maxActions), HP(healthPoints), space(space), price(price), 
+    numInDeck(numInDeck), combinedSprite(), equipment()
 {
     scaleFactor = 0.05f;
     rotationAngle = 90.0f;

@@ -3,6 +3,7 @@
         "HP": 4,
         "maxActions": 6,
         "name": "Peasant Horseman",
+        "numInDeck": 1,
         "price": 3,
         "side": 0,
         "space": {
@@ -15,6 +16,7 @@
         "HP": 4,
         "maxActions": 7,
         "name": "Prince Horseman",
+        "numInDeck": 1,
         "price": 3,
         "side": 0,
         "space": {
@@ -27,6 +29,7 @@
         "HP": 4,
         "maxActions": 7,
         "name": "Townsman Horseman",
+        "numInDeck": 1,
         "price": 3,
         "side": 0,
         "space": {
@@ -39,6 +42,7 @@
         "HP": 5,
         "maxActions": 7,
         "name": "Knight Horseman",
+        "numInDeck": 1,
         "price": 5,
         "side": 0,
         "space": {
@@ -51,6 +55,7 @@
         "HP": 5,
         "maxActions": 6,
         "name": "Peasant Archer",
+        "numInDeck": 1,
         "price": 3,
         "side": 0,
         "space": {
@@ -63,6 +68,7 @@
         "HP": 4,
         "maxActions": 7,
         "name": "Prince Archer",
+        "numInDeck": 1,
         "price": 4,
         "side": 0,
         "space": {
@@ -75,6 +81,7 @@
         "HP": 5,
         "maxActions": 7,
         "name": "Townsman Archer",
+        "numInDeck": 1,
         "price": 4,
         "side": 0,
         "space": {
@@ -87,6 +94,7 @@
         "HP": 4,
         "maxActions": 8,
         "name": "Knight Archer",
+        "numInDeck": 1,
         "price": 5,
         "side": 0,
         "space": {
@@ -99,6 +107,7 @@
         "HP": 3,
         "maxActions": 9,
         "name": "Knight Warrior",
+        "numInDeck": 1,
         "price": 4,
         "side": 0,
         "space": {
@@ -111,6 +120,7 @@
         "HP": 5,
         "maxActions": 8,
         "name": "Prince Warrior",
+        "numInDeck": 1,
         "price": 5,
         "side": 0,
         "space": {
@@ -123,6 +133,7 @@
         "HP": 4,
         "maxActions": 8,
         "name": "Townsman Warrior",
+        "numInDeck": 1,
         "price": 3,
         "side": 0,
         "space": {
@@ -135,6 +146,7 @@
         "HP": 5,
         "maxActions": 8,
         "name": "Peasant Warrior",
+        "numInDeck": 1,
         "price": 5,
         "side": 0,
         "space": {
@@ -147,6 +159,7 @@
         "HP": 3,
         "maxActions": 8,
         "name": "Townsman Defender",
+        "numInDeck": 1,
         "price": 4,
         "side": 0,
         "space": {
@@ -159,6 +172,7 @@
         "HP": 3,
         "maxActions": 8,
         "name": "Prince Defender",
+        "numInDeck": 1,
         "price": 3,
         "side": 0,
         "space": {
@@ -171,6 +185,7 @@
         "HP": 3,
         "maxActions": 7,
         "name": "Peasant Defender",
+        "numInDeck": 1,
         "price": 3,
         "side": 0,
         "space": {
@@ -183,6 +198,7 @@
         "HP": 4,
         "maxActions": 8,
         "name": "Knight Defender",
+        "numInDeck": 1,
         "price": 5,
         "side": 0,
         "space": {

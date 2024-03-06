@@ -17,7 +17,7 @@ public:
     };
 
     Pawn(const std::string& name, int teamNumber, int side, int maxActions, 
-        int healthPoints, SpaceInventory space, int price, int numInDeck=1);
+        int healthPoints, SpaceInventory space, int price, const int numInDeck=1);
     ~Pawn();
 
     // Getter methods
