@@ -18,6 +18,8 @@ bool PawnsManager::savePawnsToJson(const std::vector<Pawn*>& equipment, const st
             space["extras"] = person->getSpace().extras;
             itemData["space"] = space;
             itemData["price"] = person->getPrice();
+            itemData["numInDeck"] = person->getNumInDeck();
+
             equipmentData.push_back(itemData);
         }
 
@@ -51,8 +53,9 @@ std::vector<Pawn*> PawnsManager::loadPawnsFromJson(const std::string& filename)
             space.hands = item["space"]["hands"];
             space.extras = item["space"]["extras"];
             int price = item["price"];
+            int numInDeck = item["numInDeck"];
 
-            Pawn* pawn = new Pawn(name, teamNumber, side, maxActions, HP, space, price);
+            Pawn* pawn = new Pawn(name, teamNumber, side, maxActions, HP, space, price, numInDeck);
             pawnList.push_back(pawn);
         }
     }

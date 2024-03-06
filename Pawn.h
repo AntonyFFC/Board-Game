@@ -16,9 +16,9 @@ public:
         int extras;
     };
 
-    Pawn(const std::string& name, int teamNumber, int side, int maxActions, int healthPoints, SpaceInventory space, int price);
+    Pawn(const std::string& name, int teamNumber, int side, int maxActions, 
+        int healthPoints, SpaceInventory space, int price, int numInDeck=1);
     ~Pawn();
-
 
     // Getter methods
     std::string getName() const;
@@ -34,6 +34,7 @@ public:
     int getPrice() const;
     sf::Sprite getSprite();
     std::tuple<int, int, int> getHexCoords() const;
+    int getNumInDeck() const;
 
     // Setter methods
     void setName(const std::string& name);
@@ -93,4 +94,5 @@ private:
     float xPos;
     float yPos;
     std::tuple<int, int, int> hexCoords;
+    int numInDeck;
 };

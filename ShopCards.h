@@ -33,6 +33,7 @@ public:
 private:
     void sortEquipment(std::vector<Equipment*>& equipmentList);
     void sortWarriors(std::vector<Pawn*>& pawnsList);
+    void implicateNumInDeck();
 
     std::vector<WarriorCard*> warriorsCards; //shownWarriots
     std::vector<EquipmentCard*> itemsCards; //shownItems

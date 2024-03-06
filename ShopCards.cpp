@@ -4,8 +4,10 @@ ShopCards::ShopCards()
 {
 	currentPage = 0;
 	equipmentList = EquipmentManager::loadEquipmentFromJson("equipment");
-	sortEquipment(equipmentList);
 	pawnsList = PawnsManager::loadPawnsFromJson("pawns");
+	implicateNumInDeck();
+
+	sortEquipment(equipmentList);
 	sortWarriors(pawnsList);
 }
 
@@ -237,3 +239,25 @@ void ShopCards::sortWarriors(std::vector<Pawn*>& pawnsList)
 		}
 	}
 }
+
+void ShopCards::implicateNumInDeck()
+{
+	std::vector<Equipment*> replicatedListEq;
+
+	for (Equipment* item : equipmentList) {
+		for (int i = 0; i < item->getNumInDeck(); ++i) {
+			replicatedListEq.push_back(item);
+		}
+	}
+	equipmentList = replicatedListEq;
+
+	std::vector<Pawn*> replicatedListPw;
+
+	for (Pawn* item : pawnsList) {
+		for (int i = 0; i < item->getNumInDeck(); ++i) {
+			replicatedListPw.push_back(item);
+		}
+	}
+	pawnsList = replicatedListPw;
+} //The problem with the code below is that even if I have two pointers in the list 
+//they still piont to the same object and when it is deleted it

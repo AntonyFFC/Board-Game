@@ -3,7 +3,8 @@
 #include <random>
 #include <iostream>
 
-Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions, int healthPoints, SpaceInventory space, int price)
+Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions, 
+    int healthPoints, SpaceInventory space, int price, int NumInDeck)
     : name(name), teamNumber(teamNumber), side(side),maxActions(maxActions), remainingActions(maxActions), HP(healthPoints), space(space), price(price), combinedSprite(), equipment()
 {
     scaleFactor = 0.05f;
@@ -136,6 +137,11 @@ int Pawn::getPrice() const {
 std::tuple<int, int, int> Pawn::getHexCoords() const
 {
     return hexCoords;
+}
+
+int Pawn::getNumInDeck() const
+{
+    return numInDeck;
 }
 
 // Setter methods
