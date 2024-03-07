@@ -199,7 +199,7 @@ void ShopCards::removeCard(int cardNum)
 			accesoriesList.erase(std::find(accesoriesList.begin(), accesoriesList.end(), item));
 		}
 		else {
-			// Handle unexpected types if needed
+			std::cout << "Unexpected item type";
 		}
 		//here I remove from the cards, which are in the shop
 		itemsCards.erase(itemsCards.begin() + cardNum);
@@ -237,7 +237,7 @@ void ShopCards::sortEquipment(std::vector<Equipment*>& equipmentList)
 			accesoriesList.push_back(equip);
 		}
 		else {
-			// Handle unexpected types if needed
+			std::cout << "Unexpected item type";
 		}
 	}
 }

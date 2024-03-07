@@ -171,6 +171,7 @@
     <ClCompile Include="ShopPawns.cpp" />
     <ClCompile Include="ShopStorage.cpp" />
     <ClCompile Include="SpriteUtils.cpp" />
+    <ClCompile Include="Table.cpp" />
     <ClCompile Include="TableUtils.cpp" />
     <ClCompile Include="TradeTable.cpp" />
     <ClCompile Include="WarriorPrep.cpp" />
@@ -197,6 +198,7 @@
     <ClInclude Include="ShopPawns.h" />
     <ClInclude Include="ShopStorage.h" />
     <ClInclude Include="SpriteUtils.h" />
+    <ClInclude Include="Table.h" />
     <ClInclude Include="TableUtils.h" />
     <ClInclude Include="TradeTable.h" />
     <ClInclude Include="WarriorPrep.h" />

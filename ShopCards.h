@@ -7,7 +7,7 @@
 #include "EquipmentManager.h"
 #include "PawnsManager.h"
 #include <random> 
-
+#include <iostream>
 
 class ShopCards {
 public:
