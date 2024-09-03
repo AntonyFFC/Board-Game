@@ -118,7 +118,7 @@ void Shop::nextTurn()
 	if (!currentPlayerIndex)
 	{
 		currentRound++;
-		if (currentRound == 4) //should be 7 so that 6 rounds happen
+		if (currentRound == 3) //should be 7 so that 6 rounds happen
 		{
 			startGame();
 			return;

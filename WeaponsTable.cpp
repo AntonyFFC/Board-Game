@@ -9,7 +9,7 @@ int getSumOfArray(T(&arr)[N]) {
     }
     return sum;
 }
-// IF weapons contains onlt one weapon then skip the choosing table when called
+// IF weapons contains only one weapon then skip the choosing table when called
 WeaponsTable::WeaponsTable(Pawn* inPawn, Pawn* inAttacked, std::vector<Equipment*> weapons, sf::RenderWindow* inWindow)
     :attacker(inPawn), attacked(inAttacked), weapons(weapons), target(inWindow), headers{"Name","left-right-arrow-icon","circle-line-icon","bomb-blast-icon",
  "history-icon","cube-icon","dollar-icon","Other" }, cellWidths{ 70,40,40,30,30,30,30,100 }

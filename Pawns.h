@@ -9,11 +9,12 @@
 #include <functional>
 #include <iostream>
 #include "TradeTable.h"
-#include "WeaponsTable.h"
+#include "Table.h"
 class Pawns
 {
 public:
 	Pawns(Board* board, sf::RenderWindow* window);
+	~Pawns();
 
 	void handleClick(sf::Vector2i mousePosition);
 	void handleClickRight(sf::Vector2i mousePosition);
@@ -45,12 +46,12 @@ private:
 	void pawnClicked(int pawnNum);
 	void trading(sf::Vector2i mousePosition);
 	void choosing(sf::Vector2i mousePosition);
-	void pawnMoved(int pawnNum, std::tuple<int, int, int> where);
+	void pawnMoved(int pawnNum);
 	void attack(int pawnNum, int attackedNum, Equipment* weapon);
 	void death(Pawn* attacked);
 	std::vector<Equipment*> getWeaponsInUse(int pawnNum, int attackedNum);
-	bool pawnFirst(std::tuple<int, int, int> current);
-	void pawnSecond(int pawnNum, std::tuple<int, int, int> current);
+	bool pawnFirst();
+	void pawnSecond(int pawnNum); //second click, number of previous pawn
 	std::vector<std::tuple<int, int, int>> getViewOfWeapon(int pawnNum, Equipment* weapon);
 	std::vector<std::tuple<int, int, int>> getViewOfPawn(int pawnNum);
 	std::vector<std::tuple<int, int, int>> getRangeOfPawn(int pawnNum);
@@ -65,7 +66,7 @@ private:
 
 	Board* board;
 	TradeTable* tradeTable;
-	WeaponsTable* weaponsTable;
+	Table* currentTable;
 	sf::RenderWindow* target;
 	std::tuple<int, int, int> previousHex;
 	bool wasShift;
@@ -76,6 +77,7 @@ private:
 	sf::Text turnText;
 	bool isTrading_;
 	bool isChoosing_;
+	std::tuple<int, int, int> current; //current clicked hex
 	int previousWarrior[2];
 	int numberOfPawns[2];
 };

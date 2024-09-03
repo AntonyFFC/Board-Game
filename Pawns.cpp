@@ -4,6 +4,7 @@ Pawns::Pawns(Board* board,sf::RenderWindow* window)
     :board(board),target(window)
 {
     tradeTable = nullptr;
+	currentTable = new Table(target);// add delete at the end chosen!!!
     previousHex = empty;
     wasShift = false;
     isTrading_ = false;
@@ -14,6 +15,11 @@ Pawns::Pawns(Board* board,sf::RenderWindow* window)
     numberOfPawns[0] = 0;
     numberOfPawns[1] = 0;
     setupText();
+}
+
+Pawns::~Pawns()
+{
+    delete currentTable;
 }
 
 void Pawns::flipTurn()
@@ -61,22 +67,22 @@ void Pawns::handleClick(sf::Vector2i mousePosition)
     else
     {
         for (auto& pair : board->hexDict) {
-            std::tuple<int, int, int> present = pair.first;
-            if (board->hexDict[present]->isClicked(mousePosition)) {
-                if ((!board->hexDict[present]->isPawn() || !board->hexDict[present]->pawn->isAlive()) && !board->hexDict[present]->isHigh(0))
+            current = pair.first;
+            if (board->hexDict[current]->isClicked(mousePosition)) {
+                if ((!board->hexDict[current]->isPawn() || !board->hexDict[current]->pawn->isAlive()) && !board->hexDict[current]->isHigh(0))
                 {
                     board->clearHighlight();
                     previousHex = empty;
                 }
-                else if (board->hexDict[present]->isPawn() && board->hexDict[present]->pawn->isAlive())
+                else if (board->hexDict[current]->isPawn() && board->hexDict[current]->pawn->isAlive())
                 {
                     if (previousHex != empty)
                     {
-                        pawnSecond(whichPawn, present);
+                        pawnSecond(whichPawn);
                     }
                     else
                     {
-                        if (!pawnFirst(present))
+                        if (!pawnFirst())
                         {
                             break;
                         }
@@ -84,7 +90,7 @@ void Pawns::handleClick(sf::Vector2i mousePosition)
                 }
                 else
                 {
-                    pawnMoved(whichPawn, present);
+                    pawnMoved(whichPawn);
                 }
                 break;
             }
@@ -92,7 +98,7 @@ void Pawns::handleClick(sf::Vector2i mousePosition)
     }
 }
 
-void Pawns::pawnSecond(int pawnNum, std::tuple<int, int, int> current)
+void Pawns::pawnSecond(int pawnNum)
 {
     int attackedNum = numberOfPawn(current);
     std::vector<std::tuple<int, int, int>> inView = getViewOfPawn(pawnNum);
@@ -102,7 +108,9 @@ void Pawns::pawnSecond(int pawnNum, std::tuple<int, int, int> current)
         std::vector<Equipment*> weaponsInView = getWeaponsInUse(pawnNum, attackedNum);
         if (weaponsInView.size())
         {
-            weaponsTable = new WeaponsTable(pawnDict[pawnNum], pawnDict[attackedNum], weaponsInView, target); // add delete when chosen!!!
+			currentTable->setPosition(sf::Vector2f(target->getSize().x - 375, 35));
+			currentTable->setEquipment(weaponsInView);
+            currentTable->createTexture();
             setChoosing(true);
         }
         else
@@ -112,7 +120,7 @@ void Pawns::pawnSecond(int pawnNum, std::tuple<int, int, int> current)
     }
 }
 
-bool Pawns::pawnFirst(std::tuple<int, int, int> current)
+bool Pawns::pawnFirst()
 {
     whichPawn = numberOfPawn(current);
     if (whosTurn == pawnDict[whichPawn]->getSide() 
@@ -258,7 +266,7 @@ void Pawns::draw(bool isShift)
         tradeTable->draw();
     }
     else if (isChoosing()) {
-        weaponsTable->draw();
+        currentTable->draw();
     }
 }
 
@@ -304,28 +312,27 @@ void Pawns::trading(sf::Vector2i mousePosition)
 void Pawns::choosing(sf::Vector2i mousePosition)
 {
     Equipment* item = nullptr;
-    if (weaponsTable->tableClicked(mousePosition))
+    if (currentTable->tableClicked(mousePosition))
     {
         std::cout << "Table clicked\n";
-        item = weaponsTable->getWeapon(mousePosition);
+        item = currentTable->getClickedItem(mousePosition);
         if (item != nullptr)
         {
-            int attackerNum = numberOfPawn(weaponsTable->getAttacker()->getHexCoords());
-            int attackedNum = numberOfPawn(weaponsTable->getAttacked()->getHexCoords());
+            int attackerNum = whichPawn;
+            int attackedNum = numberOfPawn(current);
             setChoosing(false);
             attack(attackerNum, attackedNum, item);
-            delete weaponsTable;
         }
     }
 }
 
-void Pawns::pawnMoved(int pawnNum, std::tuple<int, int, int> where)
+void Pawns::pawnMoved(int pawnNum)
 {
     Pawn* pawn = pawnDict[pawnNum];
-    pawn->reduceActions(board->hexDict[where]->getPawnDist());
+    pawn->reduceActions(board->hexDict[current]->getPawnDist());
     board->hexDict[previousHex]->setPawn(false);
-    board->hexDict[where]->setPawn(true, pawn);
-    previousHex = where;
+    board->hexDict[current]->setPawn(true, pawn);
+    previousHex = current;
     resetTurn(pawnNum);
 }
 
