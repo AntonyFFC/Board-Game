@@ -20,6 +20,8 @@ public:
 	sf::Vector2f getSize() const;
 	Equipment* getClickedItem(sf::Vector2i mousePosition);
 	void createTexture();
+	sf::Sprite getTableSprite();
+	int cellHeight;
 
 private:
 	void drawHeaders();
@@ -42,7 +44,6 @@ private:
 	int maxY;
 	int cellWidths[8];
 	int sumOfCellWidths;
-	int cellHeight;
 	int numberOfItems;
 	sf::RenderTexture tableRenderTexture;
 	sf::Sprite tableSprite;

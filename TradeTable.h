@@ -8,46 +8,43 @@
 #include <functional>
 #include <iostream>
 #include "TableUtils.h"
+#include "Table.h"
+#include "SpriteUtils.h"
+
+
 class TradeTable
 {
 public:
 	TradeTable(Pawn* inPawn, Pawn* inBody, sf::RenderWindow* window);
+	~TradeTable();
 	void draw();
 	bool tableClicked(sf::Vector2i mousePosition);
 	bool doneClicked(sf::Vector2i mousePosition);
 	void trade(sf::Vector2i mousePosition);
 
 private:
-	void createTexture(std::vector<Equipment*> equipment, bool bodys);
-	void setUpPositions(bool bodys);
-	void drawHeaders();
-	void drawEquipment(std::vector<Equipment*> equipment);
+	void createTexture();
+	void setUpPositions();
+	void drawTables();
 	void drawDoneButton();
-	bool isOnBody(sf::Vector2i mousePosition);
-	Equipment* clickOnEquipment(sf::Vector2i mousePosition, std::vector<Equipment*> equipment);
 	void tradeItem(Equipment* item, bool isBodys);
+	void initializeTables();
 	void initializeTexture();
 	void setUpDimensions();
+	void setUpButton();
 
 	Pawn* pawn;
 	Pawn* body;
 	sf::RenderWindow* target;
-	std::vector<std::function<std::string(const Equipment&)>> functions;
-	sf::RectangleShape cell;
 	sf::RectangleShape doneCell;
 	sf::Text tradeText;
-	std::map<std::string, sf::Sprite> iconSprites;
-	std::vector<sf::Texture*> iconTextures;
-	std::string headers[8];
 	int minX;
 	int minY;
 	int maxX;
 	int maxY;
-	int cellWidths[8];
-	int sumOfCellWidths;
-	int cellHeight;
 	float gap;
 	sf::RenderTexture tableRenderTexture;
 	sf::Sprite tableSprite;
+	Table leftTable;     // players table
+	Table rightTable;    // bodys table
 };
-

@@ -76,6 +76,11 @@ void Table::createTexture()
     tableSprite = sf::Sprite(tableRenderTexture.getTexture());
 }
 
+sf::Sprite Table::getTableSprite()
+{
+	return tableSprite;
+}
+
 void Table::drawHeaders()
 {
     cell.setPosition(minX, minY);
