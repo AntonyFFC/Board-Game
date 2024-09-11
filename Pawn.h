@@ -50,6 +50,7 @@ public:
     void setRotationAngle(float angle);
     void setPosition(float inx, float iny);
     void setIsEquipmentShown(bool isShown);
+    void toggleIsEquipmentShown();
     void scale(float ins);
     void setHexCoords(std::tuple<int, int, int> coords);
     void addSpace(int hands, int extras);
@@ -58,7 +59,7 @@ public:
     bool addEquipment(Equipment* item);
     bool removeEquipment(int index);
     bool removeEquipment(Equipment* item);
-    void displayEquipment(sf::RenderWindow* target);
+    void setUpTable(sf::RenderWindow* target);
 
     // Other methods
     void reduceActions(int amount);
@@ -66,6 +67,7 @@ public:
     bool isAlive() const;
     void dead();
     void draw(sf::RenderTarget& target, bool isShift);
+	void drawTable(sf::RenderWindow* window);
     void attack(int value);
     void rangedAttack(int value, int missMax);
     bool isClicked(sf::Vector2i mousePosition) const;

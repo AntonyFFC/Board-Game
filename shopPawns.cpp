@@ -17,6 +17,9 @@ void ShopPawns::draw(sf::RenderTarget* window)
         pawn->draw(*window, false);
         pos += sf::Vector2f(0, 0.7 * pawn->getSprite().getGlobalBounds().height);
     }
+    for (Pawn* pawn : pawns) {
+        pawn->drawTable(dynamic_cast<sf::RenderWindow*>(window));
+    }
 }
 
 int ShopPawns::whichPawnClicked(sf::Vector2i mousePosition) {
@@ -43,10 +46,10 @@ bool ShopPawns::addEquipmentToPawn(int pawnIndex, Equipment* equipment) {
     return false;
 }
 
-void ShopPawns::displayPawnEquipment(int pawnIndex)
+void ShopPawns::togglePawnEquipmentTable(int pawnIndex)
 {
 	if (pawnIndex >= 0 && pawnIndex < pawns.size()) {
-		pawns[pawnIndex]->setIsEquipmentShown(true);
+		pawns[pawnIndex]->toggleIsEquipmentShown();
 	}
 }
 

@@ -160,6 +160,11 @@ void Pawn::setIsEquipmentShown(bool isShown)
     isEquipmentShown = isShown;
 }
 
+void Pawn::toggleIsEquipmentShown()
+{
+	isEquipmentShown = !isEquipmentShown;
+}
+
 void Pawn::setName(const std::string& name) {
     this->name = name;
 }
@@ -279,14 +284,14 @@ bool Pawn::removeEquipment(Equipment* item) {
     return false;
 }
 
-void Pawn::displayEquipment(sf::RenderWindow* target)
+void Pawn::setUpTable(sf::RenderWindow* target)
 {
 	if (equipmentTable == nullptr)
 	{
 		equipmentTable = new Table(target);
 	}
 	equipmentTable->setEquipment(equipment);
-	equipmentTable->setPosition(sf::Vector2f(xPos, yPos + getSprite().getGlobalBounds().height));
+	equipmentTable->setPosition(sf::Vector2f(xPos - equipmentTable->getSize().x/2, yPos + getSprite().getGlobalBounds().height / 5));
 	equipmentTable->createTexture();
     target->draw(equipmentTable->getTableSprite());
 }
@@ -346,7 +351,15 @@ void Pawn::draw(sf::RenderTarget& target, bool isShift)
     }
     if (isEquipmentShown)
     {
-		displayEquipment(dynamic_cast<sf::RenderWindow*>(&target));
+		setUpTable(dynamic_cast<sf::RenderWindow*>(&target));
+    }
+}
+
+void Pawn::drawTable(sf::RenderWindow* window)
+{
+    if (isEquipmentShown)
+    {
+        window->draw(equipmentTable->getTableSprite());
     }
 }
 

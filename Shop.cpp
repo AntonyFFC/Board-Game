@@ -244,7 +244,7 @@ void Shop::whatClicked(sf::Vector2i mousePosition)
 	{
 		if (lastItem == nullptr)
 		{
-			shopPawns[currentPlayerIndex].displayPawnEquipment(pawnNum);
+			shopPawns[currentPlayerIndex].togglePawnEquipmentTable(pawnNum);
 		}
 		else
 		{

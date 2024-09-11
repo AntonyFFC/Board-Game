@@ -4,7 +4,7 @@
 TradeTable::TradeTable(Pawn* inPawn, Pawn* inBody, sf::RenderWindow* inWindow)
 	:pawn(inPawn), body(inBody), target(inWindow), leftTable(inWindow), rightTable(inWindow)
 {
-    gap = 5;
+    gap = 10;
     initializeTables();
     setUpDimensions();
     doneCell = initializeCells();
