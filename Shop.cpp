@@ -240,13 +240,20 @@ void Shop::whatClicked(sf::Vector2i mousePosition)
 	{
 		wallIcon.setIsBeingClicked(true);
 	}
-	else if (pawnNum != -1 && lastItem != nullptr)
+	else if (pawnNum != -1)
 	{
-		if (!shopPawns[currentPlayerIndex].addEquipmentToPawn(pawnNum, lastItem->getItem()))
+		if (lastItem == nullptr)
 		{
-			shopStorage[currentPlayerIndex].addCard(lastItem);
+			shopPawns[currentPlayerIndex].displayPawnEquipment(pawnNum);
 		}
-		lastItem = nullptr;
+		else
+		{
+			if (!shopPawns[currentPlayerIndex].addEquipmentToPawn(pawnNum, lastItem->getItem()))
+			{
+				shopStorage[currentPlayerIndex].addCard(lastItem);
+			}
+			lastItem = nullptr;
+		}
 	}
 	else if (storageCardNum != -1)
 	{

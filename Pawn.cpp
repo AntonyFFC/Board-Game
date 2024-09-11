@@ -1,5 +1,4 @@
 ﻿#include "Pawn.h"
-#include "Equipment.h"
 #include <random>
 #include <iostream>
 
@@ -7,11 +6,13 @@ Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions,
     int healthPoints, SpaceInventory space, int price, int numInDeck)
     : name(name), teamNumber(teamNumber), side(side),maxActions(maxActions), 
     remainingActions(maxActions), HP(healthPoints), space(space), price(price), 
-    numInDeck(numInDeck), combinedSprite(), equipment()
+	numInDeck(numInDeck), combinedSprite(), equipment()
 {
     scaleFactor = 0.05f;
     rotationAngle = 90.0f;
     remainingSpace = space;
+    isEquipmentShown = false;
+    equipmentTable = nullptr;
     createSprite();
     xPos = 0;
     yPos = 0;
@@ -31,6 +32,7 @@ Pawn::~Pawn() {
     equipment.clear();
     delete combinedSprite;
     delete combinedTexture;
+    delete equipmentTable;
 }
 
 std::unordered_set<std::string> Pawn::getSet() {
@@ -146,7 +148,17 @@ int Pawn::getNumInDeck() const
     return numInDeck;
 }
 
+bool Pawn::getIsEquipmentShown() const
+{
+	return isEquipmentShown;
+}
+
 // Setter methods
+
+void Pawn::setIsEquipmentShown(bool isShown)
+{
+    isEquipmentShown = isShown;
+}
 
 void Pawn::setName(const std::string& name) {
     this->name = name;
@@ -267,6 +279,18 @@ bool Pawn::removeEquipment(Equipment* item) {
     return false;
 }
 
+void Pawn::displayEquipment(sf::RenderWindow* target)
+{
+	if (equipmentTable == nullptr)
+	{
+		equipmentTable = new Table(target);
+	}
+	equipmentTable->setEquipment(equipment);
+	equipmentTable->setPosition(sf::Vector2f(xPos, yPos + getSprite().getGlobalBounds().height));
+	equipmentTable->createTexture();
+    target->draw(equipmentTable->getTableSprite());
+}
+
 // Other methods
 
 void Pawn::reduceActions(int amount) {
@@ -319,6 +343,10 @@ void Pawn::draw(sf::RenderTarget& target, bool isShift)
     target.draw(getSprite());
     if (isShift) {
         drawStats(target);
+    }
+    if (isEquipmentShown)
+    {
+		displayEquipment(dynamic_cast<sf::RenderWindow*>(&target));
     }
 }
 

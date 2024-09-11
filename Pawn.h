@@ -8,6 +8,10 @@
 #include <unordered_set>
 #include <stdexcept>
 #include "Globals.h"
+#include "Table.h"
+#include "Equipment.h"
+
+class Table;
 
 class Pawn {
 public:
@@ -35,6 +39,7 @@ public:
     sf::Sprite getSprite();
     std::tuple<int, int, int> getHexCoords() const;
     int getNumInDeck() const;
+	bool getIsEquipmentShown() const;
 
     // Setter methods
     void setName(const std::string& name);
@@ -44,6 +49,7 @@ public:
     void setHP(int healthPoints);
     void setRotationAngle(float angle);
     void setPosition(float inx, float iny);
+    void setIsEquipmentShown(bool isShown);
     void scale(float ins);
     void setHexCoords(std::tuple<int, int, int> coords);
     void addSpace(int hands, int extras);
@@ -52,6 +58,7 @@ public:
     bool addEquipment(Equipment* item);
     bool removeEquipment(int index);
     bool removeEquipment(Equipment* item);
+    void displayEquipment(sf::RenderWindow* target);
 
     // Other methods
     void reduceActions(int amount);
@@ -95,4 +102,6 @@ private:
     float yPos;
     std::tuple<int, int, int> hexCoords;
     int numInDeck;
+	Table* equipmentTable;
+    bool isEquipmentShown;
 };

@@ -43,6 +43,13 @@ bool ShopPawns::addEquipmentToPawn(int pawnIndex, Equipment* equipment) {
     return false;
 }
 
+void ShopPawns::displayPawnEquipment(int pawnIndex)
+{
+	if (pawnIndex >= 0 && pawnIndex < pawns.size()) {
+		pawns[pawnIndex]->setIsEquipmentShown(true);
+	}
+}
+
 std::vector<Pawn*> ShopPawns::getPawns()
 {
     return pawns;
