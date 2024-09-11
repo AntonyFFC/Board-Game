@@ -221,6 +221,10 @@ void Pawns::handleShiftOn()
             }
             board->hexDict[hex]->setHighlight(true, 1);
         }
+		for (Pawn* pawn : pawnDict)
+		{
+            pawn->setIsEquipmentShown(true);
+		}
     }
     wasShift = true;
 }
@@ -231,6 +235,10 @@ void Pawns::handleShiftOff()
     {
         board->hexDict[hex]->setHighlight(false, 1);
         board->hexDict[hex]->setHighlight(false, 2);
+    }
+    for (Pawn* pawn : pawnDict)
+    {
+        pawn->setIsEquipmentShown(false);
     }
     board->highlighted[1].clear();
     wasShift = false;
