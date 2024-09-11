@@ -4,8 +4,8 @@
 TradeTable::TradeTable(Pawn* inPawn, Pawn* inBody, sf::RenderWindow* inWindow)
 	:pawn(inPawn), body(inBody), target(inWindow), leftTable(inWindow), rightTable(inWindow)
 {
-    initializeTables();
     gap = 5;
+    initializeTables();
     setUpDimensions();
     doneCell = initializeCells();
     tradeText = initializeText("trade", &globalFont2, leftTable.cellHeight * 3 / 4, sf::Color::Black); // table height isnt calclulated yet
@@ -94,6 +94,7 @@ void TradeTable::trade(sf::Vector2i mousePosition)
     if (item != nullptr)
     {
         tradeItem(item, isBodys);
+        initializeTables();
         initializeTexture();
     }
 }
