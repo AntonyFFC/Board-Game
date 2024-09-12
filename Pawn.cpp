@@ -293,7 +293,6 @@ void Pawn::setUpTable(sf::RenderWindow* target)
 	equipmentTable->setEquipment(equipment);
 	equipmentTable->setPosition(sf::Vector2f(xPos - equipmentTable->getSize().x/2, yPos + getSprite().getGlobalBounds().height / 5));
 	equipmentTable->createTexture();
-    target->draw(equipmentTable->getTableSprite());
 }
 
 // Other methods

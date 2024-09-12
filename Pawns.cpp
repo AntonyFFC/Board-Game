@@ -165,7 +165,16 @@ void Pawns::handleClickRight(sf::Vector2i mousePosition)
                 {
                     placeWall(whichPawn, coords);
                 }
-                break;
+                return;
+            }
+        }
+
+        for (Pawn* pawn : pawnDict)
+        {
+            if (pawn->isClicked(mousePosition))
+            {
+				pawn->toggleIsEquipmentShown();
+                return;
             }
         }
     }
@@ -221,10 +230,6 @@ void Pawns::handleShiftOn()
             }
             board->hexDict[hex]->setHighlight(true, 1);
         }
-		for (Pawn* pawn : pawnDict)
-		{
-            pawn->setIsEquipmentShown(true);
-		}
     }
     wasShift = true;
 }
@@ -235,10 +240,6 @@ void Pawns::handleShiftOff()
     {
         board->hexDict[hex]->setHighlight(false, 1);
         board->hexDict[hex]->setHighlight(false, 2);
-    }
-    for (Pawn* pawn : pawnDict)
-    {
-        pawn->setIsEquipmentShown(false);
     }
     board->highlighted[1].clear();
     wasShift = false;
@@ -286,6 +287,9 @@ void Pawns::drawPawns(bool isShift)
         int y = board->hexDict[pawn->getHexCoords()]->getOrigin().y;
         pawn->setPosition(x, y);
         pawn->draw(*target, isShift);
+    }
+    for (Pawn* pawn : pawnDict) {
+        pawn->drawTable(dynamic_cast<sf::RenderWindow*>(target));
     }
 }
 
