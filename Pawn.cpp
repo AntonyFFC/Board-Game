@@ -259,6 +259,7 @@ bool Pawn::addEquipment(Equipment* item) {
                 }
                 equipment.push_back(item);
                 remainingSpace.hands -= item->getSpaceOccupied().numSpaces;
+				calculateInitialActions();
                 createSprite();
                 return true;
             }
@@ -269,6 +270,7 @@ bool Pawn::addEquipment(Equipment* item) {
             {
                 equipment.push_back(item);
                 remainingSpace.extras -= item->getSpaceOccupied().numSpaces;
+                calculateInitialActions();
                 createSprite();
                 return true;
             }
@@ -288,6 +290,7 @@ bool Pawn::removeEquipment(int index) {
             remainingSpace.extras += equipment[index]->getSpaceOccupied().numSpaces;
         }
         equipment.erase(equipment.begin() + index);
+        calculateInitialActions();
         createSprite();
         return true;
     }
@@ -574,6 +577,18 @@ void Pawn::setUpPosition()
     combinedSprite->setOrigin(combinedSprite->getLocalBounds().width / 2, 
         combinedSprite->getLocalBounds().height / 2);
     combinedSprite->setRotation(rotationAngle);
+}
+
+void Pawn::calculateInitialActions()
+{
+	for (Equipment* item : equipment)
+	{
+        if (item->getType() == "Armour" || (item->getType() == "Accesory" && 
+                item->getName() != "dagger" && item->getName() != "long dagger"))
+        {
+            this->maxActions -= item->getAttackActions();
+        }
+	}
 }
 
 const std::map<std::string, int> Pawn::order = {

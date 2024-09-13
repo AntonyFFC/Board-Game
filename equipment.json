@@ -154,7 +154,7 @@
     },
     {
         "additionalCapabilities": "adds 2 movement",
-        "attackActions": 2,
+        "attackActions": -2,
         "attackValue": 0,
         "name": "war horse",
         "numInDeck": 2,
@@ -171,7 +171,7 @@
     },
     {
         "additionalCapabilities": "adds 1 movement",
-        "attackActions": 1,
+        "attackActions": -1,
         "attackValue": 0,
         "name": "horse",
         "numInDeck": 1,

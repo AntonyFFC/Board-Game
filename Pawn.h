@@ -86,6 +86,7 @@ private:
     void useArmour(const std::string& type, std::vector<bool>& armours, int value);
     void flipSprite(std::string name);
     void setUpPosition();
+	void calculateInitialActions();
 
     std::string name;
     int teamNumber;
