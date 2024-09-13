@@ -76,6 +76,7 @@ public:
     static std::map<std::string, sf::Sprite> spriteMap;
     static std::vector<sf::Texture*> textures;
 private:
+    void handsExtrasToSet(std::unordered_set<std::string>& set);
     std::unordered_set<std::string> getSet();
     void createSprite();
     static std::map<std::string, sf::Sprite> initializeSpriteMap();
@@ -83,7 +84,7 @@ private:
     std::vector<bool> whatArmour();
     Equipment* findArmour(const std::string& type);
     void useArmour(const std::string& type, std::vector<bool>& armours, int value);
-    void flipSprite(Equipment* item);
+    void flipSprite(std::string name);
     void setUpPosition();
 
     std::string name;

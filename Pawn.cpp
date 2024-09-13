@@ -35,12 +35,43 @@ Pawn::~Pawn() {
     delete equipmentTable;
 }
 
+void Pawn::handsExtrasToSet(std::unordered_set<std::string>& set)
+{
+    if (remainingSpace.hands == 1)
+    {
+        if (remainingSpace.hands < space.hands)
+        {
+            flipSprite("one hand");
+            set.insert("one hand");
+		}
+		else
+		{
+			set.insert("one hand");
+		}
+    }
+    else if (remainingSpace.hands == 2)
+    {
+        set.insert("two hands");
+    }
+
+	if (remainingSpace.extras == 1)
+	{
+		set.insert("one extra");
+	}
+	else if (remainingSpace.extras == 2)
+	{
+		set.insert("two extras");
+	}
+}
+
 std::unordered_set<std::string> Pawn::getSet() {
     std::unordered_set<std::string> nameSet;
     if (side == 0)
         nameSet.insert("red");
     else
         nameSet.insert("blue");
+
+	handsExtrasToSet(nameSet);
 
     for (const auto& obj : equipment) {
         std::string name = obj->getName();
@@ -224,7 +255,7 @@ bool Pawn::addEquipment(Equipment* item) {
             {
                 if (remainingSpace.hands < space.hands)
                 {
-                    flipSprite(item);
+                    flipSprite(item->getName());
                 }
                 equipment.push_back(item);
                 remainingSpace.hands -= item->getSpaceOccupied().numSpaces;
@@ -525,15 +556,15 @@ Equipment* Pawn::findArmour(const std::string& type)
     throw std::runtime_error("Now such armour");
 }
 
-void Pawn::flipSprite(Equipment* item)
+void Pawn::flipSprite(std::string name)
 {
-    sf::Sprite sprite = spriteMap[item->getName()];
+    sf::Sprite sprite = spriteMap[name];
     sf::Sprite flippedSprite(sprite);
     sf::IntRect textureRect = sprite.getTextureRect();
     textureRect.left += textureRect.width;
     textureRect.width = -textureRect.width;
     flippedSprite.setTextureRect(textureRect);
-    spriteMap[item->getName()] = flippedSprite;
+    spriteMap[name] = flippedSprite;
 }
 
 void Pawn::setUpPosition()
@@ -575,6 +606,10 @@ const std::map<std::string, int> Pawn::order = {
     {"slingshot", 22},
     {"gauntlets", 23},
     {"bracers", 24},
+    {"one hand", 25},
+	{"two hands", 26},
+	{"one extra", 27},
+	{"two extras", 28},
 };
 
 std::vector<sf::Texture*> Pawn::textures;
