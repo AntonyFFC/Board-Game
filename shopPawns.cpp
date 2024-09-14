@@ -11,7 +11,7 @@ void ShopPawns::draw(sf::RenderTarget* window)
 {
     sf::Vector2f pos(window->getSize().x *0.65, 130);
     for (Pawn* pawn : pawns) {
-        pawn->scale(0.2);
+        pawn->scale(0.2f);
         pawn->setRotationAngle(0.f);
         pawn->setPosition(pos.x, pos.y);
         pawn->draw(*window, false);

@@ -390,9 +390,17 @@ void Pawn::draw(sf::RenderTarget& target, bool isShift)
     if (isShift) {
         drawStats(target);
     }
-    if (isEquipmentShown)
+    if (this->isEquipmentShown)
     {
-		setUpTable(dynamic_cast<sf::RenderWindow*>(&target));
+        if (!isInGame)
+        {
+            setUpTable(dynamic_cast<sf::RenderWindow*>(&target));
+            drawStats(target);
+        }
+        else
+        {
+            setUpTable(dynamic_cast<sf::RenderWindow*>(&target));
+        }
     }
 }
 
@@ -407,33 +415,47 @@ void Pawn::drawTable(sf::RenderWindow* window)
 void Pawn::drawStats(sf::RenderTarget& target)
 {
     sf::Text attributesText;
-    int size = 15;
+    sf::FloatRect spriteBounds = getSprite().getGlobalBounds();
+
+    float size = 40.0f;
+    float nameXPos = spriteBounds.left;
+    float nameYPos = spriteBounds.top + spriteBounds.height / 6;
+    float hpXpos = 38.0f;
+    float hpYpos = spriteBounds.height/2.8f;
+	float hpOutlineThickness = 4.0f;
+	if (isInGame)
+	{
+		size = 15.0f;
+        nameXPos = spriteBounds.left + spriteBounds.width / 5;
+        nameYPos = spriteBounds.top - spriteBounds.height / 4;
+        hpXpos = 17.0f;
+        hpYpos = spriteBounds.height - 7;
+        hpOutlineThickness = 0.3f;
+	}
     attributesText.setFont(globalFont);
     attributesText.setCharacterSize(size);
 
     // Position the attributes text relative to the pawn's sprite
-    sf::FloatRect spriteBounds = getSprite().getGlobalBounds();
-    attributesText.setPosition(spriteBounds.left + spriteBounds.width / 5, spriteBounds.top - spriteBounds.height / 4);
-
+    attributesText.setPosition(nameXPos, nameYPos);
     attributesText.setFillColor(sf::Color::White);
     attributesText.setString(getName());
     target.draw(attributesText);
 
-    attributesText.move(0, 15);
+    attributesText.move(0, size);
     attributesText.setFillColor(sf::Color::Blue);
     attributesText.setString(std::to_string(getMaxActions()));
     target.draw(attributesText);
 
-    attributesText.move(-17, spriteBounds.height - 7);
+    attributesText.move(-hpXpos, hpYpos);
     attributesText.setFillColor(sf::Color::Red);
     attributesText.setOutlineColor(sf::Color::Red);
-    attributesText.setOutlineThickness(2);
-    attributesText.setLineSpacing(0.3);
+    attributesText.setOutlineThickness(2*size*1/15);
+    attributesText.setLineSpacing(hpOutlineThickness);
     attributesText.setCharacterSize(size * 2);
     std::string hpString = "";
     hpString = 176;
     for (int i = 0; i < getHP(); ++i) {
-        attributesText.move(0, -12);
+        attributesText.move(0, -12*size*1/15);
         attributesText.setString(hpString);
         target.draw(attributesText);
     }
