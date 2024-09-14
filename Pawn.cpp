@@ -319,6 +319,7 @@ bool Pawn::removeEquipment(Equipment* item) {
                 remainingSpace.extras += object->getSpaceOccupied().numSpaces;
             }
             equipment.erase(std::remove(equipment.begin(), equipment.end(), object), equipment.end());
+            calculateInitialActions();
             createSprite();
             return true;
         }
