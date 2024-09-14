@@ -40,6 +40,7 @@ public:
     std::tuple<int, int, int> getHexCoords() const;
     int getNumInDeck() const;
 	bool getIsEquipmentShown() const;
+	bool getIsInGame() const;
 
     // Setter methods
     void setName(const std::string& name);
@@ -54,6 +55,7 @@ public:
     void scale(float ins);
     void setHexCoords(std::tuple<int, int, int> coords);
     void addSpace(int hands, int extras);
+	void setIsInGame(bool inGame);
 
     // Equipment-related methods
     bool addEquipment(Equipment* item);
@@ -92,7 +94,8 @@ private:
     int teamNumber;
     int side;
     int remainingActions;
-    int maxActions;
+	int maxActions; // The maximum number of actions a pawn can take in a turn without any items
+	int calculatedMaxActions; // The maximum number of actions a pawn can take in a turn
     int HP;
     SpaceInventory space;
     SpaceInventory remainingSpace;
@@ -108,4 +111,5 @@ private:
     int numInDeck;
 	Table* equipmentTable;
     bool isEquipmentShown;
+    bool isInGame;
 };

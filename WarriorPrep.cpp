@@ -99,6 +99,8 @@ void WarriorPrep::putPawn(std::tuple<int, int, int> coordinates)
 	else
 		currentPawn->setRotationAngle(-90.0f);
 	currentPawn->setHexCoords(coordinates);
+
+	currentPawn->setIsInGame(true);
 	pawns->addPawn(currentPawn);
 	if (pawnDict[currentPlayer].empty())
 	{

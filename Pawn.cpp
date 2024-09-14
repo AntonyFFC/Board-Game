@@ -4,14 +4,15 @@
 
 Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions, 
     int healthPoints, SpaceInventory space, int price, int numInDeck)
-    : name(name), teamNumber(teamNumber), side(side),maxActions(maxActions), 
-    remainingActions(maxActions), HP(healthPoints), space(space), price(price), 
-	numInDeck(numInDeck), combinedSprite(), equipment()
+	: name(name), teamNumber(teamNumber), side(side), remainingActions(maxActions), 
+    maxActions(maxActions), calculatedMaxActions(maxActions), HP(healthPoints), 
+    space(space), price(price), equipment(), combinedSprite(), numInDeck(numInDeck)
 {
     scaleFactor = 0.05f;
     rotationAngle = 90.0f;
     remainingSpace = space;
     isEquipmentShown = false;
+	isInGame = false;
     equipmentTable = nullptr;
     createSprite();
     xPos = 0;
@@ -26,28 +27,21 @@ Pawn::~Pawn() {
     textures.clear();
     spriteMap.clear();
 
+    delete equipmentTable;
+
     for (Equipment* weapon : equipment) {
         delete weapon;
     }
     equipment.clear();
     delete combinedSprite;
     delete combinedTexture;
-    delete equipmentTable;
 }
 
 void Pawn::handsExtrasToSet(std::unordered_set<std::string>& set)
 {
     if (remainingSpace.hands == 1)
     {
-        if (remainingSpace.hands < space.hands)
-        {
-            flipSprite("one hand");
-            set.insert("one hand");
-		}
-		else
-		{
-			set.insert("one hand");
-		}
+		set.insert("one hand");
     }
     else if (remainingSpace.hands == 2)
     {
@@ -141,7 +135,7 @@ int Pawn::getRemainingActions() const {
 }
 
 int Pawn::getMaxActions() const {
-    return maxActions;
+    return calculatedMaxActions;
 }
 
 int Pawn::getHP() const {
@@ -182,6 +176,11 @@ int Pawn::getNumInDeck() const
 bool Pawn::getIsEquipmentShown() const
 {
 	return isEquipmentShown;
+}
+
+bool Pawn::getIsInGame() const
+{
+    return isInGame;
 }
 
 // Setter methods
@@ -243,6 +242,15 @@ void Pawn::addSpace(int hands, int extras) {
     this->space.extras += extras;
     this->remainingSpace.hands += hands;
     this->remainingSpace.extras += extras;
+}
+
+void Pawn::setIsInGame(bool inGame)
+{
+	isInGame = inGame;
+	if (inGame) //the pawn joins the game
+	{
+		remainingActions = calculatedMaxActions;
+	}
 }
 
 // Equipment-related methods
@@ -581,12 +589,13 @@ void Pawn::setUpPosition()
 
 void Pawn::calculateInitialActions()
 {
+	this->calculatedMaxActions = this->maxActions;
 	for (Equipment* item : equipment)
 	{
         if (item->getType() == "Armour" || (item->getType() == "Accesory" && 
                 item->getName() != "dagger" && item->getName() != "long dagger"))
         {
-            this->maxActions -= item->getAttackActions();
+            this->calculatedMaxActions -= item->getAttackActions();
         }
 	}
 }
