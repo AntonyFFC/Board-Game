@@ -372,7 +372,12 @@ void Pawns::attack(int pawnNum, int attackedNum, Equipment* weapon)
         Pawn* attacked = pawnDict[attackedNum];
         if (weapon->isRanged())
         {
-            attacked->rangedAttack(weapon->getAttackValue(), weapon->getMissMax());
+			int missMax = weapon->getMissMax();
+            if (findBracers(pawnNum))
+            {
+                missMax--;
+            }
+            attacked->rangedAttack(weapon->getAttackValue(), missMax);
         }
         else
         {
@@ -390,6 +395,18 @@ void Pawns::attack(int pawnNum, int attackedNum, Equipment* weapon)
     {
         std::cout << "Not enough actions\n";
     }
+}
+
+bool Pawns::findBracers(int pawnNum)
+{
+	for (Equipment* item : pawnDict[pawnNum]->getEquipment())
+	{
+		if (item->getName() == "bracers")
+		{
+			return true;
+		}
+	}
+    return false;
 }
 
 void Pawns::death(Pawn* attacked)
