@@ -345,7 +345,7 @@ void Board::clearHighlight()
 {
     for (std::tuple<int, int, int> hex : highlighted[0])
     {
-        hexDict[hex]->setHighlight(false, 0);
+        hexDict[hex]->clearHighlight(0);
     }
     highlighted[0].clear();
 }

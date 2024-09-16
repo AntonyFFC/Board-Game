@@ -45,7 +45,8 @@ public:
 	bool isHigh(int col) const;
 	bool isClicked(sf::Vector2i mousePosition) const;
 
-	virtual void setHighlight(bool boolean, int col);
+	virtual void setHighlight(int col, int inWhosPawn);
+	void clearHighlight(int col);
 	void draw(sf::RenderTarget& target);
 	void setScl(float inS = 0.8);	
 	Pawn* pawn;
@@ -64,6 +65,7 @@ private:
 	float xOffset;
 	float yOffset;
 	int pawnDist_;
+	int whosPawn;
 	bool isRock_ = false;
 	bool isWall_ = false;
 	bool isBase_ = false;
@@ -75,12 +77,11 @@ private:
 	bool isBlocking_ = false;
 	sf::Color fill;
 	sf::Color out;
-	std::vector<sf::Color> highFill;
+	std::vector<sf::Color> highFillRed;
+	std::vector<sf::Color> highFillBlue;
 	std::vector<sf::Color> highOut;
 	sf::Color startColor;
 	sf::Color base;
-	std::vector<sf::Color> startHigh;
-	std::vector<sf::Color> baseHigh;
 
 };
 
@@ -96,7 +97,7 @@ class Rock : public Hex
 {
 public:
 	Rock(std::tuple<int, int, int> inCoords = { 0, 0, 0 }, float inxPos = 0.f, float inyPos = 0.f);
-	void setHighlight(bool boolean, int col) override;
+	void setHighlight(int col, int inWhosPawn) override;
 	sf::ConvexShape getShape() override;
 };
 

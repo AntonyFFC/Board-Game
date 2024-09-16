@@ -162,6 +162,10 @@ void Pawns::handleClickRight(sf::Vector2i mousePosition)
                         previousHex = empty;
                     }
                 }
+                else if (board->hexDict[coords]->isPawn())
+                {
+                    pawnDict[numberOfPawn(coords)]->toggleIsEquipmentShown();
+                }
                 else if (!placeWall(whichPawn, coords))
                 {
                     board->clearHighlight();
@@ -230,17 +234,16 @@ void Pawns::handleShiftOn()
         for (int i = 0; i<pawnDict.size(); i++)
         {
             std::vector<std::tuple<int, int, int>> inView = getViewOfPawn(i);
-            board->highlighted[1].insert(board->highlighted[1].end(), inView.begin(), inView.end());
-        }
-
-        for (std::tuple<int, int, int> hex : board->highlighted[1])
-        {
-            if (board->hexDict[hex]->isHigh(1) || board->hexDict[hex]->isHigh(0))
+            for (std::tuple<int, int, int> hex : inView)
             {
-                board->hexDict[hex]->setHighlight(true, 2);
-                continue;
+                if (board->hexDict[hex]->isHigh(1))
+                {
+                    board->hexDict[hex]->setHighlight(2, pawnDict[i]->getSide());
+                    continue;
+                }
+                board->hexDict[hex]->setHighlight(1, pawnDict[i]->getSide());
             }
-            board->hexDict[hex]->setHighlight(true, 1);
+            board->highlighted[1].insert(board->highlighted[1].end(), inView.begin(), inView.end());
         }
     }
     wasShift = true;
@@ -250,8 +253,8 @@ void Pawns::handleShiftOff()
 {
     for (std::tuple<int, int, int> hex : board->highlighted[1])
     {
-        board->hexDict[hex]->setHighlight(false, 1);
-        board->hexDict[hex]->setHighlight(false, 2);
+        board->hexDict[hex]->clearHighlight(1);
+        board->hexDict[hex]->clearHighlight(2);
     }
     board->highlighted[1].clear();
     wasShift = false;
@@ -316,7 +319,7 @@ void Pawns::pawnClicked(int pawnNum)
     board->highlighted[0] = getRangeOfPawn(pawnNum);
     for (std::tuple<int, int, int> hex : board->highlighted[0])
     {
-        board->hexDict[hex]->setHighlight(true, 0);
+        board->hexDict[hex]->setHighlight(0, whosTurn);
     }
 }
 

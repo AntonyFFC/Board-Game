@@ -13,15 +13,15 @@ Hex::Hex(std::tuple<int, int, int> inCoords, float inxPos, float inyPos)
         highlights[i] = false;
     }
     scale = 0.8f;
+	whosPawn = 0;
     xOffset = 30.f;
     yOffset = 20.f;
     setPawn(false);
     setBody(false);
     startColor = sf::Color(134, 179, 0);
     base = sf::Color(104, 176, 163);
-    startHigh = { sf::Color(185, 224, 67), sf::Color(217, 91, 33), sf::Color(199,167,52)};
-    baseHigh = { sf::Color(159, 227, 215), sf::Color(217, 85, 129), sf::Color(184,166,178)};
-    highFill = { sf::Color(89, 207, 89), sf::Color(207, 89, 89), sf::Color(156,140,89) };
+    highFillRed = { sf::Color(89, 207, 89), sf::Color(207, 89, 89), sf::Color(156,140,89) };
+    highFillBlue = { sf::Color(89, 207, 89), sf::Color(87, 91, 207), sf::Color(156,140,89) };
     highOut = { sf::Color(225, 245, 5), sf::Color(225, 245, 5), sf::Color(225, 245, 5) };
     shape = initShape();
     setCoords(std::get<0>(cubeCoords), std::get<1>(cubeCoords), std::get<2>(cubeCoords));
@@ -218,9 +218,15 @@ int Hex::getPawnDist() const
     return pawnDist_;
 }
 
-void Hex::setHighlight(bool boolean, int col)
+void Hex::setHighlight(int col, int inWhosPawn)
 {
-    highlights[col] = boolean;
+	this->whosPawn = inWhosPawn;
+    highlights[col] = true;
+}
+
+void Hex::clearHighlight(int col)
+{
+	highlights[col] = false;
 }
 
 bool Hex::isClicked(sf::Vector2i mousePosition) const {
@@ -245,6 +251,13 @@ Grass::Grass(std::tuple<int, int, int> inCoords, float inxPos, float inyPos)
     setGrass(true);
 }
 
+sf::Color adjustColor(const sf::Color& color, int adjustment) {
+    sf::Uint8 r = std::min(255, color.r + adjustment);
+    sf::Uint8 g = std::min(255, color.g + adjustment);
+    sf::Uint8 b = std::min(255, color.b + adjustment);
+    return sf::Color(r, g, b, color.a); // Preserve the alpha channel
+}
+
 sf::ConvexShape Grass::getShape() {
     sf::Color currentFill = fill;
     sf::Color currentOut = out;
@@ -257,33 +270,33 @@ sf::ConvexShape Grass::getShape() {
         }
     }
 
-    if (isStart()) {
-        if (largestHighIndex == -1)
+    if (largestHighIndex == -1) {
+        if (isStart())
         {
             currentFill = startColor;
-        }
-        else
-        {
-            currentFill = startHigh[largestHighIndex];
-            currentOut = highOut[largestHighIndex];
-        }     
+		}
+		else if (isBase())
+		{
+			currentFill = base;
+		}
     }
-    else if (isBase())
+    else
     {
-        if (largestHighIndex == -1)
+		if (whosPawn == 0)
+		{
+			currentFill = highFillRed[largestHighIndex];
+			currentOut = highOut[largestHighIndex];
+		}
+		else
+		{
+			currentFill = highFillBlue[largestHighIndex];
+			currentOut = highOut[largestHighIndex];
+		}
+
+        if (isStart() || isBase())
         {
-            currentFill = base;
+            currentFill = adjustColor(currentFill, 30);
         }
-        else
-        {
-            currentFill = baseHigh[largestHighIndex];
-            currentOut = highOut[largestHighIndex];
-        }
-    }
-    else if (largestHighIndex != -1)
-    {
-        currentFill = highFill[largestHighIndex];
-        currentOut = highOut[largestHighIndex];
     }
     setColour(currentFill, currentOut);
     return shape;
@@ -298,7 +311,7 @@ Rock::Rock(std::tuple<int, int, int> inCoords, float inxPos, float inyPos)
     setBlocking(true);
 }
 
-void Rock::setHighlight(bool boolean, int col)
+void Rock::setHighlight(int col, int inWhosPawn)
 {
     return;
 }
@@ -315,7 +328,7 @@ Wall::Wall(std::tuple<int, int, int> inCoords, float inxPos, float inyPos)
 {    
     fill = sf::Color(140, 62, 34);
     out = sf::Color(71, 31, 16);
-    highFill = { sf::Color(36, 8, 5)};
+    highFillRed = { sf::Color(36, 8, 5)};
     setWall(true);
     setBlocking(true);
 }
@@ -325,7 +338,7 @@ sf::ConvexShape Wall::getShape() {
     sf::Color currentOut = out;
     if (isHigh(0) || isHigh(1) || isHigh(2))
     {
-        currentFill = highFill[0];
+        currentFill = highFillRed[0];
         currentOut = highOut[0];
     }
     setColour(currentFill, currentOut);
