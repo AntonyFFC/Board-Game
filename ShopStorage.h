@@ -12,6 +12,7 @@ public:
 	void addCard(EquipmentCard* itemCard);
 	EquipmentCard* takeItem(int index);
 	void addWall();
+	int getNumberOfWalls();
 private:
 	void drawRectangle(sf::RenderTarget* target);
 	void drawCards(sf::RenderTarget* target);

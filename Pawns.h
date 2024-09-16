@@ -10,6 +10,8 @@
 #include <iostream>
 #include "TradeTable.h"
 #include "Table.h"
+#include "Walls.h"
+
 class Pawns
 {
 public:
@@ -19,6 +21,7 @@ public:
 	void handleClick(sf::Vector2i mousePosition);
 	void handleClickRight(sf::Vector2i mousePosition);
 	void addPawn(Pawn* inPawn);
+	void addWalls(int numWalls, int teamNum);
 	void handleShiftOn();
 	void handleShiftOff();
 	bool isTrading() const;
@@ -58,7 +61,7 @@ private:
 	void setupText();
 	void flipTurn();
 	int numberOfPawn(std::tuple<int, int, int> coords, bool body = false);
-	void placeWall(int pawnNumber, std::tuple<int, int, int> coords);
+	bool placeWall(int pawnNumber, std::tuple<int, int, int> coords);
 	bool destroyWall(int pawnNumber, std::tuple<int, int, int> coords);
 	void drawTurn();
 	void drawPawns(bool isShift);
@@ -67,6 +70,7 @@ private:
 	Board* board;
 	TradeTable* tradeTable;
 	Table* currentTable;
+	Walls* walls;
 	sf::RenderWindow* target;
 	std::tuple<int, int, int> previousHex;
 	bool wasShift;

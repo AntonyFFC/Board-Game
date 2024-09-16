@@ -174,6 +174,7 @@
     <ClCompile Include="Table.cpp" />
     <ClCompile Include="TableUtils.cpp" />
     <ClCompile Include="TradeTable.cpp" />
+    <ClCompile Include="Walls.cpp" />
     <ClCompile Include="WarriorPrep.cpp" />
     <ClCompile Include="WeaponsTable.cpp" />
   </ItemGroup>
@@ -201,6 +202,7 @@
     <ClInclude Include="Table.h" />
     <ClInclude Include="TableUtils.h" />
     <ClInclude Include="TradeTable.h" />
+    <ClInclude Include="Walls.h" />
     <ClInclude Include="WarriorPrep.h" />
     <ClInclude Include="WeaponsTable.h" />
   </ItemGroup>

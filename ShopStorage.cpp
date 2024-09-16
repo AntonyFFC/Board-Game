@@ -51,6 +51,11 @@ void ShopStorage::addWall()
     numberOfWalls++;
 }
 
+int ShopStorage::getNumberOfWalls()
+{
+	return numberOfWalls;
+}
+
 void ShopStorage::drawRectangle(sf::RenderTarget* target)
 {
     sf::Vector2u targetSize = target->getSize();
@@ -75,7 +80,7 @@ void ShopStorage::drawWalls(sf::RenderTarget* target)
     sf::Vector2u targetSize = target->getSize();
     sf::Vector2f pos(targetSize.x*0.8, targetSize.y * 0.07);
     for (int i = 0; i < numberOfWalls; i++) {
-        circle.setPosition(sf::Vector2f(pos.x, pos.y));
+        circle.setPosition(pos);
         target->draw(circle);
         pos += sf::Vector2f(0, radius*2.5);
     }

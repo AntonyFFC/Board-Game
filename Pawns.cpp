@@ -3,6 +3,7 @@
 Pawns::Pawns(Board* board,sf::RenderWindow* window)
     :board(board),target(window)
 {
+	walls = new Walls(window);
     tradeTable = nullptr;
 	currentTable = new Table(target);// add delete at the end chosen!!!
     previousHex = empty;
@@ -161,9 +162,10 @@ void Pawns::handleClickRight(sf::Vector2i mousePosition)
                         previousHex = empty;
                     }
                 }
-                else
+                else if (!placeWall(whichPawn, coords))
                 {
-                    placeWall(whichPawn, coords);
+                    board->clearHighlight();
+                    previousHex = empty;
                 }
                 return;
             }
@@ -180,12 +182,17 @@ void Pawns::handleClickRight(sf::Vector2i mousePosition)
     }
 }
 
-void Pawns::placeWall(int pawnNumber, std::tuple<int, int, int> coords)
+bool Pawns::placeWall(int pawnNumber, std::tuple<int, int, int> coords)
 {
+    if (!walls->buildWall(pawnDict[pawnNumber]->getSide()))
+    {
+		return false;
+    }
     board->clearHighlight();
     pawnDict[pawnNumber]->reduceActions(1);
     board->setWall(coords);
     resetTurn(pawnNumber);
+	return true;
 }
 
 bool Pawns::destroyWall(int pawnNumber, std::tuple<int, int, int> coords)
@@ -209,6 +216,11 @@ void Pawns::addPawn(Pawn* inPawn)
     pawnDict.push_back(inPawn);
     board->hexDict[inPawn->getHexCoords()]->setPawn(true, inPawn);
     numberOfPawns[inPawn->getSide()]++;
+}
+
+void Pawns::addWalls(int numWalls, int teamNum)
+{
+	walls->addWalls(numWalls, teamNum);
 }
 
 void Pawns::handleShiftOn()
@@ -270,6 +282,7 @@ void Pawns::draw(bool isShift)
 {
     drawTurn();
     drawPawns(isShift);
+    walls->draw();
     if (isTrading())
     {
         tradeTable->draw();

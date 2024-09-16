@@ -64,6 +64,11 @@ void Gui::addPawns(std::vector<Pawn*> pawns, int playerIndx)
     warriorPrep->addPawns(pawns, playerIndx);
 }
 
+void Gui::addWalls(int numWalls, int playerIndx)
+{
+	pawns->addWalls(numWalls, playerIndx);
+}
+
 void Gui::display()
 {
     window->clear(sf::Color(66, 82, 107));

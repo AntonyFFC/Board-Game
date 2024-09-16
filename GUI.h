@@ -21,6 +21,7 @@ public:
     void start();
     void keyPressed(const sf::Event& event);
     void addPawns(std::vector<Pawn*> pawns, int playerIndx);
+	void addWalls(int numWalls, int playerIndx);
 private:
     void display();
 
