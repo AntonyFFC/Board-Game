@@ -370,6 +370,12 @@ void Pawns::attack(int pawnNum, int attackedNum, Equipment* weapon)
     if (weapon->getAttackActions() <= attacker->getRemainingActions())
     {
         Pawn* attacked = pawnDict[attackedNum];
+		int attackValue = weapon->getAttackValue();
+		if (findGauntlets(pawnNum))
+		{
+			attackValue++;
+		}
+
         if (weapon->isRanged())
         {
 			int missMax = weapon->getMissMax();
@@ -377,11 +383,11 @@ void Pawns::attack(int pawnNum, int attackedNum, Equipment* weapon)
             {
                 missMax--;
             }
-            attacked->rangedAttack(weapon->getAttackValue(), missMax);
+            attacked->rangedAttack(attackValue, missMax);
         }
         else
         {
-            attacked->attack(weapon->getAttackValue());
+            attacked->attack(attackValue);
         }
 
         if (!attacked->isAlive())
@@ -407,6 +413,19 @@ bool Pawns::findBracers(int pawnNum)
 		}
 	}
     return false;
+}
+
+bool Pawns::findGauntlets(int pawnNum)
+{
+	for (Equipment* item : pawnDict[pawnNum]->getEquipment())
+	{
+		if (item->getName() == "gauntlets")
+		{
+			return true;
+		}
+	}
+	return false;
+
 }
 
 void Pawns::death(Pawn* attacked)

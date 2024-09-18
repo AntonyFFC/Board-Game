@@ -52,6 +52,7 @@ private:
 	void pawnMoved(int pawnNum);
 	void attack(int pawnNum, int attackedNum, Equipment* weapon);
 	bool findBracers(int pawnNum);
+	bool findGauntlets(int pawnNum);
 	void death(Pawn* attacked);
 	std::vector<Equipment*> getWeaponsInUse(int pawnNum, int attackedNum);
 	bool pawnFirst();
