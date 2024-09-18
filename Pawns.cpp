@@ -388,6 +388,10 @@ void Pawns::attack(int pawnNum, int attackedNum, Equipment* weapon)
         else
         {
             attacked->attack(attackValue);
+			if (weapon->getName() == "dagger" || weapon->getName() == "long dagger")
+			{
+				attacker->removeEquipment(weapon);
+			}
         }
 
         if (!attacked->isAlive())
@@ -443,7 +447,8 @@ std::vector<Equipment*> Pawns::getWeaponsInUse(int pawnNum, int attackedNum)
     Pawn* attacker = pawnDict[pawnNum];
     for (Equipment* item : attacker->getEquipment())
     {
-        if (item->getType() == "Weapon" && item->getAttackActions() <= attacker->getRemainingActions())
+        if (item->getType() == "Weapon" && item->getAttackActions() <= attacker->getRemainingActions()
+            || item->getName() == "dagger" || item->getName() == "long dagger")
         {
             std::vector<std::tuple<int, int, int>> inView = getViewOfWeapon(pawnNum, item);
             auto it = std::find(inView.begin(), inView.end(), attackedSpot);
