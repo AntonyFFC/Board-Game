@@ -53,7 +53,22 @@ void ShopPawns::togglePawnEquipmentTable(int pawnIndex)
 	}
 }
 
+void ShopPawns::setPawnEquipmentTable(int pawnIndex, bool value)
+{
+	if (pawnIndex >= 0 && pawnIndex < pawns.size()) {
+		pawns[pawnIndex]->setIsEquipmentShown(value);
+	}
+
+}
+
 std::vector<Pawn*> ShopPawns::getPawns()
 {
     return pawns;
+}
+
+void ShopPawns::hideAllTables()
+{
+	for (Pawn* pawn : pawns) {
+		pawn->setIsEquipmentShown(false);
+	}
 }

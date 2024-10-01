@@ -4,6 +4,8 @@
 #include <sstream>
 #include <vector>
 
+class Pawn;
+
 class Equipment {
 public:
     struct SpaceOccupied {
@@ -15,7 +17,7 @@ public:
         int maxRange;
     };
 
-    Equipment(const std::string& name, Range range, const SpaceOccupied& spaceOccupied, int attackValue,
+    Equipment(const std::string& name, Range range, const SpaceOccupied& spaceOccupied, int baseAttack,
               int attackActions, const std::string& type, int price, const std::string& additionalCapabilities,
               const int numInDeck = 1, 
               std::vector<std::pair<std::string, int>> actionBonus = {},
@@ -26,7 +28,7 @@ public:
     std::string getName() const;
     Range getRange() const;
     SpaceOccupied getSpaceOccupied() const;
-    int getAttackValue() const;
+    int getAttackValue(const Pawn* owner = nullptr) const;
     int getAttackActions() const;
     std::string getType() const;
     int getPrice() const;
@@ -44,7 +46,7 @@ private:
     std::string name;
     Range range;
     SpaceOccupied spaceOccupied;
-    int attackValue;
+    int baseAttack;
     int attackActions;
     std::string type;
     int price;

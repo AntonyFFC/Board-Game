@@ -9,8 +9,9 @@
 #include <stdexcept>
 #include "Globals.h"
 #include "Table.h"
-#include "Equipment.h"
 
+
+class Equipment;
 class Table;
 
 class Pawn {
@@ -26,6 +27,8 @@ public:
 
     // Getter methods
     std::string getName() const;
+	std::string getFirstName() const; //returns first word of the name
+	std::string getSecondName() const; //returns second word of the name
     int getTeamNumber() const;
     int getSide() const;
     int getRemainingActions() const;

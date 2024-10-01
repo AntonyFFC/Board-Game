@@ -1,4 +1,5 @@
 #include "Equipment.h"
+#include "Pawn.h"
 #include <stdexcept>
 
 bool isStringRanged(const std::string& text)
@@ -24,12 +25,12 @@ int getMissValueFromString(const std::string& text)
 }
 
 Equipment::Equipment(const std::string& name, Range range, const SpaceOccupied& spaceOccupied, 
-    int attackValue, int attackActions,const std::string& type, int price,
+    int baseAttack, int attackActions,const std::string& type, int price,
     const std::string& additionalCapabilities, const int numInDeck,
     std::vector<std::pair<std::string, int>> actionBonus,
     std::vector<std::pair<std::string, int>> attackBonus, 
     std::vector<std::pair<std::string, int>> rangeBonus)
-    : name(name), range(range), spaceOccupied(spaceOccupied), attackValue(attackValue),
+    : name(name), range(range), spaceOccupied(spaceOccupied), baseAttack(baseAttack),
     attackActions(attackActions), type(type), price(price),
     additionalCapabilities(additionalCapabilities), numInDeck(numInDeck),
 	actionBonus(actionBonus), attackBonus(attackBonus), rangeBonus(rangeBonus)
@@ -54,7 +55,16 @@ Equipment::SpaceOccupied Equipment::getSpaceOccupied() const {
     return spaceOccupied;
 }
 
-int Equipment::getAttackValue() const {
+int Equipment::getAttackValue(const Pawn* owner) const {
+	if (owner == nullptr) {
+		return baseAttack;
+	}
+    int attackValue = baseAttack;
+    for (const auto& pair : attackBonus) {
+        if (pair.first == "isTownsman" && owner->getFirstName() == "Townsman") {
+            attackValue += pair.second;
+        }
+    }
     return attackValue;
 }
 
@@ -107,11 +117,11 @@ int Equipment::reduceDurability(int value)
     else
     {
         int rest = 0;
-        attackValue -= value;
-        if (attackValue < 0)
+        baseAttack -= value;
+        if (baseAttack < 0)
         {
-            rest = -attackValue;
-            attackValue = 0;
+            rest = -baseAttack;
+            baseAttack = 0;
         }
         return rest;
     }

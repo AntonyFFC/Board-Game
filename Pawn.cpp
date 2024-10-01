@@ -1,4 +1,5 @@
 ﻿#include "Pawn.h"
+#include "Equipment.h"
 #include <random>
 #include <iostream>
 
@@ -120,6 +121,28 @@ sf::Sprite Pawn::getSprite() {
 
 std::string Pawn::getName() const {
     return name;
+}
+
+std::string Pawn::getFirstName() const
+{
+    std::istringstream stream(name);
+    std::string word;
+    stream >> word;
+	return word;
+}
+
+std::string Pawn::getSecondName() const
+{
+    std::istringstream stream(name);
+    std::string word;
+    int wordCount = 0;
+
+    while (stream >> word) {
+        wordCount++;
+        if (wordCount == 2) {
+            return word;
+        }
+    }
 }
 
 int Pawn::getTeamNumber() const {
@@ -572,7 +595,7 @@ void Pawn::useArmour(const std::string& type, std::vector<bool>& armours, int va
 {
     Equipment* armour = findArmour(type);
     int rest = armour->reduceDurability(value);
-    if (armour->getAttackValue() <= 0)
+    if (armour->getAttackValue(this) <= 0)
     {
         removeEquipment(armour);
         delete armour;
@@ -580,7 +603,7 @@ void Pawn::useArmour(const std::string& type, std::vector<bool>& armours, int va
         {
             Equipment* covering = findArmour("Covering");
             int rest2 = covering->reduceDurability(rest);
-            if (covering->getAttackValue() <= 0)
+            if (covering->getAttackValue(this) <= 0)
             {
                 removeEquipment(covering);
                 delete covering;

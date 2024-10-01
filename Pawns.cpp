@@ -370,7 +370,7 @@ void Pawns::attack(int pawnNum, int attackedNum, Equipment* weapon)
     if (weapon->getAttackActions() <= attacker->getRemainingActions())
     {
         Pawn* attacked = pawnDict[attackedNum];
-		int attackValue = weapon->getAttackValue();
+		int attackValue = weapon->getAttackValue(attacker);
 		if (findGauntlets(pawnNum))
 		{
 			attackValue++;

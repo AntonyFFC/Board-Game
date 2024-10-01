@@ -293,6 +293,8 @@ void Shop::unClickAll()
 
 void Shop::startGame()
 {
+	shopPawns[0].hideAllTables();
+	shopPawns[1].hideAllTables();
 	interface1->addPawns(shopPawns[0].getPawns(), 0);
 	interface1->addWalls(shopStorage[0].getNumberOfWalls(), 0);
 	interface1->addPawns(shopPawns[1].getPawns(), 1);
