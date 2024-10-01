@@ -1,7 +1,9 @@
 [
     {
+        "actionBonus": [],
         "additionalCapabilities": "Helmet",
         "attackActions": 0,
+        "attackBonus": [],
         "attackValue": 3,
         "name": "helmet",
         "numInDeck": 2,
@@ -10,6 +12,7 @@
             "maxRange": 0,
             "minRange": 0
         },
+        "rangeBonus": [],
         "spaceOccupied": {
             "numSpaces": 1,
             "spaceType": "extras"
@@ -17,8 +20,10 @@
         "type": "Armour"
     },
     {
+        "actionBonus": [],
         "additionalCapabilities": "Helmet",
         "attackActions": 1,
+        "attackBonus": [],
         "attackValue": 4,
         "name": "great helmet",
         "numInDeck": 1,
@@ -27,6 +32,7 @@
             "maxRange": 0,
             "minRange": 0
         },
+        "rangeBonus": [],
         "spaceOccupied": {
             "numSpaces": 1,
             "spaceType": "extras"
@@ -34,14 +40,14 @@
         "type": "Armour"
     },
     {
-        "additionalCapabilities": "Shield -2 movement 0 with knight",
-        "attackActions": 2,
-        "actionConditions": [
-          {
+        "actionBonus": [
+        {
             "condition": "isKnight",
             "bonus": -2
-          }
+        }
         ],
+        "additionalCapabilities": "Shield -2 movement 0 with knight",
+        "attackActions": 2,
         "attackValue": 5,
         "name": "light shield",
         "numInDeck": 2,
@@ -50,6 +56,7 @@
             "maxRange": 0,
             "minRange": 0
         },
+        "rangeBonus": [],
         "spaceOccupied": {
             "numSpaces": 1,
             "spaceType": "hands"
@@ -57,14 +64,15 @@
         "type": "Armour"
     },
     {
-        "additionalCapabilities": "Shield -2 movement, -1 with knight",
-        "attackActions": 2,
-        "actionConditions": [
-          {
+        "actionBonus": [
+        {
             "condition": "isKnight",
             "bonus": -1
-          }
+        }
         ],
+        "additionalCapabilities": "Shield -2 movement, -1 with knight",
+        "attackActions": 2,
+        "attackBonus": [],
         "attackValue": 5,
         "name": "shield",
         "numInDeck": 1,
@@ -73,6 +81,7 @@
             "maxRange": 0,
             "minRange": 0
         },
+        "rangeBonus": [],
         "spaceOccupied": {
             "numSpaces": 1,
             "spaceType": "hands"
@@ -80,8 +89,10 @@
         "type": "Armour"
     },
     {
+        "actionBonus": [],
         "additionalCapabilities": "Shield",
         "attackActions": 2,
+        "attackBonus": [],
         "attackValue": 6,
         "name": "heavy shield",
         "numInDeck": 2,
@@ -90,6 +101,7 @@
             "maxRange": 0,
             "minRange": 0
         },
+        "rangeBonus": [],
         "spaceOccupied": {
             "numSpaces": 1,
             "spaceType": "hands"
@@ -97,8 +109,10 @@
         "type": "Armour"
     },
     {
+        "actionBonus": [],
         "additionalCapabilities": "Covering",
         "attackActions": 1,
+        "attackBonus": [],
         "attackValue": 2,
         "name": "leather armour",
         "numInDeck": 1,
@@ -107,6 +121,7 @@
             "maxRange": 0,
             "minRange": 0
         },
+        "rangeBonus": [],
         "spaceOccupied": {
             "numSpaces": 1,
             "spaceType": "extras"
@@ -114,8 +129,10 @@
         "type": "Armour"
     },
     {
+        "actionBonus": [],
         "additionalCapabilities": "Covering",
         "attackActions": 1,
+        "attackBonus": [],
         "attackValue": 3,
         "name": "plate armour",
         "numInDeck": 2,
@@ -124,6 +141,7 @@
             "maxRange": 0,
             "minRange": 0
         },
+        "rangeBonus": [],
         "spaceOccupied": {
             "numSpaces": 1,
             "spaceType": "extras"
@@ -131,15 +149,16 @@
         "type": "Armour"
     },
     {
+        "actionBonus": [],
         "additionalCapabilities": "-1 attack, -2 with shield",
         "attackActions": 2,
-        "attackValue": 1,
-        "acttackConditions": [
-          {
+        "attackBonus": [
+        {
             "condition": "hasShield",
             "bonus": 1
-          }
+        }
         ],
+        "attackValue": 1,
         "name": "flail",
         "numInDeck": 1,
         "price": 3,
@@ -147,6 +166,7 @@
             "maxRange": 1,
             "minRange": 0
         },
+        "rangeBonus": [],
         "spaceOccupied": {
             "numSpaces": 1,
             "spaceType": "hands"
@@ -154,8 +174,10 @@
         "type": "Weapon"
     },
     {
+        "actionBonus": [],
         "additionalCapabilities": "misses less by 1",
         "attackActions": 0,
+        "attackBonus": [],
         "attackValue": 0,
         "name": "bracers",
         "numInDeck": 2,
@@ -164,6 +186,7 @@
             "maxRange": 0,
             "minRange": 0
         },
+        "rangeBonus": [],
         "spaceOccupied": {
             "numSpaces": 1,
             "spaceType": "extras"
@@ -171,8 +194,10 @@
         "type": "Accesory"
     },
     {
+        "actionBonus": [],
         "additionalCapabilities": "adds 2 movement",
         "attackActions": -2,
+        "attackBonus": [],
         "attackValue": 0,
         "name": "war horse",
         "numInDeck": 2,
@@ -181,6 +206,7 @@
             "maxRange": 0,
             "minRange": 0
         },
+        "rangeBonus": [],
         "spaceOccupied": {
             "numSpaces": 1,
             "spaceType": "extras"
@@ -188,8 +214,10 @@
         "type": "Accesory"
     },
     {
+        "actionBonus": [],
         "additionalCapabilities": "adds 1 movement",
         "attackActions": -1,
+        "attackBonus": [],
         "attackValue": 0,
         "name": "horse",
         "numInDeck": 1,
@@ -198,6 +226,7 @@
             "maxRange": 0,
             "minRange": 0
         },
+        "rangeBonus": [],
         "spaceOccupied": {
             "numSpaces": 1,
             "spaceType": "extras"
@@ -205,8 +234,10 @@
         "type": "Accesory"
     },
     {
+        "actionBonus": [],
         "additionalCapabilities": "Ranged 2",
         "attackActions": 3,
+        "attackBonus": [],
         "attackValue": 2,
         "name": "crossbow",
         "numInDeck": 1,
@@ -215,6 +246,7 @@
             "maxRange": 6,
             "minRange": 4
         },
+        "rangeBonus": [],
         "spaceOccupied": {
             "numSpaces": 1,
             "spaceType": "hands"
@@ -222,8 +254,10 @@
         "type": "Weapon"
     },
     {
+        "actionBonus": [],
         "additionalCapabilities": "Ranged 2",
         "attackActions": 4,
+        "attackBonus": [],
         "attackValue": 2,
         "name": "heavy crossbow",
         "numInDeck": 1,
@@ -232,6 +266,7 @@
             "maxRange": 6,
             "minRange": 4
         },
+        "rangeBonus": [],
         "spaceOccupied": {
             "numSpaces": 1,
             "spaceType": "hands"
@@ -239,8 +274,10 @@
         "type": "Weapon"
     },
     {
+        "actionBonus": [],
         "additionalCapabilities": "Ranged 2",
         "attackActions": 2,
+        "attackBonus": [],
         "attackValue": 1,
         "name": "bow",
         "numInDeck": 1,
@@ -249,6 +286,7 @@
             "maxRange": 7,
             "minRange": 4
         },
+        "rangeBonus": [],
         "spaceOccupied": {
             "numSpaces": 2,
             "spaceType": "hands"
@@ -256,8 +294,10 @@
         "type": "Weapon"
     },
     {
+        "actionBonus": [],
         "additionalCapabilities": "Ranged 2",
         "attackActions": 2,
+        "attackBonus": [],
         "attackValue": 1,
         "name": "longbow",
         "numInDeck": 1,
@@ -266,6 +306,7 @@
             "maxRange": 7,
             "minRange": 5
         },
+        "rangeBonus": [],
         "spaceOccupied": {
             "numSpaces": 2,
             "spaceType": "hands"
@@ -273,8 +314,10 @@
         "type": "Weapon"
     },
     {
+        "actionBonus": [],
         "additionalCapabilities": "",
         "attackActions": 1,
+        "attackBonus": [],
         "attackValue": 1,
         "name": "sword",
         "numInDeck": 1,
@@ -283,6 +326,7 @@
             "maxRange": 1,
             "minRange": 0
         },
+        "rangeBonus": [],
         "spaceOccupied": {
             "numSpaces": 1,
             "spaceType": "hands"
@@ -290,8 +334,10 @@
         "type": "Weapon"
     },
     {
+        "actionBonus": [],
         "additionalCapabilities": "",
         "attackActions": 1,
+        "attackBonus": [],
         "attackValue": 1,
         "name": "two handed sword",
         "numInDeck": 1,
@@ -300,6 +346,7 @@
             "maxRange": 2,
             "minRange": 0
         },
+        "rangeBonus": [],
         "spaceOccupied": {
             "numSpaces": 2,
             "spaceType": "hands"
@@ -307,15 +354,16 @@
         "type": "Weapon"
     },
     {
+        "actionBonus": [],
         "additionalCapabilities": "3 attack, 4 with townsman",
         "attackActions": 4,
-        "attackValue": 3,
-        "acttackConditions": [
+        "attackBonus": [
           {
             "condition": "isTownsman",
             "bonus": 1
           }
         ],
+        "attackValue": 3,
         "name": "two handed axe",
         "numInDeck": 1,
         "price": 2,
@@ -323,6 +371,7 @@
             "maxRange": 2,
             "minRange": 0
         },
+        "rangeBonus": [],
         "spaceOccupied": {
             "numSpaces": 2,
             "spaceType": "hands"
@@ -330,17 +379,19 @@
         "type": "Weapon"
     },
     {
+        "actionBonus": [],
         "additionalCapabilities": "destroys walls using 1 action, 1 range, 2 with townsman",
         "attackActions": 4,
+        "attackBonus": [],
         "attackValue": 2,
         "name": "warhammer",
         "numInDeck": 1,
         "price": 2,
         "range": {
-          "maxRange": 1,
-          "minRange": 0
+            "maxRange": 1,
+            "minRange": 0
         },
-        "rangeConditions": [
+        "rangeBonus": [
           {
             "condition": "isTownsman",
             "bonus": 1
@@ -353,14 +404,15 @@
         "type": "Weapon"
     },
     {
-        "additionalCapabilities": "Ranged 3 ,-3 actions, -2 with peasant",
-        "attackActions": 3,
-        "actionConditions": [
+        "actionBonus": [
           {
             "condition": "isPeasant",
             "bonus": -1
           }
         ],
+        "additionalCapabilities": "Ranged 3 ,-3 actions, -2 with peasant",
+        "attackActions": 3,
+        "attackBonus": [],
         "attackValue": 2,
         "name": "large slingshot",
         "numInDeck": 1,
@@ -369,6 +421,7 @@
             "maxRange": 4,
             "minRange": 2
         },
+        "rangeBonus": [],
         "spaceOccupied": {
             "numSpaces": 2,
             "spaceType": "hands"
@@ -376,15 +429,16 @@
         "type": "Weapon"
     },
     {
+        "actionBonus": [],
         "additionalCapabilities": "Ranged 3 ,1 attack, 2 with peasant",
         "attackActions": 3,
-        "attackValue": 1,
-        "acttackConditions": [
+        "attackBonus": [
           {
             "condition": "isPeasant",
             "bonus": 1
           }
         ],
+        "attackValue": 1,
         "name": "slingshot",
         "numInDeck": 1,
         "price": 1,
@@ -392,6 +446,7 @@
             "maxRange": 4,
             "minRange": 2
         },
+        "rangeBonus": [],
         "spaceOccupied": {
             "numSpaces": 2,
             "spaceType": "hands"
@@ -399,8 +454,10 @@
         "type": "Weapon"
     },
     {
+        "actionBonus": [],
         "additionalCapabilities": "+1 to every attack",
         "attackActions": 0,
+        "attackBonus": [],
         "attackValue": 1,
         "name": "gauntlets",
         "numInDeck": 2,
@@ -409,6 +466,7 @@
             "maxRange": 0,
             "minRange": 0
         },
+        "rangeBonus": [],
         "spaceOccupied": {
             "numSpaces": 1,
             "spaceType": "extras"
@@ -416,8 +474,10 @@
         "type": "Accesory"
     },
     {
+        "actionBonus": [],
         "additionalCapabilities": "Single use, 1 range, 2 with prince",
         "attackActions": 1,
+        "attackBonus": [],
         "attackValue": 5,
         "name": "long dagger",
         "numInDeck": 1,
@@ -426,7 +486,7 @@
             "maxRange": 1,
             "minRange": 0
         },
-        "rangeConditions": [
+        "rangeBonus": [
           {
             "condition": "isPrince",
             "bonus": 1
@@ -439,15 +499,16 @@
         "type": "Accesory"
     },
     {
+        "actionBonus": [],
         "additionalCapabilities": "Single use, 4 attack, 5 with prince",
         "attackActions": 1,
-        "attackValue": 4,
-        "acttackConditions": [
+        "attackBonus": [
           {
             "condition": "isPrince",
             "bonus": 1
           }
         ],
+        "attackValue": 4,
         "name": "dagger",
         "numInDeck": 1,
         "price": 2,
@@ -455,6 +516,7 @@
             "maxRange": 1,
             "minRange": 0
         },
+        "rangeBonus": [],
         "spaceOccupied": {
             "numSpaces": 1,
             "spaceType": "extras"
@@ -462,15 +524,16 @@
         "type": "Accesory"
     },
     {
+        "actionBonus": [],
         "additionalCapabilities": "2 attack, 3 on a horse",
         "attackActions": 3,
-        "attackValue": 2,
-        "acttackConditions": [
+        "attackBonus": [
           {
             "condition": "isMounted",
             "bonus": 1
           }
         ],
+        "attackValue": 2,
         "name": "spear",
         "numInDeck": 1,
         "price": 4,
@@ -478,6 +541,7 @@
             "maxRange": 2,
             "minRange": 0
         },
+        "rangeBonus": [],
         "spaceOccupied": {
             "numSpaces": 1,
             "spaceType": "hands"
@@ -485,15 +549,16 @@
         "type": "Weapon"
     },
     {
+        "actionBonus": [],
         "additionalCapabilities": "2 attack, 3 with townsman",
         "attackActions": 3,
-        "attackValue": 2,
-        "acttackConditions": [
+        "attackBonus": [
           {
             "condition": "isTownsman",
             "bonus": 1
           }
         ],
+        "attackValue": 2,
         "name": "axe",
         "numInDeck": 1,
         "price": 3,
@@ -501,6 +566,7 @@
             "maxRange": 1,
             "minRange": 0
         },
+        "rangeBonus": [],
         "spaceOccupied": {
             "numSpaces": 1,
             "spaceType": "hands"
@@ -508,8 +574,10 @@
         "type": "Weapon"
     },
     {
+        "actionBonus": [],
         "additionalCapabilities": "1 range, 2 with peasant",
         "attackActions": 2,
+        "attackBonus": [],
         "attackValue": 1,
         "name": "fork",
         "numInDeck": 1,
@@ -518,7 +586,7 @@
             "maxRange": 1,
             "minRange": 0
         },
-        "rangeConditions": [
+        "rangeBonus": [
           {
             "condition": "isPeasant",
             "bonus": 1

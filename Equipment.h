@@ -2,6 +2,7 @@
 #include <string>
 #include <map>
 #include <sstream>
+#include <vector>
 
 class Equipment {
 public:
@@ -15,8 +16,11 @@ public:
     };
 
     Equipment(const std::string& name, Range range, const SpaceOccupied& spaceOccupied, int attackValue,
-        int attackActions,const std::string& type, int price, const std::string& additionalCapabilities,
-        const int numInDeck=1);
+              int attackActions, const std::string& type, int price, const std::string& additionalCapabilities,
+              const int numInDeck = 1, 
+              std::vector<std::pair<std::string, int>> actionBonus = {},
+              std::vector<std::pair<std::string, int>> attackBonus = {},
+              std::vector<std::pair<std::string, int>> rangeBonus = {});
 
     // getters
     std::string getName() const;
@@ -29,8 +33,11 @@ public:
     std::string getAdditionalCapabilities() const;
     int getMissMax() const;
     int getNumInDeck() const;
+	std::vector<std::pair<std::string, int>> getActionBonus() const;
+	std::vector<std::pair<std::string, int>> getAttackBonus() const;
+	std::vector<std::pair<std::string, int>> getRangeBonus() const;
     int reduceDurability(int value);
-    bool isRanged();
+    bool isRanged() const;
     std::string rangeToString() const;
     std::string spaceToString() const;
 private:
@@ -45,4 +52,7 @@ private:
     bool ranged;
     int miss;
     int numInDeck;
+    std::vector<std::pair<std::string, int>> actionBonus;
+    std::vector<std::pair<std::string, int>> attackBonus;
+    std::vector<std::pair<std::string, int>> rangeBonus;
 };

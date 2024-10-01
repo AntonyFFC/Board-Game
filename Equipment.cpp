@@ -25,10 +25,14 @@ int getMissValueFromString(const std::string& text)
 
 Equipment::Equipment(const std::string& name, Range range, const SpaceOccupied& spaceOccupied, 
     int attackValue, int attackActions,const std::string& type, int price,
-    const std::string& additionalCapabilities, const int numInDeck)
+    const std::string& additionalCapabilities, const int numInDeck,
+    std::vector<std::pair<std::string, int>> actionBonus,
+    std::vector<std::pair<std::string, int>> attackBonus, 
+    std::vector<std::pair<std::string, int>> rangeBonus)
     : name(name), range(range), spaceOccupied(spaceOccupied), attackValue(attackValue),
     attackActions(attackActions), type(type), price(price),
-    additionalCapabilities(additionalCapabilities), numInDeck(numInDeck)
+    additionalCapabilities(additionalCapabilities), numInDeck(numInDeck),
+	actionBonus(actionBonus), attackBonus(attackBonus), rangeBonus(rangeBonus)
 {
     ranged = isStringRanged(additionalCapabilities);
     miss = 0;
@@ -79,6 +83,21 @@ int Equipment::getNumInDeck() const
     return numInDeck;
 }
 
+std::vector<std::pair<std::string, int>> Equipment::getActionBonus() const
+{
+	return actionBonus;
+}
+
+std::vector<std::pair<std::string, int>> Equipment::getAttackBonus() const
+{
+	return attackBonus;
+}
+
+std::vector<std::pair<std::string, int>> Equipment::getRangeBonus() const
+{
+	return rangeBonus;
+}
+
 int Equipment::reduceDurability(int value)
 {
     if (getType() != "Armour")
@@ -99,7 +118,7 @@ int Equipment::reduceDurability(int value)
 
 }
 
-bool Equipment::isRanged()
+bool Equipment::isRanged() const
 {
     return ranged;
 }

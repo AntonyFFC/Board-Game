@@ -24,6 +24,33 @@ bool EquipmentManager::saveEquipmentToJson(const std::vector<Equipment*>& equipm
             itemData["additionalCapabilities"] = item->getAdditionalCapabilities();
             itemData["numInDeck"] = item->getNumInDeck();
 
+            nlohmann::json actionBonusJson = nlohmann::json::array();
+            for (const auto& bonus : item->getActionBonus()) {
+                nlohmann::json bonusJson;
+                bonusJson["condition"] = bonus.first;
+                bonusJson["bonus"] = bonus.second;
+                actionBonusJson.push_back(bonusJson);
+            }
+            itemData["actionBonus"] = actionBonusJson;
+
+            nlohmann::json attackBonusJson = nlohmann::json::array();
+            for (const auto& bonus : item->getAttackBonus()) {
+                nlohmann::json bonusJson;
+                bonusJson["condition"] = bonus.first;
+                bonusJson["bonus"] = bonus.second;
+                attackBonusJson.push_back(bonusJson);
+            }
+            itemData["attackBonus"] = attackBonusJson;
+
+            nlohmann::json rangeBonusJson = nlohmann::json::array();
+            for (const auto& bonus : item->getRangeBonus()) {
+                nlohmann::json bonusJson;
+                bonusJson["condition"] = bonus.first;
+                bonusJson["bonus"] = bonus.second;
+                rangeBonusJson.push_back(bonusJson);
+            }
+            itemData["rangeBonus"] = rangeBonusJson;
+
             equipmentData.push_back(itemData);
         }
 
@@ -65,8 +92,27 @@ std::vector<Equipment*> EquipmentManager::loadEquipmentFromJson(const std::strin
             std::string additionalCapabilities = item["additionalCapabilities"];
             int numInDeck = item["numInDeck"];
 
+            std::vector<std::pair<std::string, int>> actionBonus = {};
+            if (item.contains("actionBonus") && item["actionBonus"].is_array()) {
+                for (const auto& cond : item["actionBonus"]) {
+                    actionBonus.emplace_back(cond["condition"], cond["bonus"]);
+                }
+            }
+            std::vector<std::pair<std::string, int>> attackBonus = {};
+            if (item.contains("attackBonus") && item["attackBonus"].is_array()) {
+                for (const auto& cond : item["attackBonus"]) {
+                    attackBonus.emplace_back(cond["condition"], cond["bonus"]);
+                }
+            }
+            std::vector<std::pair<std::string, int>> rangeBonus = {};
+            if (item.contains("rangeBonus") && item["rangeBonus"].is_array()) {
+                for (const auto& cond : item["rangeBonus"]) {
+                    rangeBonus.emplace_back(cond["condition"], cond["bonus"]);
+                }
+            }
+
             Equipment* equipment = new Equipment(name, range, spaceOccupied, attackValue, attackActions,
-                type, price, additionalCapabilities, numInDeck);
+                type, price, additionalCapabilities, numInDeck, actionBonus, attackBonus, rangeBonus);
             equipmentList.push_back(equipment);
         }
     }
