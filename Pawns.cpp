@@ -148,7 +148,7 @@ void Pawns::handleClickRight(sf::Vector2i mousePosition)
         pawnDict[whichPawn]->reduceActions(1);
         setTrading(true);
         tradeTable = new TradeTable(pawnDict[whichPawn], pawnDict[numberOfPawn(pawnCoords, true)], target);
-        resetTurn(whichPawn);
+        resetTurn();
     }
     else
     {
@@ -195,7 +195,7 @@ bool Pawns::placeWall(int pawnNumber, std::tuple<int, int, int> coords)
     board->clearHighlight();
     pawnDict[pawnNumber]->reduceActions(1);
     board->setWall(coords);
-    resetTurn(pawnNumber);
+    resetTurn();
 	return true;
 }
 
@@ -210,7 +210,7 @@ bool Pawns::destroyWall(int pawnNumber, std::tuple<int, int, int> coords)
     {
         board->setGrass(coords);
         pawnDict[pawnNumber]->reduceActions(4);
-        resetTurn(pawnNumber);
+        resetTurn();
     }
     return true;
 }
@@ -361,7 +361,7 @@ void Pawns::pawnMoved(int pawnNum)
     board->hexDict[previousHex]->setPawn(false);
     board->hexDict[current]->setPawn(true, pawn);
     previousHex = current;
-    resetTurn(pawnNum);
+    resetTurn();
 }
 
 void Pawns::attack(int pawnNum, int attackedNum, Equipment* weapon)
@@ -399,7 +399,7 @@ void Pawns::attack(int pawnNum, int attackedNum, Equipment* weapon)
             death(attacked);
         }
         attacker->reduceActions(weapon->getAttackActions());
-        resetTurn(pawnNum);
+        resetTurn();
     }
     else
     {
@@ -512,17 +512,16 @@ void Pawns::setupText()
     }
 }
 
-void Pawns::resetTurn(int pawnNum)
+void Pawns::resetTurn()
 {
     board->clearHighlight();
-    if (pawnDict[pawnNum]->getRemainingActions() == 0)
-    {
-        pawnDict[pawnNum]->setRemainingActions(pawnDict[pawnNum]->getMaxActions());
-        previousHex = empty;
-        flipTurn();
-    }
-    else
-    {
-        pawnClicked(pawnNum);
-    }
+    pawnClicked(whichPawn);
+}
+
+void Pawns::endTurn()
+{
+    pawnDict[whichPawn]->setRemainingActions(pawnDict[whichPawn]->getMaxActions());
+    board->clearHighlight();
+    previousHex = empty;
+    flipTurn();
 }

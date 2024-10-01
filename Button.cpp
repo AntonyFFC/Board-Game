@@ -26,6 +26,26 @@ Button::~Button()
     // No dynamic memory to clean up
 }
 
+bool Button::click(sf::Vector2i mousePosition)
+{
+    if (isClicked(mousePosition))
+    {
+        setIsBeingClicked(true);
+        return true;
+    }
+    return false;
+}
+
+bool Button::unclick()
+{
+    if (!isBeingClicked)
+    {
+        return false;
+    }
+	setIsBeingClicked(false);
+	return true;
+}
+
 bool Button::isClicked(sf::Vector2i mousePosition)
 {
     sf::FloatRect buttonBounds = buttonShape.getGlobalBounds();
@@ -88,6 +108,19 @@ void Button::setOutlineColor(sf::Color color)
 void Button::setOutlineThickness(float thickness)
 {
     buttonShape.setOutlineThickness(thickness);
+}
+
+void Button::setIsBeingClicked(bool boolean)
+{
+	isBeingClicked = boolean;
+	if (boolean)
+	{
+		buttonShape.setFillColor(sf::Color::Cyan);
+	}
+	else
+	{
+		buttonShape.setFillColor(sf::Color::Transparent);
+	}
 }
 
 void Button::draw(sf::RenderTexture& window)

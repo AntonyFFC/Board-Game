@@ -12,6 +12,7 @@
 #include "Pawns.h"
 #include "SpriteUtils.h"
 #include "WarriorPrep.h"
+#include "Button.h"
 
 class Gui {
 public:
@@ -28,6 +29,7 @@ private:
     sf::RenderWindow* window;
     Board* grid;
     Pawns* pawns;
+	Button endTurnButton;
     WarriorPrep* warriorPrep;
     bool isShiftKeyPressed = false;
     sf::Sprite backgroundSprite;

@@ -6,6 +6,8 @@ Gui::Gui(sf::RenderWindow* window)
     initializeFont();
 	grid = new Board(13, 19, 0.8f);
     pawns = new Pawns(grid, window);
+    endTurnButton = Button(sf::Vector2f(window->getSize().x / 2 + 150,
+        window->getSize().y - 70), sf::Vector2f(200, 50), "end turn");
     warriorPrep = new WarriorPrep(window, grid, pawns);
     backgroundSprite = loadBackgroundSprite(&backgroundTexture,"board");
     backgroundSprite.setPosition(0, 0);
@@ -44,13 +46,21 @@ void Gui::keyPressed(const sf::Event& event) {
     }
     else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
         sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
-        pawns->handleClick(mousePosition);
+		if (!endTurnButton.click(mousePosition))
+            pawns->handleClick(mousePosition);
         changesOccurred = true;
     }
     else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right) {
         sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
         pawns->handleClickRight(mousePosition);
         changesOccurred = true;
+    }
+    else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
+        if (endTurnButton.unclick()) // checks if the button was clicked earlier
+        {
+            pawns->endTurn();
+            changesOccurred = true;
+        }
     }
     if (event.type == sf::Event::Closed)
     {
@@ -75,5 +85,6 @@ void Gui::display()
     window->draw(backgroundSprite);
     grid->drawBoard(*window);
     pawns->draw(isShiftKeyPressed);
+	endTurnButton.draw(*window);
     window->display();
 }
