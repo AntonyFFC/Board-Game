@@ -65,6 +65,7 @@ public:
 
     // Other methods
     void reduceActions(int amount);
+	void reduceMaxActions(int amount);
     void reduceHP(int amount);
     bool isAlive() const;
     void dead();

@@ -347,10 +347,29 @@ void Pawn::reduceActions(int amount) {
     }
 }
 
+void Pawn::reduceMaxActions(int amount)
+{
+	maxActions -= amount;
+}
+
 void Pawn::reduceHP(int amount) {
+	int previousHP = HP;
     HP -= amount;
     if (!isAlive())
         dead();
+    else if (previousHP > 2)
+    {
+		if (HP == 2)
+			reduceMaxActions(1);
+		else if (HP == 1)
+		    reduceMaxActions(2);
+		calculateInitialActions();
+    }
+    else if (previousHP == 2 && HP == 1)
+    {
+        reduceMaxActions(1);
+        calculateInitialActions();
+    }
 }
 
 bool Pawn::isAlive() const {
