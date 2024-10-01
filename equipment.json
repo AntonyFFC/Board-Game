@@ -35,7 +35,13 @@
     },
     {
         "additionalCapabilities": "Shield -2 movement 0 with knight",
-        "attackActions": 1,
+        "attackActions": 2,
+        "actionConditions": [
+          {
+            "condition": "isKnight",
+            "bonus": -2
+          }
+        ],
         "attackValue": 5,
         "name": "light shield",
         "numInDeck": 2,
@@ -53,6 +59,12 @@
     {
         "additionalCapabilities": "Shield -2 movement, -1 with knight",
         "attackActions": 2,
+        "actionConditions": [
+          {
+            "condition": "isKnight",
+            "bonus": -1
+          }
+        ],
         "attackValue": 5,
         "name": "shield",
         "numInDeck": 1,
@@ -122,6 +134,12 @@
         "additionalCapabilities": "-1 attack, -2 with shield",
         "attackActions": 2,
         "attackValue": 1,
+        "acttackConditions": [
+          {
+            "condition": "hasShield",
+            "bonus": 1
+          }
+        ],
         "name": "flail",
         "numInDeck": 1,
         "price": 3,
@@ -292,6 +310,12 @@
         "additionalCapabilities": "3 attack, 4 with townsman",
         "attackActions": 4,
         "attackValue": 3,
+        "acttackConditions": [
+          {
+            "condition": "isTownsman",
+            "bonus": 1
+          }
+        ],
         "name": "two handed axe",
         "numInDeck": 1,
         "price": 2,
@@ -313,9 +337,15 @@
         "numInDeck": 1,
         "price": 2,
         "range": {
-            "maxRange": 1,
-            "minRange": 0
+          "maxRange": 1,
+          "minRange": 0
         },
+        "rangeConditions": [
+          {
+            "condition": "isTownsman",
+            "bonus": 1
+          }
+        ],
         "spaceOccupied": {
             "numSpaces": 1,
             "spaceType": "hands"
@@ -325,6 +355,12 @@
     {
         "additionalCapabilities": "Ranged 3 ,-3 actions, -2 with peasant",
         "attackActions": 3,
+        "actionConditions": [
+          {
+            "condition": "isPeasant",
+            "bonus": -1
+          }
+        ],
         "attackValue": 2,
         "name": "large slingshot",
         "numInDeck": 1,
@@ -343,6 +379,12 @@
         "additionalCapabilities": "Ranged 3 ,1 attack, 2 with peasant",
         "attackActions": 3,
         "attackValue": 1,
+        "acttackConditions": [
+          {
+            "condition": "isPeasant",
+            "bonus": 1
+          }
+        ],
         "name": "slingshot",
         "numInDeck": 1,
         "price": 1,
@@ -384,6 +426,12 @@
             "maxRange": 1,
             "minRange": 0
         },
+        "rangeConditions": [
+          {
+            "condition": "isPrince",
+            "bonus": 1
+          }
+        ],
         "spaceOccupied": {
             "numSpaces": 1,
             "spaceType": "extras"
@@ -394,6 +442,12 @@
         "additionalCapabilities": "Single use, 4 attack, 5 with prince",
         "attackActions": 1,
         "attackValue": 4,
+        "acttackConditions": [
+          {
+            "condition": "isPrince",
+            "bonus": 1
+          }
+        ],
         "name": "dagger",
         "numInDeck": 1,
         "price": 2,
@@ -411,6 +465,12 @@
         "additionalCapabilities": "2 attack, 3 on a horse",
         "attackActions": 3,
         "attackValue": 2,
+        "acttackConditions": [
+          {
+            "condition": "isMounted",
+            "bonus": 1
+          }
+        ],
         "name": "spear",
         "numInDeck": 1,
         "price": 4,
@@ -428,6 +488,12 @@
         "additionalCapabilities": "2 attack, 3 with townsman",
         "attackActions": 3,
         "attackValue": 2,
+        "acttackConditions": [
+          {
+            "condition": "isTownsman",
+            "bonus": 1
+          }
+        ],
         "name": "axe",
         "numInDeck": 1,
         "price": 3,
@@ -452,6 +518,12 @@
             "maxRange": 1,
             "minRange": 0
         },
+        "rangeConditions": [
+          {
+            "condition": "isPeasant",
+            "bonus": 1
+          }
+        ],
         "spaceOccupied": {
             "numSpaces": 1,
             "spaceType": "hands"
