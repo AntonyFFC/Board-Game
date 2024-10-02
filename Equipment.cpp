@@ -15,13 +15,13 @@ int getMissValueFromString(const std::string& text)
     return 0;
 }
 
-Equipment::Equipment(const std::string& name, Range range, const SpaceOccupied& spaceOccupied, 
+Equipment::Equipment(const std::string& name, Range baseRange, const SpaceOccupied& spaceOccupied,
     int baseAttack, int attackActions,const std::string& type, int price,
     const std::string& additionalCapabilities, const int numInDeck,
     std::vector<std::pair<std::string, int>> actionBonus,
     std::vector<std::pair<std::string, int>> attackBonus, 
     std::vector<std::pair<std::string, int>> rangeBonus)
-    : name(name), range(range), spaceOccupied(spaceOccupied), baseAttack(baseAttack),
+    : name(name), baseRange(baseRange), spaceOccupied(spaceOccupied), baseAttack(baseAttack),
     attackActions(attackActions), type(type), price(price),
     additionalCapabilities(additionalCapabilities), numInDeck(numInDeck),
 	actionBonus(actionBonus), attackBonus(attackBonus), rangeBonus(rangeBonus)
@@ -43,8 +43,22 @@ bool Equipment::doesNameContain(std::string name) const
 	return this->name.find(name) != std::string::npos;
 }
 
-Equipment::Range Equipment::getRange() const {
-    return range;
+Equipment::Range Equipment::getRange(const Pawn* owner) const {
+    if (owner == nullptr) {
+        return baseRange;
+    }
+    Range rangeValue = baseRange;
+    for (const auto& pair : rangeBonus) {
+        if ((pair.first == "isTownsman" && owner->getFirstName() == "Townsman") ||
+            (pair.first == "isPrince" && owner->getFirstName() == "Prince") ||
+            (pair.first == "isKnight" && owner->getFirstName() == "Knight") ||
+            (pair.first == "isPeasant" && owner->getFirstName() == "Peasant") ||
+            (pair.first == "hasShield" && owner->hasShield()) ||
+            (pair.first == "isMounted" && owner->isMounted())) {
+            rangeValue.maxRange += pair.second;
+        }
+    }
+    return rangeValue;
 }
 
 Equipment::SpaceOccupied Equipment::getSpaceOccupied() const {
@@ -155,7 +169,7 @@ bool Equipment::isRanged() const
 std::string Equipment::rangeToString() const
 {
     std::string outText;
-    outText = std::to_string(range.minRange) + "-" + std::to_string(range.maxRange);
+    outText = std::to_string(baseRange.minRange) + "-" + std::to_string(baseRange.maxRange);
     return outText;
 }
 

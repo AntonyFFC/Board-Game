@@ -439,7 +439,7 @@ std::vector<Equipment*> Pawns::getWeaponsInUse(int pawnNum, int attackedNum)
 std::vector<std::tuple<int, int, int>> Pawns::getViewOfWeapon(int pawnNum, Equipment* weapon)
 {
     Pawn* pawn = pawnDict[pawnNum];
-    Equipment::Range range = weapon->getRange();
+    Equipment::Range range = weapon->getRange(pawn);
     return board->getInView(pawn->getHexCoords(), range.maxRange, range.minRange);
 }
 

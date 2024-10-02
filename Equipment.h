@@ -17,7 +17,7 @@ public:
         int maxRange;
     };
 
-    Equipment(const std::string& name, Range range, const SpaceOccupied& spaceOccupied, int baseAttack,
+    Equipment(const std::string& name, Range baseRange, const SpaceOccupied& spaceOccupied, int baseAttack,
               int attackActions, const std::string& type, int price, const std::string& additionalCapabilities,
               const int numInDeck = 1, 
               std::vector<std::pair<std::string, int>> actionBonus = {},
@@ -27,7 +27,7 @@ public:
     // getters
     std::string getName() const;
 	bool doesNameContain(std::string name) const;
-    Range getRange() const;
+    Range getRange(const Pawn* owner = nullptr) const;
     SpaceOccupied getSpaceOccupied() const;
     int getAttackValue(const Pawn* owner = nullptr) const;
     int getAttackActions(const Pawn* owner = nullptr) const;
@@ -46,7 +46,7 @@ public:
     std::string spaceToString() const;
 private:
     std::string name;
-    Range range;
+    Range baseRange;
     SpaceOccupied spaceOccupied;
     int baseAttack;
     int attackActions;
