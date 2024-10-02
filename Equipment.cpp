@@ -26,6 +26,7 @@ Equipment::Equipment(const std::string& name, Range baseRange, const SpaceOccupi
     additionalCapabilities(additionalCapabilities), numInDeck(numInDeck),
 	actionBonus(actionBonus), attackBonus(attackBonus), rangeBonus(rangeBonus)
 {
+	owner = nullptr;
     ranged = getFirstWordCapabilities()=="Ranged";
     miss = 0;
     if (isRanged())
@@ -43,7 +44,7 @@ bool Equipment::doesNameContain(std::string name) const
 	return this->name.find(name) != std::string::npos;
 }
 
-Equipment::Range Equipment::getRange(const Pawn* owner) const {
+Equipment::Range Equipment::getRange() const {
     if (owner == nullptr) {
         return baseRange;
     }
@@ -65,7 +66,7 @@ Equipment::SpaceOccupied Equipment::getSpaceOccupied() const {
     return spaceOccupied;
 }
 
-int Equipment::getAttackValue(const Pawn* owner) const {
+int Equipment::getAttackValue() const {
 	if (owner == nullptr) {
 		return baseAttack;
 	}
@@ -80,10 +81,18 @@ int Equipment::getAttackValue(const Pawn* owner) const {
             attackValue += pair.second;
         }
     }
+    if ((owner->getSecondName() == "Defender") &&
+        ((owner->getFirstName() == "Townsman" && getFirstWordCapabilities() == "Covering") ||
+        (owner->getFirstName() == "Prince" && getFirstWordCapabilities() == "Helmet") ||
+        ((owner->getFirstName() == "Peasant" || owner->getFirstName() == "Knight") &&
+        getFirstWordCapabilities() == "Helmet")))
+    {
+        attackValue += 1;
+    }
     return attackValue;
 }
 
-int Equipment::getAttackActions(const Pawn* owner) const {
+int Equipment::getAttackActions() const {
     if (owner == nullptr) {
 		return attackActions;
 	}
@@ -155,6 +164,12 @@ int Equipment::reduceDurability(int value)
     {
         int rest = 0;
         baseAttack -= value;
+		int attackValue = getAttackValue();
+        if (attackValue < 0)
+        {
+            rest = -attackValue;
+			baseAttack += rest; // now the getAttackValue() will return 0
+        }
         return rest;
     }
 
@@ -169,7 +184,8 @@ bool Equipment::isRanged() const
 std::string Equipment::rangeToString() const
 {
     std::string outText;
-    outText = std::to_string(baseRange.minRange) + "-" + std::to_string(baseRange.maxRange);
+    Range rangeValue = getRange();
+    outText = std::to_string(rangeValue.minRange) + "-" + std::to_string(rangeValue.maxRange);
     return outText;
 }
 
@@ -178,4 +194,14 @@ std::string Equipment::spaceToString() const
     std::string outText;
     outText = std::to_string(spaceOccupied.numSpaces) + ":" + spaceOccupied.spaceType;
     return outText;
+}
+
+void Equipment::setOwner(Pawn* owner)
+{
+	this->owner = owner;
+}
+
+Pawn* Equipment::getOwner() const
+{
+    return this->owner;
 }

@@ -27,10 +27,10 @@ public:
     // getters
     std::string getName() const;
 	bool doesNameContain(std::string name) const;
-    Range getRange(const Pawn* owner = nullptr) const;
+    Range getRange() const;
     SpaceOccupied getSpaceOccupied() const;
-    int getAttackValue(const Pawn* owner = nullptr) const;
-    int getAttackActions(const Pawn* owner = nullptr) const;
+    int getAttackValue() const;
+    int getAttackActions() const;
     std::string getType() const;
     int getPrice() const;
     std::string getAdditionalCapabilities() const;
@@ -44,6 +44,8 @@ public:
     bool isRanged() const;
     std::string rangeToString() const;
     std::string spaceToString() const;
+	void setOwner(Pawn* owner);
+	Pawn* getOwner() const;
 private:
     std::string name;
     Range baseRange;
@@ -59,4 +61,5 @@ private:
     std::vector<std::pair<std::string, int>> actionBonus;
     std::vector<std::pair<std::string, int>> attackBonus;
     std::vector<std::pair<std::string, int>> rangeBonus;
+    Pawn* owner;
 };

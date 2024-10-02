@@ -44,6 +44,7 @@ public:
     int getNumInDeck() const;
 	bool getIsEquipmentShown() const;
 	bool getIsInGame() const;
+	int getMissMax(std::string weaponName) const;
 
     // Setter methods
     void setName(const std::string& name);

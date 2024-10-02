@@ -367,10 +367,10 @@ void Pawns::pawnMoved(int pawnNum)
 void Pawns::attack(int pawnNum, int attackedNum, Equipment* weapon)
 {
     Pawn* attacker = pawnDict[pawnNum];
-    if (weapon->getAttackActions(attacker) <= attacker->getRemainingActions())
+    if (weapon->getAttackActions() <= attacker->getRemainingActions())
     {
         Pawn* attacked = pawnDict[attackedNum];
-		int attackValue = weapon->getAttackValue(attacker);
+		int attackValue = weapon->getAttackValue();
 		if (pawnDict[pawnNum]->hasItem("gauntlets"))
 		{
 			attackValue++;
@@ -378,11 +378,7 @@ void Pawns::attack(int pawnNum, int attackedNum, Equipment* weapon)
 
         if (weapon->isRanged())
         {
-			int missMax = weapon->getMissMax();
-            if (pawnDict[pawnNum]->hasItem("bracers"))
-            {
-                missMax--;
-            }
+			int missMax = pawnDict[pawnNum]->getMissMax(weapon->getName());
             attacked->rangedAttack(attackValue, missMax);
         }
         else
@@ -398,7 +394,7 @@ void Pawns::attack(int pawnNum, int attackedNum, Equipment* weapon)
         {
             death(attacked);
         }
-        attacker->reduceActions(weapon->getAttackActions(attacker));
+        attacker->reduceActions(weapon->getAttackActions());
         resetTurn();
     }
     else
@@ -422,7 +418,7 @@ std::vector<Equipment*> Pawns::getWeaponsInUse(int pawnNum, int attackedNum)
     Pawn* attacker = pawnDict[pawnNum];
     for (Equipment* item : attacker->getEquipment())
     {
-        if (item->getType() == "Weapon" && item->getAttackActions(attacker) <= attacker->getRemainingActions()
+        if (item->getType() == "Weapon" && item->getAttackActions() <= attacker->getRemainingActions()
             || item->getName() == "dagger" || item->getName() == "long dagger")
         {
             std::vector<std::tuple<int, int, int>> inView = getViewOfWeapon(pawnNum, item);
@@ -439,7 +435,7 @@ std::vector<Equipment*> Pawns::getWeaponsInUse(int pawnNum, int attackedNum)
 std::vector<std::tuple<int, int, int>> Pawns::getViewOfWeapon(int pawnNum, Equipment* weapon)
 {
     Pawn* pawn = pawnDict[pawnNum];
-    Equipment::Range range = weapon->getRange(pawn);
+    Equipment::Range range = weapon->getRange();
     return board->getInView(pawn->getHexCoords(), range.maxRange, range.minRange);
 }
 

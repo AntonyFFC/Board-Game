@@ -206,6 +206,27 @@ bool Pawn::getIsInGame() const
     return isInGame;
 }
 
+int Pawn::getMissMax(std::string weaponName) const
+{
+	int missMax = 0;
+	for (Equipment* item : equipment)
+	{
+		if (item->getName() == weaponName)
+		{
+			missMax = item->getMissMax();
+		}
+	}
+	if (getSecondName() == "Archer")
+	{
+		missMax -= 1;
+	}
+    if (hasItem("bracers"))
+    {
+		missMax -= 1;
+    }
+	return missMax;
+}
+
 // Setter methods
 
 void Pawn::setIsEquipmentShown(bool isShown)
@@ -289,6 +310,7 @@ bool Pawn::addEquipment(Equipment* item) {
                     flipSprite(item->getName());
                 }
                 equipment.push_back(item);
+				item->setOwner(this);
                 remainingSpace.hands -= item->getSpaceOccupied().numSpaces;
 				calculateInitialActions();
                 createSprite();
@@ -300,6 +322,7 @@ bool Pawn::addEquipment(Equipment* item) {
             if (item->getSpaceOccupied().numSpaces <= remainingSpace.extras)
             {
                 equipment.push_back(item);
+                item->setOwner(this);
                 remainingSpace.extras -= item->getSpaceOccupied().numSpaces;
                 calculateInitialActions();
                 createSprite();
@@ -449,7 +472,7 @@ void Pawn::draw(sf::RenderTarget& target, bool isShift)
 
 void Pawn::drawTable(sf::RenderWindow* window)
 {
-    if (isEquipmentShown)
+    if (this->isEquipmentShown)
     {
         window->draw(equipmentTable->getTableSprite());
     }
@@ -609,11 +632,11 @@ std::vector<bool> Pawn::whatArmour()
     {
         if (item->getType() == "Armour")
         {
-            if (getFirstWord(item->getAdditionalCapabilities()) == "Shield")
+            if (item->getFirstWordCapabilities() == "Shield")
             {
                 types[0] = true;
             }
-            else if (getFirstWord(item->getAdditionalCapabilities()) == "Helmet")
+            else if (item->getFirstWordCapabilities() == "Helmet")
             {
                 types[1] = true;
             }
@@ -630,7 +653,7 @@ void Pawn::useArmour(const std::string& type, std::vector<bool>& armours, int va
 {
     Equipment* armour = findArmour(type);
     int rest = armour->reduceDurability(value);
-    if (armour->getAttackValue(this) <= 0)
+    if (armour->getAttackValue() <= 0)
     {
         removeEquipment(armour);
         delete armour;
@@ -638,7 +661,7 @@ void Pawn::useArmour(const std::string& type, std::vector<bool>& armours, int va
         {
             Equipment* covering = findArmour("Covering");
             int rest2 = covering->reduceDurability(rest);
-            if (covering->getAttackValue(this) <= 0)
+            if (covering->getAttackValue() <= 0)
             {
                 removeEquipment(covering);
                 delete covering;
@@ -658,7 +681,7 @@ Equipment* Pawn::findArmour(const std::string& type)
     {
         if (item->getType() == "Armour")
         {
-            if (getFirstWord(item->getAdditionalCapabilities()) == type)
+            if (item->getFirstWordCapabilities() == type)
             {
                 return item;
             }
@@ -695,8 +718,12 @@ void Pawn::calculateInitialActions()
         if (item->getType() == "Armour" || (item->getType() == "Accesory" && 
                 item->getName() != "dagger" && item->getName() != "long dagger"))
         {
-            this->calculatedMaxActions -= item->getAttackActions(this);
+            this->calculatedMaxActions -= item->getAttackActions();
         }
+		if (isMounted() && getSecondName() == "Horseman")
+		{
+			this->calculatedMaxActions += 1;
+		}
 	}
 }
 
