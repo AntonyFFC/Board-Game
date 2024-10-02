@@ -26,13 +26,15 @@ public:
 
     // getters
     std::string getName() const;
+	bool doesNameContain(std::string name) const;
     Range getRange() const;
     SpaceOccupied getSpaceOccupied() const;
     int getAttackValue(const Pawn* owner = nullptr) const;
-    int getAttackActions() const;
+    int getAttackActions(const Pawn* owner = nullptr) const;
     std::string getType() const;
     int getPrice() const;
     std::string getAdditionalCapabilities() const;
+	std::string getFirstWordCapabilities() const;
     int getMissMax() const;
     int getNumInDeck() const;
 	std::vector<std::pair<std::string, int>> getActionBonus() const;

@@ -525,6 +525,41 @@ bool Pawn::isClicked(sf::Vector2i mousePosition) const
     return combinedSprite->getGlobalBounds().contains(mousePosition.x, mousePosition.y);
 }
 
+bool Pawn::hasItem(const std::string& name) const
+{
+	for (Equipment* item : equipment)
+	{
+		if (item->getName() == name)
+		{
+			return true;
+		}
+	}
+    return false;
+}
+
+bool Pawn::hasShield() const
+{
+	for (Equipment* item : equipment)
+	{
+		if (item->getFirstWordCapabilities() == "Shield")
+		{
+			return true;
+		}
+	}
+}
+
+bool Pawn::isMounted() const
+{
+	for (Equipment* item : equipment)
+	{
+		if (item->doesNameContain("horse"))
+		{
+			return true;
+		}
+	}
+    return false;
+}
+
 void Pawn::attack(int value)
 {
     std::vector<bool> armours = whatArmour();
@@ -660,7 +695,7 @@ void Pawn::calculateInitialActions()
         if (item->getType() == "Armour" || (item->getType() == "Accesory" && 
                 item->getName() != "dagger" && item->getName() != "long dagger"))
         {
-            this->calculatedMaxActions -= item->getAttackActions();
+            this->calculatedMaxActions -= item->getAttackActions(this);
         }
 	}
 }

@@ -367,11 +367,11 @@ void Pawns::pawnMoved(int pawnNum)
 void Pawns::attack(int pawnNum, int attackedNum, Equipment* weapon)
 {
     Pawn* attacker = pawnDict[pawnNum];
-    if (weapon->getAttackActions() <= attacker->getRemainingActions())
+    if (weapon->getAttackActions(attacker) <= attacker->getRemainingActions())
     {
         Pawn* attacked = pawnDict[attackedNum];
 		int attackValue = weapon->getAttackValue(attacker);
-		if (findGauntlets(pawnNum))
+		if (pawnDict[pawnNum]->hasItem("gauntlets"))
 		{
 			attackValue++;
 		}
@@ -379,7 +379,7 @@ void Pawns::attack(int pawnNum, int attackedNum, Equipment* weapon)
         if (weapon->isRanged())
         {
 			int missMax = weapon->getMissMax();
-            if (findBracers(pawnNum))
+            if (pawnDict[pawnNum]->hasItem("bracers"))
             {
                 missMax--;
             }
@@ -398,38 +398,13 @@ void Pawns::attack(int pawnNum, int attackedNum, Equipment* weapon)
         {
             death(attacked);
         }
-        attacker->reduceActions(weapon->getAttackActions());
+        attacker->reduceActions(weapon->getAttackActions(attacker));
         resetTurn();
     }
     else
     {
         std::cout << "Not enough actions\n";
     }
-}
-
-bool Pawns::findBracers(int pawnNum)
-{
-	for (Equipment* item : pawnDict[pawnNum]->getEquipment())
-	{
-		if (item->getName() == "bracers")
-		{
-			return true;
-		}
-	}
-    return false;
-}
-
-bool Pawns::findGauntlets(int pawnNum)
-{
-	for (Equipment* item : pawnDict[pawnNum]->getEquipment())
-	{
-		if (item->getName() == "gauntlets")
-		{
-			return true;
-		}
-	}
-	return false;
-
 }
 
 void Pawns::death(Pawn* attacked)
@@ -447,7 +422,7 @@ std::vector<Equipment*> Pawns::getWeaponsInUse(int pawnNum, int attackedNum)
     Pawn* attacker = pawnDict[pawnNum];
     for (Equipment* item : attacker->getEquipment())
     {
-        if (item->getType() == "Weapon" && item->getAttackActions() <= attacker->getRemainingActions()
+        if (item->getType() == "Weapon" && item->getAttackActions(attacker) <= attacker->getRemainingActions()
             || item->getName() == "dagger" || item->getName() == "long dagger")
         {
             std::vector<std::tuple<int, int, int>> inView = getViewOfWeapon(pawnNum, item);

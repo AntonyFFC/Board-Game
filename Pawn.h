@@ -77,6 +77,9 @@ public:
     void attack(int value);
     void rangedAttack(int value, int missMax);
     bool isClicked(sf::Vector2i mousePosition) const;
+	bool hasItem(const std::string& name) const;
+	bool hasShield() const;
+	bool isMounted() const;
 
     static const std::map<std::string, int> order;
     static std::map<std::string, sf::Sprite> spriteMap;

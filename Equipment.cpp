@@ -2,15 +2,6 @@
 #include "Pawn.h"
 #include <stdexcept>
 
-bool isStringRanged(const std::string& text)
-{
-    std::istringstream iss(text);
-
-    std::string firstWord;
-    iss >> firstWord;
-    return firstWord == "Ranged";
-}
-
 int getMissValueFromString(const std::string& text)
 {
     std::istringstream iss(text);
@@ -35,7 +26,7 @@ Equipment::Equipment(const std::string& name, Range range, const SpaceOccupied& 
     additionalCapabilities(additionalCapabilities), numInDeck(numInDeck),
 	actionBonus(actionBonus), attackBonus(attackBonus), rangeBonus(rangeBonus)
 {
-    ranged = isStringRanged(additionalCapabilities);
+    ranged = getFirstWordCapabilities()=="Ranged";
     miss = 0;
     if (isRanged())
     {
@@ -45,6 +36,11 @@ Equipment::Equipment(const std::string& name, Range range, const SpaceOccupied& 
 
 std::string Equipment::getName() const {
     return name;
+}
+
+bool Equipment::doesNameContain(std::string name) const
+{
+	return this->name.find(name) != std::string::npos;
 }
 
 Equipment::Range Equipment::getRange() const {
@@ -61,15 +57,34 @@ int Equipment::getAttackValue(const Pawn* owner) const {
 	}
     int attackValue = baseAttack;
     for (const auto& pair : attackBonus) {
-        if (pair.first == "isTownsman" && owner->getFirstName() == "Townsman") {
+        if ((pair.first == "isTownsman" && owner->getFirstName() == "Townsman") ||
+            (pair.first == "isPrince" && owner->getFirstName() == "Prince") || 
+            (pair.first == "isKnight" && owner->getFirstName() == "Knight") ||
+            (pair.first == "isPeasant" && owner->getFirstName() == "Peasant") || 
+            (pair.first == "hasShield" && owner->hasShield()) || 
+            (pair.first == "isMounted" && owner->isMounted())) {
             attackValue += pair.second;
         }
     }
     return attackValue;
 }
 
-int Equipment::getAttackActions() const {
-    return attackActions;
+int Equipment::getAttackActions(const Pawn* owner) const {
+    if (owner == nullptr) {
+		return attackActions;
+	}
+    int actionsValue = attackActions;
+    for (const auto& pair : actionBonus) {
+        if ((pair.first == "isTownsman" && owner->getFirstName() == "Townsman") ||
+            (pair.first == "isPrince" && owner->getFirstName() == "Prince") || 
+            (pair.first == "isKnight" && owner->getFirstName() == "Knight") ||
+            (pair.first == "isPeasant" && owner->getFirstName() == "Peasant") ||
+            (pair.first == "hasShield" && owner->hasShield()) ||
+            (pair.first == "isMounted" && owner->isMounted())) {
+            actionsValue += pair.second;
+        }
+    }
+    return actionsValue;
 }
 
 std::string Equipment::getType() const {
@@ -82,6 +97,14 @@ int Equipment::getPrice() const {
 
 std::string Equipment::getAdditionalCapabilities() const {
     return additionalCapabilities;
+}
+
+std::string Equipment::getFirstWordCapabilities() const
+{
+	std::istringstream iss(additionalCapabilities);
+	std::string firstWord;
+	iss >> firstWord;
+	return firstWord;
 }
 
 int Equipment::getMissMax() const {
@@ -118,11 +141,6 @@ int Equipment::reduceDurability(int value)
     {
         int rest = 0;
         baseAttack -= value;
-        if (baseAttack < 0)
-        {
-            rest = -baseAttack;
-            baseAttack = 0;
-        }
         return rest;
     }
 
