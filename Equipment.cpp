@@ -85,7 +85,7 @@ int Equipment::getAttackValue() const {
         ((owner->getFirstName() == "Townsman" && getFirstWordCapabilities() == "Covering") ||
         (owner->getFirstName() == "Prince" && getFirstWordCapabilities() == "Helmet") ||
         ((owner->getFirstName() == "Peasant" || owner->getFirstName() == "Knight") &&
-        getFirstWordCapabilities() == "Helmet")))
+        getFirstWordCapabilities() == "Shield")))
     {
         attackValue += 1;
     }
