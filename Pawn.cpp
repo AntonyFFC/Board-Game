@@ -227,6 +227,15 @@ int Pawn::getMissMax(std::string weaponName) const
 	return missMax;
 }
 
+int Pawn::getWallDestroyCost() const
+{
+	if (hasItem("warhammer"))
+	{
+		return 1;
+	}
+    return 4;
+}
+
 // Setter methods
 
 void Pawn::setIsEquipmentShown(bool isShown)

@@ -202,14 +202,15 @@ bool Pawns::placeWall(int pawnNumber, std::tuple<int, int, int> coords)
 bool Pawns::destroyWall(int pawnNumber, std::tuple<int, int, int> coords)
 {
     board->clearHighlight();
-    if (pawnDict[pawnNumber]->getRemainingActions() < 4)
+	int wallDestroyCost = pawnDict[pawnNumber]->getWallDestroyCost();
+    if (pawnDict[pawnNumber]->getRemainingActions() < wallDestroyCost)
     {
         return false;
     }
     else
     {
         board->setGrass(coords);
-        pawnDict[pawnNumber]->reduceActions(4);
+        pawnDict[pawnNumber]->reduceActions(wallDestroyCost);
         resetTurn();
     }
     return true;

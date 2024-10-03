@@ -45,6 +45,7 @@ public:
 	bool getIsEquipmentShown() const;
 	bool getIsInGame() const;
 	int getMissMax(std::string weaponName) const;
+	int getWallDestroyCost() const;
 
     // Setter methods
     void setName(const std::string& name);
