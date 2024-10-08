@@ -166,6 +166,10 @@ void Pawns::handleClickRight(sf::Vector2i mousePosition)
                 {
                     pawnDict[numberOfPawn(coords)]->toggleIsEquipmentShown();
                 }
+                else if (board->hexDict[coords]->hasBody())
+                {
+                    pawnDict[numberOfPawn(coords, true)]->toggleIsEquipmentShown();
+                }
                 else if (!placeWall(whichPawn, coords))
                 {
                     board->clearHighlight();
