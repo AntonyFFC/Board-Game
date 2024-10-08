@@ -68,6 +68,12 @@ void Button::setSize(sf::Vector2f size)
     buttonShape.setSize(size);
 }
 
+void Button::setSizeToText()
+{
+	sf::FloatRect textBounds = buttonText.getLocalBounds();
+	buttonShape.setSize(sf::Vector2f(textBounds.width * 1.2f, textBounds.height * 1.2f));
+}
+
 sf::Vector2f Button::getSize() const
 {
     return buttonShape.getSize();
@@ -93,6 +99,12 @@ void Button::setFont(sf::Font& font)
 void Button::setTextColor(sf::Color color)
 {
     buttonText.setFillColor(color);
+}
+
+void Button::setTextSize(unsigned int size)
+{
+	buttonText.setCharacterSize(size);
+	setTextPosition();
 }
 
 void Button::setBackgroundColor(sf::Color color)

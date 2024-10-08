@@ -14,10 +14,15 @@ Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions,
     remainingSpace = space;
     isEquipmentShown = false;
 	isInGame = false;
+	isCurrentPawn = false;
     equipmentTable = nullptr;
     createSprite();
     xPos = 0;
     yPos = 0;
+    dropButton = Button(sf::Vector2f(0,0), sf::Vector2f(100, 25), "drop equipment");
+	dropButton.setTextSize(15);
+    dropButton.setSizeToText();
+	dropButton.setBackgroundColor(sf::Color::Red);
 }
 
 Pawn::~Pawn() {
@@ -238,14 +243,16 @@ int Pawn::getWallDestroyCost() const
 
 // Setter methods
 
-void Pawn::setIsEquipmentShown(bool isShown)
+void Pawn::setIsEquipmentShown(bool isShown, bool isCurrent)
 {
-    isEquipmentShown = isShown;
+    this->isEquipmentShown = isShown;
+    this->isCurrentPawn = isCurrent;
 }
 
-void Pawn::toggleIsEquipmentShown()
+void Pawn::toggleIsEquipmentShown(bool isCurrent)
 {
-	isEquipmentShown = !isEquipmentShown;
+    this->isEquipmentShown = !isEquipmentShown;
+    this->isCurrentPawn = isCurrent;
 }
 
 void Pawn::setName(const std::string& name) {
@@ -433,6 +440,7 @@ bool Pawn::isAlive() const {
 
 void Pawn::dead()
 {
+	setIsEquipmentShown(false);
     //delete combinedSprite;
     sf::Sprite sprite;
     sf::RenderTexture* renderTexture = new sf::RenderTexture;
@@ -474,6 +482,11 @@ void Pawn::draw(sf::RenderTarget& target, bool isShift)
         }
         else
         {
+            if (isCurrentPawn)
+            {
+				dropButton.setPosition(sf::Vector2f(xPos - 50, yPos - 100));
+				dropButton.draw(dynamic_cast<sf::RenderWindow&>(target));
+            }
             setUpTable(dynamic_cast<sf::RenderWindow*>(&target));
         }
     }

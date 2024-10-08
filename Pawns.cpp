@@ -142,13 +142,20 @@ bool Pawns::pawnFirst()
 void Pawns::handleClickRight(sf::Vector2i mousePosition)
 {
     std::tuple<int, int, int> pawnCoords = pawnDict[whichPawn]->getHexCoords();
-    if (board->hexDict[pawnCoords]->isClicked(mousePosition) && board->hexDict[pawnCoords]->hasBody())
+    if (board->hexDict[pawnCoords]->isClicked(mousePosition) )
     {
-        board->clearHighlight();
-        pawnDict[whichPawn]->reduceActions(1);
-        setTrading(true);
-        tradeTable = new TradeTable(pawnDict[whichPawn], pawnDict[numberOfPawn(pawnCoords, true)], target);
-        resetTurn();
+        if (board->hexDict[pawnCoords]->hasBody())
+        {
+            board->clearHighlight();
+            pawnDict[whichPawn]->reduceActions(1);
+            setTrading(true);
+            tradeTable = new TradeTable(pawnDict[whichPawn], pawnDict[numberOfPawn(pawnCoords, true)], target);
+            resetTurn();
+        }
+        else
+        {
+			pawnDict[whichPawn]->toggleIsEquipmentShown(true);
+        }
     }
     else
     {

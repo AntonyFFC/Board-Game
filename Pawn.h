@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include "Globals.h"
 #include "Table.h"
+#include "Button.h"
 
 
 class Equipment;
@@ -55,8 +56,8 @@ public:
     void setHP(int healthPoints);
     void setRotationAngle(float angle);
     void setPosition(float inx, float iny);
-    void setIsEquipmentShown(bool isShown);
-    void toggleIsEquipmentShown();
+    void setIsEquipmentShown(bool isShown, bool isCurrent = false);
+    void toggleIsEquipmentShown(bool isCurrent = false);
     void scale(float ins);
     void setHexCoords(std::tuple<int, int, int> coords);
     void addSpace(int hands, int extras);
@@ -121,4 +122,6 @@ private:
 	Table* equipmentTable;
     bool isEquipmentShown;
     bool isInGame;
+	bool isCurrentPawn; // Is this pawn the current used pawn in the game
+    Button dropButton;
 };

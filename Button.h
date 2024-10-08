@@ -14,11 +14,13 @@ public:
     void setPosition(sf::Vector2f position);
     sf::Vector2f getPosition() const;
     void setSize(sf::Vector2f size);
+	void setSizeToText();
     sf::Vector2f getSize() const;
     void setText(std::string text);
     std::string getText() const;
     void setFont(sf::Font& font);
     void setTextColor(sf::Color color);
+	void setTextSize(unsigned int size);
     void setBackgroundColor(sf::Color color);
     void setOutlineColor(sf::Color color);
     void setOutlineThickness(float thickness);
