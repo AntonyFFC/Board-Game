@@ -370,6 +370,11 @@ void Pawns::draw(bool isShift)
 
 void Pawns::drawPawns(bool isShift)
 {
+    for (EquipmentPile* pile : pileDict) {
+        pile->setPosition(board->hexDict[pile->getHexCoords()]->getOrigin().x,
+            board->hexDict[pile->getHexCoords()]->getOrigin().y);
+        pile->draw(*target);
+    }
     for (auto it = pawnDict.rbegin(); it != pawnDict.rend(); ++it) {
         auto& pawn = *it;
         int x = board->hexDict[pawn->getHexCoords()]->getOrigin().x;
@@ -380,6 +385,7 @@ void Pawns::drawPawns(bool isShift)
     for (Pawn* pawn : pawnDict) {
         pawn->drawTable(dynamic_cast<sf::RenderWindow*>(target));
     }
+
 }
 
 void Pawns::drawTurn()
