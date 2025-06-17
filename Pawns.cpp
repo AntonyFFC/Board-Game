@@ -21,6 +21,10 @@ Pawns::Pawns(Board* board,sf::RenderWindow* window)
 Pawns::~Pawns()
 {
     delete currentTable;
+    delete walls;
+	for (EquipmentPile* pile : pileDict) {
+		delete pile;
+	}
 }
 
 void Pawns::flipTurn()
@@ -164,14 +168,40 @@ bool Pawns::pawnFirst()
     }
 }
 
+void Pawns::handleClickRelease(sf::Vector2i mousePosition)
+{
+    if (isDropping())
+    {
+        if (drop(mousePosition))
+        {
+            return;
+        }
+    }
+}
+
 void Pawns::handleClickRight(sf::Vector2i mousePosition)
 {
+    if (previousHex == empty)
+    {
+        for (auto& pair : board->hexDict) {
+            if (!board->hexDict[pair.first]->isClicked(mousePosition))
+            {
+                continue;
+            }
+            pawnFirstRight(pair.first);
+        }
+    }
     std::tuple<int, int, int> pawnCoords = pawnDict[whichPawn]->getHexCoords();
     if (board->hexDict[pawnCoords]->isClicked(mousePosition) )
     {
         if (board->hexDict[pawnCoords]->hasBody())
         {
             handleRightClickWhenOnBody(pawnCoords);
+            return;
+        }
+        else if (board->hexDict[pawnCoords]->hasEquipmentPile())
+        {
+            handleRightClickWhenOnPile(pawnCoords);
             return;
         }
 
@@ -187,14 +217,20 @@ void Pawns::handleClickRight(sf::Vector2i mousePosition)
     handlePawnEquipmentRightClick(mousePosition);
 }
 
-void Pawns::handleClickRelease(sf::Vector2i mousePosition)
+bool Pawns::pawnFirstRight(std::tuple<int, int, int> pawnCoords)
 {
-    if (isDropping())
+    whichPawn = numberOfPawn(pawnCoords);
+    if (whosTurn == pawnDict[whichPawn]->getSide()
+        && (whichPawn != previousWarrior[whosTurn] || numberOfPawns[whosTurn] == 1))
     {
-        if (drop(mousePosition))
-        {
-            return;
-        }
+        previousHex = pawnCoords;
+        previousWarrior[whosTurn] = whichPawn;
+        return true;
+    }
+    else {
+        board->clearHighlight();
+        previousHex = empty;
+        return false;
     }
 }
 
@@ -203,8 +239,30 @@ void Pawns::handleRightClickWhenOnBody(const std::tuple<int, int, int>& pawnCoor
     board->clearHighlight();
     pawnDict[whichPawn]->reduceActions(1);
     setTrading(true);
-    tradeTable = new TradeTable(pawnDict[whichPawn], pawnDict[numberOfPawn(pawnCoords, true)], target);
+    tradeTable = new TradeTable(pawnDict[whichPawn], pawnDict[numberOfPawn(pawnCoords, true)]->getEquipment(), target);
     resetTurn();
+}
+
+void Pawns::handleRightClickWhenOnPile(const std::tuple<int, int, int>& pileCoords)
+{
+    board->clearHighlight();
+    pawnDict[whichPawn]->reduceActions(1);
+    setTrading(true);
+    EquipmentPile* targetPile = pileDict[numberOfPile(pileCoords)];
+    tradeTable = new TradeTable(pawnDict[whichPawn], targetPile->getEquipment(), target);
+    resetTurn();
+}
+
+int Pawns::numberOfPile(const std::tuple<int, int, int>& pileCoords) const
+{
+    for (size_t i = 0; i < pileDict.size(); ++i)
+    {
+        if (pileDict[i]->getHexCoords() == pileCoords)
+        {
+            return static_cast<int>(i);
+        }
+    }
+    throw std::runtime_error("No EquipmentPile found at the given coordinates");
 }
 
 bool Pawns::handleNeighborRightClick(sf::Vector2i mousePosition, const std::tuple<int, int, int>& pawnCoords)
@@ -412,6 +470,19 @@ void Pawns::trading(sf::Vector2i mousePosition)
     else if (tradeTable->doneClicked(mousePosition))
     {
         setTrading(false);
+        if (tradeTable->isVectorEmpty() &&
+            board->hexDict[pawnDict[whichPawn]->getHexCoords()]->hasEquipmentPile())
+        {
+			for (EquipmentPile* pile : pileDict) {
+				if (pile->getHexCoords() == pawnDict[whichPawn]->getHexCoords())
+				{
+					board->hexDict[pawnDict[whichPawn]->getHexCoords()]->setEquipmentPile(false);
+					pileDict.erase(std::remove(pileDict.begin(), pileDict.end(), pile), pileDict.end());
+					delete pile;
+					break;
+				}
+			}
+        }
         delete(tradeTable);
     }
 }
@@ -459,6 +530,7 @@ bool Pawns::drop(sf::Vector2i mousePosition)
         pawnDict[whichPawn]->reduceActions(1);
         pawnDict[whichPawn]->dropItems(newPile);
         pawnDict[whichPawn]->setIsEquipmentShown(false);
+        board->hexDict[pawnDict[whichPawn]->getHexCoords()]->setEquipmentPile(true);
         resetTurn();
         return true;
     }

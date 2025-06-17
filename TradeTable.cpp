@@ -1,8 +1,8 @@
 #include "TradeTable.h"
 
 
-TradeTable::TradeTable(Pawn* inPawn, Pawn* inBody, sf::RenderWindow* inWindow)
-	:pawn(inPawn), body(inBody), target(inWindow), leftTable(inWindow), rightTable(inWindow)
+TradeTable::TradeTable(Pawn* inPawn, std::vector<Equipment*>& itemsFrom, sf::RenderWindow* window)
+    : pawn(inPawn), itemsFrom(itemsFrom), target(window), leftTable(window), rightTable(window)
 {
     gap = 10;
     initializeTables();
@@ -99,30 +99,33 @@ void TradeTable::trade(sf::Vector2i mousePosition)
     }
 }
 
+bool TradeTable::isVectorEmpty() const
+{
+    return itemsFrom.empty();
+}
+
 void TradeTable::tradeItem(Equipment* item, bool isBodys)
 {
     if (isBodys)
     {
         if (pawn->addEquipment(item))
         {
-            body->removeEquipment(item);
+            itemsFrom.erase(std::remove(itemsFrom.begin(), itemsFrom.end(), item), itemsFrom.end());
             setUpDimensions();
         }
     }
     else
     {
-        if (body->addEquipment(item))
-        {
-            pawn->removeEquipment(item);
-            setUpDimensions();
-        }
+        itemsFrom.push_back(item);
+        pawn->removeEquipment(item);
+        setUpDimensions();
     }
 }
 
 void TradeTable::initializeTables()
 {
 	leftTable.setEquipment(pawn->getEquipment());
-	rightTable.setEquipment(body->getEquipment());
+	rightTable.setEquipment(itemsFrom);
 	setUpDimensions();
     leftTable.setPosition(sf::Vector2f(minX, minY));
     rightTable.setPosition(sf::Vector2f(minX + leftTable.getSize().x + gap, minY));
@@ -143,5 +146,5 @@ void TradeTable::setUpDimensions()
     minX = target->getSize().x - leftTable.getSize().x * 2 - gap * 2;
     minY = 35;
     maxX = target->getSize().x - gap;
-    maxY = minY + leftTable.cellHeight * (std::max(pawn->getEquipmentCount(), body->getEquipmentCount()) + 1);
+    maxY = minY + leftTable.cellHeight * (std::max(pawn->getEquipmentCount(), (int)itemsFrom.size()) + 1);
 }

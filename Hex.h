@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <tuple>
 #include "Pawn.h"
+#include "EquipmentPile.h"
 
 
 class Hex
@@ -21,6 +22,7 @@ public:
 	void setStart(bool boolean);
 	void setPawn(bool boolean, Pawn* inPawn = nullptr);
 	void setBody(bool boolean, Pawn* inBody = nullptr);
+	void setEquipmentPile(bool boolean, EquipmentPile* inPile = nullptr);
 	void setBlocking(bool boolean);
 	void setPos(float inx = 0, float iny = 0);
 	void setCoords(int inx = 0, int iny = 0, int inz = 0);
@@ -44,6 +46,7 @@ public:
 	bool isBlocking() const;
 	bool isHigh(int col) const;
 	bool isClicked(sf::Vector2i mousePosition) const;
+	bool hasEquipmentPile() const;
 
 	virtual void setHighlight(int col, int inWhosPawn);
 	void clearHighlight(int col);
@@ -51,6 +54,7 @@ public:
 	void setScl(float inS = 0.8);	
 	Pawn* pawn;
 	Pawn* body;
+	EquipmentPile* equipmentPile;
 
 private:
 	sf::ConvexShape initShape() const;
@@ -73,6 +77,7 @@ private:
 	bool isStart_ = false;
 	bool isPawn_ = false;
 	bool hasBody_ = false;
+	bool hasEquipmentPile_ = false;
 	bool highlights[3];
 	bool isBlocking_ = false;
 	sf::Color fill;

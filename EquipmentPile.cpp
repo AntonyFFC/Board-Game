@@ -36,7 +36,7 @@ void EquipmentPile::removeEquipment(Equipment* equipment)
     }
 }
 
-const std::vector<Equipment*>& EquipmentPile::getEquipment() const
+std::vector<Equipment*>& EquipmentPile::getEquipment()
 {
     return equipmentList;
 }

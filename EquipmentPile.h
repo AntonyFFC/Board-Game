@@ -10,7 +10,7 @@ public:
 
     void addEquipment(Equipment* equipment);
     void removeEquipment(Equipment* equipment);
-    const std::vector<Equipment*>& getEquipment() const;
+    std::vector<Equipment*>& getEquipment();
     void setPosition(float x, float y);
     sf::Vector2f getPosition() const;
     std::tuple<int, int, int> getHexCoords() const;

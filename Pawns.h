@@ -67,6 +67,7 @@ private:
 	bool isItAlivePawn(const std::tuple<int, int, int>& hex) const;
 	void handlePawnClickInteraction();
 	bool pawnFirst();
+	bool pawnFirstRight(std::tuple<int, int, int> pawnCoords);
 	void pawnSecond(int pawnNum); //second click, number of previous pawn
 	std::vector<std::tuple<int, int, int>> getViewOfWeapon(int pawnNum, Equipment* weapon);
 	std::vector<std::tuple<int, int, int>> getViewOfPawn(int pawnNum);
@@ -75,6 +76,8 @@ private:
 	void flipTurn();
 	int numberOfPawn(std::tuple<int, int, int> coords, bool body = false);
 	void handleRightClickWhenOnBody(const std::tuple<int, int, int>& pawnCoords);
+	void handleRightClickWhenOnPile(const std::tuple<int, int, int>& pileCoords);
+	int numberOfPile(const std::tuple<int, int, int>& pileCoords) const;
 	bool handleNeighborRightClick(sf::Vector2i mousePosition, const std::tuple<int, int, int>& pawnCoords);
 	void handlePawnEquipmentRightClick(sf::Vector2i mousePosition);
 	bool placeWall(int pawnNumber, std::tuple<int, int, int> coords);

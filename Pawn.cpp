@@ -183,7 +183,7 @@ int Pawn::getEquipmentCount() const {
     return equipment.size();
 }
 
-std::vector<Equipment*> Pawn::getEquipment() const {
+std::vector<Equipment*>& Pawn::getEquipment() {
     return equipment;
 }
 

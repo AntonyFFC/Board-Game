@@ -152,6 +152,18 @@ void Hex::setBody(bool boolean, Pawn* inBody)
     hasBody_ = boolean;
 }
 
+void Hex::setEquipmentPile(bool boolean, EquipmentPile* inPile)
+{
+	if (boolean)
+	{
+		equipmentPile = inPile;
+	}
+	else if (equipmentPile != nullptr) {
+		equipmentPile = nullptr;
+	}
+	hasEquipmentPile_ = boolean;
+}
+
 void Hex::setBlocking(bool boolean)
 {
     isBlocking_ = boolean;
@@ -237,6 +249,11 @@ bool Hex::isClicked(sf::Vector2i mousePosition) const {
         std::pow(mousePosition.y - hexOrigin.y, 2)
     );
     return distance < hexRadius;
+}
+
+bool Hex::hasEquipmentPile() const
+{
+	return hasEquipmentPile_;
 }
 
 void Hex::draw(sf::RenderTarget& target) {

@@ -39,7 +39,7 @@ public:
     SpaceInventory getSpace() const;
     SpaceInventory getRemainingSpace() const;
     int getEquipmentCount() const;
-    std::vector<Equipment*> getEquipment() const;
+    std::vector<Equipment*>& getEquipment();
     int getPrice() const;
     sf::Sprite getSprite();
     std::tuple<int, int, int> getHexCoords() const;

@@ -15,12 +15,13 @@
 class TradeTable
 {
 public:
-	TradeTable(Pawn* inPawn, Pawn* inBody, sf::RenderWindow* window);
+	TradeTable(Pawn* inPawn, std::vector<Equipment*>& itemsFrom, sf::RenderWindow* window);
 	~TradeTable();
 	void draw();
 	bool tableClicked(sf::Vector2i mousePosition);
 	bool doneClicked(sf::Vector2i mousePosition);
 	void trade(sf::Vector2i mousePosition);
+	bool isVectorEmpty() const;
 
 private:
 	void createTexture();
@@ -34,7 +35,7 @@ private:
 	void setUpButton();
 
 	Pawn* pawn;
-	Pawn* body;
+	std::vector<Equipment*>& itemsFrom;
 	sf::RenderWindow* target;
 	sf::RectangleShape doneCell;
 	sf::Text tradeText;
