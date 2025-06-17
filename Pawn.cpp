@@ -19,7 +19,7 @@ Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions,
     createSprite();
     xPos = 0;
     yPos = 0;
-    dropButton = Button(sf::Vector2f(0,0), sf::Vector2f(100, 25), "drop equipment");
+    dropButton = Button(sf::Vector2f(0,0), sf::Vector2f(150, 25), "drop selected equipment (1AP)");
 	dropButton.setTextSize(15);
     dropButton.setSizeToText();
 	dropButton.setBackgroundColor(sf::Color::Red);
@@ -239,6 +239,22 @@ int Pawn::getWallDestroyCost() const
 		return 1;
 	}
     return 4;
+}
+
+bool Pawn::getIsCurrentPawn() const
+{
+	return isCurrentPawn;
+}
+
+std::vector<Equipment*> Pawn::getHighlightedEquipment() const
+{
+	std::vector<Equipment*> highlightedEquipment;
+	if (equipmentTable != nullptr)
+	{
+		highlightedEquipment = equipmentTable->getHighlightedItems();
+	}
+	return highlightedEquipment;
+
 }
 
 // Setter methods
@@ -605,6 +621,42 @@ bool Pawn::isMounted() const
     return false;
 }
 
+bool Pawn::isEquipmentTableClicked(sf::Vector2i mousePosition) const
+{
+	if (equipmentTable != nullptr)
+	{
+		return equipmentTable->tableClicked(mousePosition);
+	}
+	return false;
+}
+
+bool Pawn::clickDropButton(sf::Vector2i mousePosition)
+{
+    return dropButton.click(mousePosition);
+}
+
+bool Pawn::unClickDropButton(sf::Vector2i mousePosition)
+{
+    return dropButton.unclick();
+}
+
+void Pawn::toggleHighlightEquipmentTable(sf::Vector2i mousePosition)
+{
+	equipmentTable->toggleHighlightClickeditem(mousePosition);
+}
+
+void Pawn::dropItems(EquipmentPile* pile)
+{
+    std::vector<Equipment*> highlightedItems = getHighlightedEquipment();
+
+    for (Equipment* item : highlightedItems)
+    {
+        pile->addEquipment(item);
+		removeEquipment(item);
+    }
+    equipmentTable->unhighlightAllItems();
+}
+
 void Pawn::attack(int value)
 {
     std::vector<bool> armours = whatArmour();
@@ -734,6 +786,7 @@ void Pawn::setUpPosition()
 
 void Pawn::calculateInitialActions()
 {
+    int peviousMaxActions = this->calculatedMaxActions;
 	this->calculatedMaxActions = this->maxActions;
 	for (Equipment* item : equipment)
 	{
@@ -747,6 +800,7 @@ void Pawn::calculateInitialActions()
 			this->calculatedMaxActions += 1;
 		}
 	}
+	this->remainingActions -= (peviousMaxActions - this->calculatedMaxActions);
 }
 
 const std::map<std::string, int> Pawn::order = {

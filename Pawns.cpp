@@ -69,6 +69,14 @@ void Pawns::handleClick(sf::Vector2i mousePosition)
         return;
     }
 
+    if (isDropping())
+    {
+        if (dropping(mousePosition))
+        {
+            return;
+        }
+    }
+
     for (auto& pair : board->hexDict) {
         current = pair.first;
         if (!board->hexDict[current]->isClicked(mousePosition))
@@ -177,6 +185,17 @@ void Pawns::handleClickRight(sf::Vector2i mousePosition)
     }
 
     handlePawnEquipmentRightClick(mousePosition);
+}
+
+void Pawns::handleClickRelease(sf::Vector2i mousePosition)
+{
+    if (isDropping())
+    {
+        if (drop(mousePosition))
+        {
+            return;
+        }
+    }
 }
 
 void Pawns::handleRightClickWhenOnBody(const std::tuple<int, int, int>& pawnCoords)
@@ -318,6 +337,10 @@ bool Pawns::isChoosing() const {
     return isChoosing_;
 }
 
+bool Pawns::isDropping() const {
+	return pawnDict[whichPawn]->getIsEquipmentShown();
+}
+
 bool Pawns::addItemToPawn(int number, Equipment* item)
 {
     return pawnDict[number]->addEquipment(item);
@@ -402,6 +425,38 @@ void Pawns::choosing(sf::Vector2i mousePosition)
             attack(attackerNum, attackedNum, item);
         }
     }
+}
+
+bool Pawns::dropping(sf::Vector2i mousePosition)
+{
+    if (pawnDict[whichPawn]->clickDropButton(mousePosition))
+    {
+		return true;
+    }
+
+	if (pawnDict[whichPawn]->isEquipmentTableClicked(mousePosition))
+	{
+		std::cout << "Table clicked\n";
+		pawnDict[whichPawn]->toggleHighlightEquipmentTable(mousePosition);
+        return true;
+	}
+
+    return !pawnDict[whichPawn]->getHighlightedEquipment().empty();
+}
+
+bool Pawns::drop(sf::Vector2i mousePosition)
+{
+    if (pawnDict[whichPawn]->unClickDropButton(mousePosition))
+    {
+        EquipmentPile* newPile = new EquipmentPile(pawnDict[whichPawn]->getHexCoords());
+        pileDict.push_back(newPile);
+        pawnDict[whichPawn]->reduceActions(1);
+        pawnDict[whichPawn]->dropItems(newPile);
+        pawnDict[whichPawn]->setIsEquipmentShown(false);
+        resetTurn();
+        return true;
+    }
+    return false;
 }
 
 void Pawns::pawnMoved(int pawnNum)

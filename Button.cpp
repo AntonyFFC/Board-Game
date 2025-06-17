@@ -1,9 +1,12 @@
 #include "Button.h"
 #include "Globals.h"
 
+std::vector<Button*> Button::allButtons;
+
 Button::Button(sf::Vector2f position, sf::Vector2f size, std::string text)
 {
     initializeFont();
+	backgroundColor = sf::Color::Transparent;
     // Set the position and size of the button shape
     buttonShape.setPosition(position);
     buttonShape.setSize(size);
@@ -16,13 +19,16 @@ Button::Button(sf::Vector2f position, sf::Vector2f size, std::string text)
     setTextPosition();
 
     // Default colors for button
-    buttonShape.setFillColor(sf::Color::Transparent); // Background color
+    buttonShape.setFillColor(backgroundColor); // Background color
     buttonShape.setOutlineColor(sf::Color::White); // Outline color
     buttonShape.setOutlineThickness(1.f); // Outline thickness
+
+	allButtons.push_back(this); // Add this button to the static vector of all buttons
 }
 
 Button::~Button()
 {
+	allButtons.erase(std::remove(allButtons.begin(), allButtons.end(), this), allButtons.end());
     // No dynamic memory to clean up
 }
 
@@ -44,6 +50,16 @@ bool Button::unclick()
     }
 	setIsBeingClicked(false);
 	return true;
+}
+
+bool Button::unclickAll()
+{
+    bool wasBeingClicked = isBeingClicked;
+	for (Button* button : allButtons)
+	{
+		button->setIsBeingClicked(false);
+	}
+    return wasBeingClicked;
 }
 
 bool Button::isClicked(sf::Vector2i mousePosition)
@@ -109,7 +125,8 @@ void Button::setTextSize(unsigned int size)
 
 void Button::setBackgroundColor(sf::Color color)
 {
-    buttonShape.setFillColor(color);
+	backgroundColor = color;
+    buttonShape.setFillColor(backgroundColor);
 }
 
 void Button::setOutlineColor(sf::Color color)
@@ -131,7 +148,7 @@ void Button::setIsBeingClicked(bool boolean)
 	}
 	else
 	{
-		buttonShape.setFillColor(sf::Color::Transparent);
+		buttonShape.setFillColor(backgroundColor);
 	}
 }
 

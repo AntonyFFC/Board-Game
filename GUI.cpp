@@ -61,6 +61,12 @@ void Gui::keyPressed(const sf::Event& event) {
             pawns->endTurn();
             changesOccurred = true;
         }
+        else
+        {
+			sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
+			pawns->handleClickRelease(mousePosition);
+            changesOccurred = true;
+        }
     }
     if (event.type == sf::Event::Closed)
     {

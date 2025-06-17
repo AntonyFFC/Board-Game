@@ -10,6 +10,7 @@
 #include "Globals.h"
 #include "Table.h"
 #include "Button.h"
+#include "EquipmentPile.h"
 
 
 class Equipment;
@@ -47,6 +48,8 @@ public:
 	bool getIsInGame() const;
 	int getMissMax(std::string weaponName) const;
 	int getWallDestroyCost() const;
+	bool getIsCurrentPawn() const;
+	std::vector<Equipment*> getHighlightedEquipment() const;
 
     // Setter methods
     void setName(const std::string& name);
@@ -68,6 +71,7 @@ public:
     bool removeEquipment(int index);
     bool removeEquipment(Equipment* item);
     void setUpTable(sf::RenderWindow* target);
+    void dropItems(EquipmentPile* pile);
 
     // Other methods
     void reduceActions(int amount);
@@ -83,6 +87,10 @@ public:
 	bool hasItem(const std::string& name) const;
 	bool hasShield() const;
 	bool isMounted() const;
+	bool isEquipmentTableClicked(sf::Vector2i mousePosition) const;
+	bool clickDropButton(sf::Vector2i mousePosition);
+    bool unClickDropButton(sf::Vector2i mousePosition);
+	void toggleHighlightEquipmentTable(sf::Vector2i mousePosition);
 
     static const std::map<std::string, int> order;
     static std::map<std::string, sf::Sprite> spriteMap;

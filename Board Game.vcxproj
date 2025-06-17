@@ -158,6 +158,7 @@
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="Equipment.cpp" />
     <ClCompile Include="EquipmentManager.cpp" />
+    <ClCompile Include="EquipmentPile.cpp" />
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="Hex.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="Card.h" />
     <ClInclude Include="Equipment.h" />
     <ClInclude Include="EquipmentManager.h" />
+    <ClInclude Include="EquipmentPile.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="GUI.h" />
     <ClInclude Include="Hex.h" />

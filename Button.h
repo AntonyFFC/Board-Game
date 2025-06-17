@@ -10,6 +10,7 @@ public:
 
 	bool click(sf::Vector2i mousePosition);
 	bool unclick();
+    bool unclickAll();
     bool isClicked(sf::Vector2i mousePosition);
     void setPosition(sf::Vector2f position);
     sf::Vector2f getPosition() const;
@@ -33,4 +34,6 @@ private:
     sf::RectangleShape buttonShape;
     sf::Text buttonText;
 	bool isBeingClicked = false;
+	static std::vector<Button*> allButtons;
+	sf::Color backgroundColor;
 };

@@ -81,6 +81,47 @@ sf::Sprite Table::getTableSprite()
 	return tableSprite;
 }
 
+void Table::toggleHighlightClickeditem(sf::Vector2i mousePosition)
+{
+    int clickMinY = minY + cellHeight;
+    int clickMaxY = minY + cellHeight * (numberOfItems+1);
+    if (mousePosition.y >= clickMinY && mousePosition.y <= clickMaxY)
+    {
+        int clickedRow = (mousePosition.y - clickMinY) / cellHeight;
+        if (clickedRow >= 0 && clickedRow < numberOfItems)
+        {
+            auto it = std::find(highlightedEquipmentIndices.begin(), highlightedEquipmentIndices.end(), clickedRow);
+            if (it != highlightedEquipmentIndices.end())
+            {
+                highlightedEquipmentIndices.erase(it);
+            }
+            else
+            {
+                highlightedEquipmentIndices.push_back(clickedRow);
+            }
+            return;
+        }
+    }
+}
+
+std::vector<Equipment*> Table::getHighlightedItems() const
+{
+	std::vector<Equipment*> highlightedItems;
+	for (int index : highlightedEquipmentIndices)
+	{
+		if (index >= 0 && index < numberOfItems)
+		{
+			highlightedItems.push_back(equipment[index]);
+		}
+	}
+	return highlightedItems;
+}
+
+void Table::unhighlightAllItems()
+{
+	highlightedEquipmentIndices.clear();
+}
+
 void Table::drawHeaders()
 {
     cell.setPosition(minX, minY);
@@ -110,13 +151,23 @@ void Table::drawHeaders()
 
 void Table::drawEquipment()
 {
-    cell.setFillColor(sf::Color(200, 200, 200));
     cell.move(-sumOfCellWidths, cellHeight);
     text.move(-sumOfCellWidths, cellHeight);
     moveSpriteMap(-sumOfCellWidths, cellHeight, iconSprites);
 
-    for (Equipment* item : equipment)
+    for (int i = 0; i < numberOfItems; ++i)
     {
+        Equipment* item = equipment[i];
+
+        if (std::find(highlightedEquipmentIndices.begin(), highlightedEquipmentIndices.end(), i) != highlightedEquipmentIndices.end())
+        {
+            cell.setFillColor(sf::Color(255, 255, 0));
+        }
+        else
+        {
+            cell.setFillColor(sf::Color(200, 200, 200));
+        }
+
         for (int i = 0; i < 8; i++)
         {
             cell.setSize(sf::Vector2f(cellWidths[i], cellHeight));

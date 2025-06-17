@@ -21,6 +21,9 @@ public:
 	Equipment* getClickedItem(sf::Vector2i mousePosition);
 	void createTexture();
 	sf::Sprite getTableSprite();
+	void toggleHighlightClickeditem(sf::Vector2i mousePosition);
+	std::vector<Equipment*> getHighlightedItems() const;
+	void unhighlightAllItems();
 	int cellHeight;
 
 private:
@@ -47,4 +50,5 @@ private:
 	int numberOfItems;
 	sf::RenderTexture tableRenderTexture;
 	sf::Sprite tableSprite;
+	std::vector<int> highlightedEquipmentIndices;
 };

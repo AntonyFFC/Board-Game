@@ -11,6 +11,7 @@
 #include "TradeTable.h"
 #include "Table.h"
 #include "Walls.h"
+#include "EquipmentPile.h"
 
 class Pawns
 {
@@ -20,12 +21,14 @@ public:
 
 	void handleClick(sf::Vector2i mousePosition);
 	void handleClickRight(sf::Vector2i mousePosition);
+	void handleClickRelease(sf::Vector2i mousePosition);
 	void addPawn(Pawn* inPawn);
 	void addWalls(int numWalls, int teamNum);
 	void handleShiftOn();
 	void handleShiftOff();
 	bool isTrading() const;
 	bool isChoosing() const;
+	bool isDropping() const;
 	bool addItemToPawn(int number, Equipment* item);
 	template<typename... Args>
 	bool addItemToPawn(int number, Equipment* item, Args&&... rest)
@@ -50,6 +53,8 @@ private:
 	void pawnFirstClick(int pawnNum);
 	void trading(sf::Vector2i mousePosition);
 	void choosing(sf::Vector2i mousePosition);
+	bool dropping(sf::Vector2i mousePosition);
+	bool drop(sf::Vector2i mousePosition);
 	void pawnMoved(int pawnNum);
 	void attack(int pawnNum, int attackedNum, Equipment* weapon);
 	bool hasEnoughActions(Pawn* attacker, Equipment* weapon) const;
@@ -87,6 +92,7 @@ private:
 	bool wasShift;
 	std::tuple<int, int, int> empty = { -9, -9, -9 };
 	std::vector<Pawn*> pawnDict;
+	std::vector<EquipmentPile*> pileDict;
 	int whosTurn;
 	int whichPawn; //current pawn number in pawnDict
 	sf::Text turnText;
