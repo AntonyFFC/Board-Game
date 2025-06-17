@@ -47,13 +47,20 @@ public:
 	void draw(bool isShift);
 
 private:
-	void pawnClicked(int pawnNum);
+	void pawnFirstClick(int pawnNum);
 	void trading(sf::Vector2i mousePosition);
 	void choosing(sf::Vector2i mousePosition);
 	void pawnMoved(int pawnNum);
 	void attack(int pawnNum, int attackedNum, Equipment* weapon);
+	bool hasEnoughActions(Pawn* attacker, Equipment* weapon) const;
+	int calculateAttackValue(Pawn* attacker, Equipment* weapon) const;
+	void handleRangedAttack(Pawn* attacker, Pawn* attacked, Equipment* weapon, int attackValue);
+	void handleMeleeAttack(Pawn* attacker, Pawn* attacked, Equipment* weapon, int attackValue);
 	void death(Pawn* attacked);
 	std::vector<Equipment*> getWeaponsInUse(int pawnNum, int attackedNum);
+	bool shouldClearHighlight(const std::tuple<int, int, int>& hex) const;
+	bool isItAlivePawn(const std::tuple<int, int, int>& hex) const;
+	void handlePawnClickInteraction();
 	bool pawnFirst();
 	void pawnSecond(int pawnNum); //second click, number of previous pawn
 	std::vector<std::tuple<int, int, int>> getViewOfWeapon(int pawnNum, Equipment* weapon);
@@ -62,6 +69,9 @@ private:
 	void setupText();
 	void flipTurn();
 	int numberOfPawn(std::tuple<int, int, int> coords, bool body = false);
+	void handleRightClickWhenOnBody(const std::tuple<int, int, int>& pawnCoords);
+	bool handleNeighborRightClick(sf::Vector2i mousePosition, const std::tuple<int, int, int>& pawnCoords);
+	void handlePawnEquipmentRightClick(sf::Vector2i mousePosition);
 	bool placeWall(int pawnNumber, std::tuple<int, int, int> coords);
 	bool destroyWall(int pawnNumber, std::tuple<int, int, int> coords);
 	void drawTurn();

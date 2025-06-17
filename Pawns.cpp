@@ -60,42 +60,59 @@ void Pawns::handleClick(sf::Vector2i mousePosition)
     if (isTrading())
     {
         trading(mousePosition);
+        return;
     }
-    else if (isChoosing())
+
+    if (isChoosing())
     {
         choosing(mousePosition);
+        return;
+    }
+
+    for (auto& pair : board->hexDict) {
+        current = pair.first;
+        if (!board->hexDict[current]->isClicked(mousePosition))
+        {
+            continue;
+        }
+
+        if (shouldClearHighlight(current))
+        {
+            board->clearHighlight();
+            previousHex = empty;
+        }
+        else if (isItAlivePawn(current))
+        {
+            handlePawnClickInteraction();
+        }
+        else
+        {
+            pawnMoved(whichPawn);
+        }
+        break;
+    }
+}
+
+bool Pawns::shouldClearHighlight(const std::tuple<int, int, int>& hex) const
+{
+    return (!board->hexDict[hex]->isPawn() || !board->hexDict[hex]->pawn->isAlive()) &&
+        !board->hexDict[hex]->isHigh(0);
+}
+
+bool Pawns::isItAlivePawn(const std::tuple<int, int, int>& hex) const
+{
+    return board->hexDict[hex]->isPawn() && board->hexDict[hex]->pawn->isAlive();
+}
+
+void Pawns::handlePawnClickInteraction()
+{
+    if (previousHex != empty)
+    {
+        pawnSecond(whichPawn);
     }
     else
     {
-        for (auto& pair : board->hexDict) {
-            current = pair.first;
-            if (board->hexDict[current]->isClicked(mousePosition)) {
-                if ((!board->hexDict[current]->isPawn() || !board->hexDict[current]->pawn->isAlive()) && !board->hexDict[current]->isHigh(0))
-                {
-                    board->clearHighlight();
-                    previousHex = empty;
-                }
-                else if (board->hexDict[current]->isPawn() && board->hexDict[current]->pawn->isAlive())
-                {
-                    if (previousHex != empty)
-                    {
-                        pawnSecond(whichPawn);
-                    }
-                    else
-                    {
-                        if (!pawnFirst())
-                        {
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    pawnMoved(whichPawn);
-                }
-                break;
-            }
-        }
+        pawnFirst();
     }
 }
 
@@ -127,7 +144,7 @@ bool Pawns::pawnFirst()
     if (whosTurn == pawnDict[whichPawn]->getSide() 
         && (whichPawn != previousWarrior[whosTurn] || numberOfPawns[whosTurn]==1))
     {
-        pawnClicked(whichPawn);
+        pawnFirstClick(whichPawn);
         previousHex = current;
         previousWarrior[whosTurn] = whichPawn;
         return true;
@@ -135,7 +152,7 @@ bool Pawns::pawnFirst()
     else {
         board->clearHighlight();
         previousHex = empty;
-        return false; //stop the loop
+        return false; //stop the loop - no it stops anyway becouse there is a break after clicking that hex
     }
 }
 
@@ -146,53 +163,74 @@ void Pawns::handleClickRight(sf::Vector2i mousePosition)
     {
         if (board->hexDict[pawnCoords]->hasBody())
         {
-            board->clearHighlight();
-            pawnDict[whichPawn]->reduceActions(1);
-            setTrading(true);
-            tradeTable = new TradeTable(pawnDict[whichPawn], pawnDict[numberOfPawn(pawnCoords, true)], target);
-            resetTurn();
-        }
-        else
-        {
-			pawnDict[whichPawn]->toggleIsEquipmentShown(true);
-        }
-    }
-    else
-    {
-        for (const std::tuple<int, int, int> coords : board->getNeighbours(pawnCoords)) {
-            if (board->hexDict[coords]->isClicked(mousePosition)) {
-                if (board->hexDict[coords]->isBlocking())
-                {
-                    if (!board->hexDict[coords]->isWall() || !destroyWall(whichPawn, coords))
-                    {
-                        board->clearHighlight();
-                        previousHex = empty;
-                    }
-                }
-                else if (board->hexDict[coords]->isPawn())
-                {
-                    pawnDict[numberOfPawn(coords)]->toggleIsEquipmentShown();
-                }
-                else if (board->hexDict[coords]->hasBody())
-                {
-                    pawnDict[numberOfPawn(coords, true)]->toggleIsEquipmentShown();
-                }
-                else if (!placeWall(whichPawn, coords))
-                {
-                    board->clearHighlight();
-                    previousHex = empty;
-                }
-                return;
-            }
+            handleRightClickWhenOnBody(pawnCoords);
+            return;
         }
 
-        for (Pawn* pawn : pawnDict)
+		pawnDict[whichPawn]->toggleIsEquipmentShown(true);
+        return;
+    }
+
+    if (handleNeighborRightClick(mousePosition, pawnCoords))
+    {
+        return;
+    }
+
+    handlePawnEquipmentRightClick(mousePosition);
+}
+
+void Pawns::handleRightClickWhenOnBody(const std::tuple<int, int, int>& pawnCoords)
+{
+    board->clearHighlight();
+    pawnDict[whichPawn]->reduceActions(1);
+    setTrading(true);
+    tradeTable = new TradeTable(pawnDict[whichPawn], pawnDict[numberOfPawn(pawnCoords, true)], target);
+    resetTurn();
+}
+
+bool Pawns::handleNeighborRightClick(sf::Vector2i mousePosition, const std::tuple<int, int, int>& pawnCoords)
+{
+    for (const auto& coords : board->getNeighbours(pawnCoords))
+    {
+        if (!board->hexDict[coords]->isClicked(mousePosition))
         {
-            if (pawn->isClicked(mousePosition))
+            continue;
+        }
+
+        if (board->hexDict[coords]->isBlocking())
+        {
+            if (!board->hexDict[coords]->isWall() || !destroyWall(whichPawn, coords))
             {
-				pawn->toggleIsEquipmentShown();
-                return;
+                board->clearHighlight();
+                previousHex = empty;
             }
+        }
+        else if (board->hexDict[coords]->isPawn())
+        {
+            pawnDict[numberOfPawn(coords)]->toggleIsEquipmentShown();
+        }
+        else if (board->hexDict[coords]->hasBody())
+        {
+            pawnDict[numberOfPawn(coords, true)]->toggleIsEquipmentShown();
+        }
+        else if (!placeWall(whichPawn, coords))
+        {
+            board->clearHighlight();
+            previousHex = empty;
+        }
+        return true;
+    }
+    return false;
+}
+
+void Pawns::handlePawnEquipmentRightClick(sf::Vector2i mousePosition)
+{
+    for (Pawn* pawn : pawnDict)
+    {
+        if (pawn->isClicked(mousePosition))
+        {
+            pawn->toggleIsEquipmentShown();
+            return;
         }
     }
 }
@@ -326,7 +364,7 @@ void Pawns::drawTurn()
     target->draw(turnText);
 }
 
-void Pawns::pawnClicked(int pawnNum)
+void Pawns::pawnFirstClick(int pawnNum)
 {
     board->highlighted[0] = getRangeOfPawn(pawnNum);
     for (std::tuple<int, int, int> hex : board->highlighted[0])
@@ -379,39 +417,60 @@ void Pawns::pawnMoved(int pawnNum)
 void Pawns::attack(int pawnNum, int attackedNum, Equipment* weapon)
 {
     Pawn* attacker = pawnDict[pawnNum];
-    if (weapon->getAttackActions() <= attacker->getRemainingActions())
+    if (!hasEnoughActions(attacker, weapon))
     {
-        Pawn* attacked = pawnDict[attackedNum];
-		int attackValue = weapon->getAttackValue();
-		if (pawnDict[pawnNum]->hasItem("gauntlets"))
-		{
-			attackValue++;
-		}
+        std::cout << "Not enough actions\n";
+        return;
+    }
 
-        if (weapon->isRanged())
-        {
-			int missMax = pawnDict[pawnNum]->getMissMax(weapon->getName());
-            attacked->rangedAttack(attackValue, missMax);
-        }
-        else
-        {
-            attacked->attack(attackValue);
-			if (weapon->getName() == "dagger" || weapon->getName() == "long dagger")
-			{
-				attacker->removeEquipment(weapon);
-			}
-        }
+    Pawn* attacked = pawnDict[attackedNum];
+    int attackValue = calculateAttackValue(attacker, weapon);
 
-        if (!attacked->isAlive())
-        {
-            death(attacked);
-        }
-        attacker->reduceActions(weapon->getAttackActions());
-        resetTurn();
+    if (weapon->isRanged())
+    {
+        handleRangedAttack(attacker, attacked, weapon, attackValue);
     }
     else
     {
-        std::cout << "Not enough actions\n";
+        handleMeleeAttack(attacker, attacked, weapon, attackValue);
+    }
+
+    if (!attacked->isAlive())
+    {
+        death(attacked);
+    }
+
+    attacker->reduceActions(weapon->getAttackActions());
+    resetTurn();
+}
+
+bool Pawns::hasEnoughActions(Pawn* attacker, Equipment* weapon) const
+{
+    return weapon->getAttackActions() <= attacker->getRemainingActions();
+}
+
+int Pawns::calculateAttackValue(Pawn* attacker, Equipment* weapon) const
+{
+    int attackValue = weapon->getAttackValue();
+    if (attacker->hasItem("gauntlets"))
+    {
+        attackValue++;
+    }
+    return attackValue;
+}
+
+void Pawns::handleRangedAttack(Pawn* attacker, Pawn* attacked, Equipment* weapon, int attackValue)
+{
+    int missMax = attacker->getMissMax(weapon->getName());
+    attacked->rangedAttack(attackValue, missMax);
+}
+
+void Pawns::handleMeleeAttack(Pawn* attacker, Pawn* attacked, Equipment* weapon, int attackValue)
+{
+    attacked->attack(attackValue);
+    if (weapon->getName() == "dagger" || weapon->getName() == "long dagger")
+    {
+        attacker->removeEquipment(weapon);
     }
 }
 
@@ -430,8 +489,8 @@ std::vector<Equipment*> Pawns::getWeaponsInUse(int pawnNum, int attackedNum)
     Pawn* attacker = pawnDict[pawnNum];
     for (Equipment* item : attacker->getEquipment())
     {
-        if (item->getType() == "Weapon" && item->getAttackActions() <= attacker->getRemainingActions()
-            || item->getName() == "dagger" || item->getName() == "long dagger")
+        if ((item->getType() == "Weapon" || item->doesNameContain("dagger")) 
+            && item->getAttackActions() <= attacker->getRemainingActions())
         {
             std::vector<std::tuple<int, int, int>> inView = getViewOfWeapon(pawnNum, item);
             auto it = std::find(inView.begin(), inView.end(), attackedSpot);
@@ -459,7 +518,7 @@ std::vector<std::tuple<int, int, int>> Pawns::getViewOfPawn(int pawnNum)
     std::vector<std::tuple<int, int, int>> inViewWeapon;
     for (Equipment* item : pawn->getEquipment())
     {
-        if (item->getType() == "Weapon")
+        if (item->getType() == "Weapon" || item->doesNameContain("dagger"))
         {
             weapon = item;
             inViewWeapon = getViewOfWeapon(pawnNum, weapon);
@@ -498,7 +557,7 @@ void Pawns::setupText()
 void Pawns::resetTurn()
 {
     board->clearHighlight();
-    pawnClicked(whichPawn);
+    pawnFirstClick(whichPawn);
 }
 
 void Pawns::endTurn()

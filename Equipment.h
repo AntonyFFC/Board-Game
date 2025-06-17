@@ -46,6 +46,7 @@ public:
     std::string spaceToString() const;
 	void setOwner(Pawn* owner);
 	Pawn* getOwner() const;
+
 private:
     std::string name;
     Range baseRange;
