@@ -211,7 +211,8 @@ bool Hex::isBlocking() const {
 bool Hex::isBlockingForPawn(Pawn* inPawn)
 {
     if (!isPawn()) return isBlocking_;
-    return isBlocking_ || inPawn->getTeamNumber() != pawn->getTeamNumber();
+    return isBlocking_ || !(inPawn->getTeamNumber() == pawn->getTeamNumber() && 
+        inPawn->getSide() == pawn->getSide());
 }
 
 bool Hex::isHigh(int col) const {
