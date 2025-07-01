@@ -196,12 +196,12 @@ void Pawns::handleClickRight(sf::Vector2i mousePosition)
     {
         if (board->hexDict[pawnCoords]->hasBody())
         {
-            handleRightClickWhenOnBody(pawnCoords);
+            handleRightClickOnTrade(pawnCoords, true);
             return;
         }
         else if (board->hexDict[pawnCoords]->hasEquipmentPile())
         {
-            handleRightClickWhenOnPile(pawnCoords);
+            handleRightClickOnTrade(pawnCoords, false);
             return;
         }
 
@@ -234,22 +234,26 @@ bool Pawns::pawnFirstRight(std::tuple<int, int, int> pawnCoords)
     }
 }
 
-void Pawns::handleRightClickWhenOnBody(const std::tuple<int, int, int>& pawnCoords)
+void Pawns::handleRightClickOnTrade(const std::tuple<int, int, int>& coords, bool isBody)
 {
-    board->clearHighlight();
-    pawnDict[whichPawn]->reduceActions(1);
-    setTrading(true);
-    tradeTable = new TradeTable(pawnDict[whichPawn], pawnDict[numberOfPawn(pawnCoords, true)]->getEquipment(), target);
-    resetTurn();
-}
+    if (pawnDict[whichPawn]->getRemainingActions() <= 0)
+    {
+        return;
+    }
 
-void Pawns::handleRightClickWhenOnPile(const std::tuple<int, int, int>& pileCoords)
-{
     board->clearHighlight();
     pawnDict[whichPawn]->reduceActions(1);
     setTrading(true);
-    EquipmentPile* targetPile = pileDict[numberOfPile(pileCoords)];
-    tradeTable = new TradeTable(pawnDict[whichPawn], targetPile->getEquipment(), target);
+
+    if (isBody)
+    {
+        tradeTable = new TradeTable(pawnDict[whichPawn], pawnDict[numberOfPawn(coords, true)]->getEquipment(), target);
+    }
+    else
+    {
+        EquipmentPile* targetPile = pileDict[numberOfPile(coords)];
+        tradeTable = new TradeTable(pawnDict[whichPawn], targetPile->getEquipment(), target);
+    }
     resetTurn();
 }
 
@@ -484,6 +488,7 @@ void Pawns::trading(sf::Vector2i mousePosition)
 			}
         }
         delete(tradeTable);
+        tradeTable = nullptr;
     }
 }
 

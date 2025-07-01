@@ -76,8 +76,7 @@ private:
 	void setupText();
 	void flipTurn();
 	int numberOfPawn(std::tuple<int, int, int> coords, bool body = false);
-	void handleRightClickWhenOnBody(const std::tuple<int, int, int>& pawnCoords);
-	void handleRightClickWhenOnPile(const std::tuple<int, int, int>& pileCoords);
+	void handleRightClickOnTrade(const std::tuple<int, int, int>& pawnCoords, bool isBody);
 	int numberOfPile(const std::tuple<int, int, int>& pileCoords) const;
 	bool handleNeighborRightClick(sf::Vector2i mousePosition, const std::tuple<int, int, int>& pawnCoords);
 	void handlePawnEquipmentRightClick(sf::Vector2i mousePosition);
