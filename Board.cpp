@@ -164,8 +164,10 @@ std::vector < std::tuple<int, int, int>> Board::getInRange(std::tuple<int, int, 
     return hexes;
 }
 
-std::vector < std::tuple<int, int, int>> Board::getReachable(std::tuple<int, int, int> start, int movement)
+std::vector < std::tuple<int, int, int>> Board::getReachable(Pawn* inPawn)
 {
+	std::tuple<int, int, int> start = inPawn->getHexCoords();
+	int movement = inPawn->getRemainingActions();
     std::vector < std::tuple<int, int, int>> visited;
     std::vector<std::vector < std::tuple<int, int, int>>> fringes;
     fringes.push_back(std::vector< std::tuple<int, int, int>>());
@@ -179,7 +181,7 @@ std::vector < std::tuple<int, int, int>> Board::getReachable(std::tuple<int, int
             std::vector < std::tuple<int, int, int>> neighbours = getNeighbours(coordinates);
             for (std::tuple<int, int, int> neighbour : neighbours)
             {
-                if (!hexDict[neighbour]->isBlocking() && !isTupleInVector(visited, neighbour) && neighbour != start)
+                if (!hexDict[neighbour]->isBlockingForPawn(inPawn) && !isTupleInVector(visited, neighbour) && neighbour != start)
                 {
                     visited.push_back(neighbour);
                     fringes[k].push_back(neighbour);
@@ -191,8 +193,9 @@ std::vector < std::tuple<int, int, int>> Board::getReachable(std::tuple<int, int
     return visited;
 }
 
-std::vector < std::tuple<int, int, int>> Board::getInView(std::tuple<int, int, int> start, int dist, int minDist)
+std::vector < std::tuple<int, int, int>> Board::getInView(Pawn* inPawn, int dist, int minDist)
 {
+    std::tuple<int, int, int> start = inPawn->getHexCoords();
     bool skipOuterLoop = false;
     std::vector <std::tuple<int, int, int>> results;
     std::vector < std::tuple<int, int, int>> inRange = getInRange(start, dist, minDist);
@@ -201,7 +204,7 @@ std::vector < std::tuple<int, int, int>> Board::getInView(std::tuple<int, int, i
         std::vector < std::tuple<int, int, int>> inLine = linedraw(start, coordinates);
         for (std::tuple<int, int, int> lineHex : inLine)
         {
-            if (hexDict[lineHex]->isBlocking())
+            if (hexDict[lineHex]->isBlockingForPawn(inPawn))
             {
                 skipOuterLoop = true;
                 break;

@@ -44,6 +44,7 @@ public:
 	bool isPawn() const;
 	bool hasBody() const;
 	bool isBlocking() const;
+	bool isBlockingForPawn(Pawn* inPawn);
 	bool isHigh(int col) const;
 	bool isClicked(sf::Vector2i mousePosition) const;
 	bool hasEquipmentPile() const;

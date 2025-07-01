@@ -208,6 +208,12 @@ bool Hex::isBlocking() const {
     return isBlocking_;
 }
 
+bool Hex::isBlockingForPawn(Pawn* inPawn)
+{
+    if (!isPawn()) return isBlocking_;
+    return isBlocking_ || inPawn->getTeamNumber() != pawn->getTeamNumber();
+}
+
 bool Hex::isHigh(int col) const {
     return highlights[col];
 }

@@ -651,7 +651,7 @@ std::vector<std::tuple<int, int, int>> Pawns::getViewOfWeapon(int pawnNum, Equip
 {
     Pawn* pawn = pawnDict[pawnNum];
     Equipment::Range range = weapon->getRange();
-    return board->getInView(pawn->getHexCoords(), range.maxRange, range.minRange);
+    return board->getInView(pawn, range.maxRange, range.minRange);
 }
 
 std::vector<std::tuple<int, int, int>> Pawns::getViewOfPawn(int pawnNum)
@@ -675,9 +675,7 @@ std::vector<std::tuple<int, int, int>> Pawns::getViewOfPawn(int pawnNum)
 std::vector<std::tuple<int, int, int>> Pawns::getRangeOfPawn(int pawnNum)
 {
     Pawn* pawn = pawnDict[pawnNum];
-    std::vector<std::tuple<int, int, int>> inRange;
-    inRange = board->getReachable(pawn->getHexCoords(), pawn->getRemainingActions());
-    return inRange;
+    return board->getReachable(pawn);
 }
 
 void Pawns::setupText()
