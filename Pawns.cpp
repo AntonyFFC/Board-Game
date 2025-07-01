@@ -523,7 +523,7 @@ bool Pawns::dropping(sf::Vector2i mousePosition)
 
 bool Pawns::drop(sf::Vector2i mousePosition)
 {
-    if (pawnDict[whichPawn]->unClickDropButton(mousePosition))
+    if (canDropItem(whichPawn, mousePosition))
     {
         EquipmentPile* newPile = new EquipmentPile(pawnDict[whichPawn]->getHexCoords());
         pileDict.push_back(newPile);
@@ -535,6 +535,12 @@ bool Pawns::drop(sf::Vector2i mousePosition)
         return true;
     }
     return false;
+}
+
+bool Pawns::canDropItem(int pawnNum, sf::Vector2i mousePosition) const
+{
+    return pawnDict[pawnNum]->unClickDropButton(mousePosition) &&
+        pawnDict[pawnNum]->getRemainingActions() && pawnDict[pawnNum]->areAnyHighlighted();
 }
 
 void Pawns::pawnMoved(int pawnNum)

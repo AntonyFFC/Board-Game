@@ -55,6 +55,7 @@ private:
 	void choosing(sf::Vector2i mousePosition);
 	bool dropping(sf::Vector2i mousePosition);
 	bool drop(sf::Vector2i mousePosition);
+	bool canDropItem(int pawnNum, sf::Vector2i mousePosition) const;
 	void pawnMoved(int pawnNum);
 	void attack(int pawnNum, int attackedNum, Equipment* weapon);
 	bool hasEnoughActions(Pawn* attacker, Equipment* weapon) const;

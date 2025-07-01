@@ -91,6 +91,7 @@ public:
 	bool clickDropButton(sf::Vector2i mousePosition);
     bool unClickDropButton(sf::Vector2i mousePosition);
 	void toggleHighlightEquipmentTable(sf::Vector2i mousePosition);
+	bool areAnyHighlighted() const;
 
     static const std::map<std::string, int> order;
     static std::map<std::string, sf::Sprite> spriteMap;

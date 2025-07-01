@@ -645,6 +645,15 @@ void Pawn::toggleHighlightEquipmentTable(sf::Vector2i mousePosition)
 	equipmentTable->toggleHighlightClickeditem(mousePosition);
 }
 
+bool Pawn::areAnyHighlighted() const
+{
+	if (equipmentTable != nullptr)
+	{
+		return equipmentTable->getHighlightedItems().size() > 0;
+	}
+	return false;
+}
+
 void Pawn::dropItems(EquipmentPile* pile)
 {
     std::vector<Equipment*> highlightedItems = getHighlightedEquipment();
