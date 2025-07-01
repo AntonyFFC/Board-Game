@@ -86,6 +86,7 @@ private:
 	void drawTurn();
 	void drawPawns(bool isShift);
 	void resetTurn();
+	void closeTables();
 
 	Board* board;
 	TradeTable* tradeTable;

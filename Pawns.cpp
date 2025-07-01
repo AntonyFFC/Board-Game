@@ -699,9 +699,25 @@ void Pawns::resetTurn()
     pawnFirstClick(whichPawn);
 }
 
+void Pawns::closeTables()
+{
+	for (Pawn* pawn : pawnDict)
+	{
+		pawn->setIsEquipmentShown(false);
+	}
+	if (tradeTable != nullptr)
+	{
+		delete tradeTable;
+		tradeTable = nullptr;
+	}
+	setTrading(false);
+	setChoosing(false);
+}
+
 void Pawns::endTurn()
 {
     pawnDict[whichPawn]->setRemainingActions(pawnDict[whichPawn]->getMaxActions());
+    closeTables();
     board->clearHighlight();
     previousHex = empty;
     flipTurn();
