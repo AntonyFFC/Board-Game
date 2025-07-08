@@ -4,10 +4,12 @@
 #include <iostream>
 
 Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions, 
-    int healthPoints, SpaceInventory space, int price, int numInDeck)
+    int healthPoints, SpaceInventory space, int price,
+    const std::string& additionalCapabilities, int numInDeck)
 	: name(name), teamNumber(teamNumber), side(side), remainingActions(maxActions), 
     maxActions(maxActions), calculatedMaxActions(maxActions), HP(healthPoints), 
-    space(space), price(price), equipment(), combinedSprite(), numInDeck(numInDeck)
+    space(space), price(price), equipment(), combinedSprite(),
+    additionalCapabilities(additionalCapabilities), numInDeck(numInDeck)
 {
     scaleFactor = 0.05f;
     rotationAngle = 90.0f;
@@ -271,6 +273,11 @@ std::vector<Equipment*> Pawn::getHighlightedEquipment() const
 	}
 	return highlightedEquipment;
 
+}
+
+std::string Pawn::getAdditionalCapabilities() const
+{
+    return additionalCapabilities;
 }
 
 // Setter methods
@@ -541,17 +548,17 @@ void Pawn::drawStats(sf::RenderTarget& target)
     float nameXPos = spriteBounds.left;
     float nameYPos = spriteBounds.top + spriteBounds.height / 6;
     float hpXpos = 38.0f;
-    float hpYpos = spriteBounds.height/2.8f;
-	float hpOutlineThickness = 4.0f;
-	if (isInGame)
-	{
-		size = 15.0f;
+    float hpYpos = spriteBounds.height / 2.8f;
+    float hpOutlineThickness = 4.0f;
+    if (isInGame)
+    {
+        size = 15.0f;
         nameXPos = spriteBounds.left + spriteBounds.width / 5;
         nameYPos = spriteBounds.top - spriteBounds.height / 4;
         hpXpos = 17.0f;
         hpYpos = spriteBounds.height - 7;
         hpOutlineThickness = 0.3f;
-	}
+    }
     attributesText.setFont(globalFont);
     attributesText.setCharacterSize(size);
 
@@ -562,17 +569,26 @@ void Pawn::drawStats(sf::RenderTarget& target)
     target.draw(attributesText);
 
     sf::FloatRect nameBounds = attributesText.getGlobalBounds();
-    float shieldX = nameBounds.left + 1.02*nameBounds.width;
+    float shieldX = nameBounds.left + 1.02 * nameBounds.width;
     float shieldY = nameBounds.top + 0.05 * nameBounds.height;
     createTeamShield(size, shieldX, shieldY);
     target.draw(teamShield);
 
-    attributesText.move(0, size);
+    attributesText.setPosition(nameXPos, nameYPos + size);
     attributesText.setFillColor(sf::Color::Blue);
     attributesText.setString(std::to_string(getMaxActions()));
     target.draw(attributesText);
 
-    attributesText.move(-hpXpos, hpYpos);
+    if (!isInGame)
+    {
+        attributesText.setCharacterSize(size / 2);
+        attributesText.setPosition(nameXPos + size, nameYPos + size);
+        attributesText.setFillColor(sf::Color::White);
+        attributesText.setString(getAdditionalCapabilities());
+        target.draw(attributesText);
+    }
+
+    attributesText.setPosition(nameXPos - hpXpos, nameYPos + size +hpYpos);
     attributesText.setFillColor(sf::Color::Red);
     attributesText.setOutlineColor(sf::Color::Red);
     attributesText.setOutlineThickness(2*size*1/15);

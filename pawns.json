@@ -1,210 +1,226 @@
 [
-    {
-        "HP": 4,
-        "maxActions": 6,
-        "name": "Peasant Horseman",
-        "numInDeck": 1,
-        "price": 3,
-        "side": 0,
-        "space": {
-            "extras": 2,
-            "hands": 2
-        },
-        "teamNumber": 0
+  {
+    "additionalCapabilities": "1 more movement on horse",
+    "HP": 4,
+    "maxActions": 6,
+    "name": "Peasant Horseman",
+    "numInDeck": 1,
+    "price": 3,
+    "side": 0,
+    "space": {
+      "extras": 2,
+      "hands": 2
     },
-    {
-        "HP": 4,
-        "maxActions": 7,
-        "name": "Prince Horseman",
-        "numInDeck": 1,
-        "price": 3,
-        "side": 0,
-        "space": {
-            "extras": 2,
-            "hands": 1
-        },
-        "teamNumber": 1
+    "teamNumber": 0
+  },
+  {
+    "additionalCapabilities": "1 more movement on horse",
+    "HP": 4,
+    "maxActions": 7,
+    "name": "Prince Horseman",
+    "numInDeck": 1,
+    "price": 3,
+    "side": 0,
+    "space": {
+      "extras": 2,
+      "hands": 1
     },
-    {
-        "HP": 4,
-        "maxActions": 7,
-        "name": "Townsman Horseman",
-        "numInDeck": 1,
-        "price": 3,
-        "side": 0,
-        "space": {
-            "extras": 1,
-            "hands": 2
-        },
-        "teamNumber": 2
+    "teamNumber": 1
+  },
+  {
+    "additionalCapabilities": "1 more movement on horse",
+    "HP": 4,
+    "maxActions": 7,
+    "name": "Townsman Horseman",
+    "numInDeck": 1,
+    "price": 3,
+    "side": 0,
+    "space": {
+      "extras": 1,
+      "hands": 2
     },
-    {
-        "HP": 5,
-        "maxActions": 7,
-        "name": "Knight Horseman",
-        "numInDeck": 1,
-        "price": 5,
-        "side": 0,
-        "space": {
-            "extras": 2,
-            "hands": 2
-        },
-        "teamNumber": 3
+    "teamNumber": 2
+  },
+  {
+    "additionalCapabilities": "1 more movement on horse",
+    "HP": 5,
+    "maxActions": 7,
+    "name": "Knight Horseman",
+    "numInDeck": 1,
+    "price": 5,
+    "side": 0,
+    "space": {
+      "extras": 2,
+      "hands": 2
     },
-    {
-        "HP": 5,
-        "maxActions": 6,
-        "name": "Peasant Archer",
-        "numInDeck": 1,
-        "price": 3,
-        "side": 0,
-        "space": {
-            "extras": 1,
-            "hands": 2
-        },
-        "teamNumber": 4
+    "teamNumber": 3
+  },
+  {
+    "additionalCapabilities": "misses less by 1",
+    "HP": 5,
+    "maxActions": 6,
+    "name": "Peasant Archer",
+    "numInDeck": 1,
+    "price": 3,
+    "side": 0,
+    "space": {
+      "extras": 1,
+      "hands": 2
     },
-    {
-        "HP": 4,
-        "maxActions": 7,
-        "name": "Prince Archer",
-        "numInDeck": 1,
-        "price": 4,
-        "side": 0,
-        "space": {
-            "extras": 2,
-            "hands": 2
-        },
-        "teamNumber": 2
+    "teamNumber": 4
+  },
+  {
+    "additionalCapabilities": "misses less by 1",
+    "HP": 4,
+    "maxActions": 7,
+    "name": "Prince Archer",
+    "numInDeck": 1,
+    "price": 4,
+    "side": 0,
+    "space": {
+      "extras": 2,
+      "hands": 2
     },
-    {
-        "HP": 5,
-        "maxActions": 7,
-        "name": "Townsman Archer",
-        "numInDeck": 1,
-        "price": 4,
-        "side": 0,
-        "space": {
-            "extras": 1,
-            "hands": 2
-        },
-        "teamNumber": 0
+    "teamNumber": 2
+  },
+  {
+    "additionalCapabilities": "misses less by 1",
+    "HP": 5,
+    "maxActions": 7,
+    "name": "Townsman Archer",
+    "numInDeck": 1,
+    "price": 4,
+    "side": 0,
+    "space": {
+      "extras": 1,
+      "hands": 2
     },
-    {
-        "HP": 4,
-        "maxActions": 8,
-        "name": "Knight Archer",
-        "numInDeck": 1,
-        "price": 5,
-        "side": 0,
-        "space": {
-            "extras": 1,
-            "hands": 2
-        },
-        "teamNumber": 2
+    "teamNumber": 0
+  },
+  {
+    "additionalCapabilities": "misses less by 1",
+    "HP": 4,
+    "maxActions": 8,
+    "name": "Knight Archer",
+    "numInDeck": 1,
+    "price": 5,
+    "side": 0,
+    "space": {
+      "extras": 1,
+      "hands": 2
     },
-    {
-        "HP": 3,
-        "maxActions": 9,
-        "name": "Knight Warrior",
-        "numInDeck": 1,
-        "price": 4,
-        "side": 0,
-        "space": {
-            "extras": 2,
-            "hands": 1
-        },
-        "teamNumber": 5
+    "teamNumber": 2
+  },
+  {
+    "additionalCapabilities": "",
+    "HP": 3,
+    "maxActions": 9,
+    "name": "Knight Warrior",
+    "numInDeck": 1,
+    "price": 4,
+    "side": 0,
+    "space": {
+      "extras": 2,
+      "hands": 1
     },
-    {
-        "HP": 5,
-        "maxActions": 8,
-        "name": "Prince Warrior",
-        "numInDeck": 1,
-        "price": 5,
-        "side": 0,
-        "space": {
-            "extras": 1,
-            "hands": 2
-        },
-        "teamNumber": 4
+    "teamNumber": 5
+  },
+  {
+    "additionalCapabilities": "",
+    "HP": 5,
+    "maxActions": 8,
+    "name": "Prince Warrior",
+    "numInDeck": 1,
+    "price": 5,
+    "side": 0,
+    "space": {
+      "extras": 1,
+      "hands": 2
     },
-    {
-        "HP": 4,
-        "maxActions": 8,
-        "name": "Townsman Warrior",
-        "numInDeck": 1,
-        "price": 3,
-        "side": 0,
-        "space": {
-            "extras": 2,
-            "hands": 1
-        },
-        "teamNumber": 1
+    "teamNumber": 4
+  },
+  {
+    "additionalCapabilities": "",
+    "HP": 4,
+    "maxActions": 8,
+    "name": "Townsman Warrior",
+    "numInDeck": 1,
+    "price": 3,
+    "side": 0,
+    "space": {
+      "extras": 2,
+      "hands": 1
     },
-    {
-        "HP": 5,
-        "maxActions": 8,
-        "name": "Peasant Warrior",
-        "numInDeck": 1,
-        "price": 5,
-        "side": 0,
-        "space": {
-            "extras": 2,
-            "hands": 2
-        },
-        "teamNumber": 0
+    "teamNumber": 1
+  },
+  {
+    "additionalCapabilities": "",
+    "HP": 5,
+    "maxActions": 8,
+    "name": "Peasant Warrior",
+    "numInDeck": 1,
+    "price": 5,
+    "side": 0,
+    "space": {
+      "extras": 2,
+      "hands": 2
     },
-    {
-        "HP": 3,
-        "maxActions": 8,
-        "name": "Townsman Defender",
-        "numInDeck": 1,
-        "price": 4,
-        "side": 0,
-        "space": {
-            "extras": 1,
-            "hands": 2
-        },
-        "teamNumber": 3
+    "teamNumber": 0
+  },
+  {
+    "additionalCapabilities": "Covering +1 durability",
+    "HP": 3,
+    "maxActions": 8,
+    "name": "Townsman Defender",
+    "numInDeck": 1,
+    "price": 4,
+    "side": 0,
+    "space": {
+      "extras": 1,
+      "hands": 2
     },
-    {
-        "HP": 3,
-        "maxActions": 8,
-        "name": "Prince Defender",
-        "numInDeck": 1,
-        "price": 3,
-        "side": 0,
-        "space": {
-            "extras": 1,
-            "hands": 2
-        },
-        "teamNumber": 4
+    "teamNumber": 3
+  },
+  {
+    "additionalCapabilities": "Helmet +1 durability",
+    "HP": 3,
+    "maxActions": 8,
+    "name": "Prince Defender",
+    "numInDeck": 1,
+    "price": 3,
+    "side": 0,
+    "space": {
+      "extras": 1,
+      "hands": 2
     },
-    {
-        "HP": 3,
-        "maxActions": 7,
-        "name": "Peasant Defender",
-        "numInDeck": 1,
-        "price": 3,
-        "side": 0,
-        "space": {
-            "extras": 2,
-            "hands": 2
-        },
-        "teamNumber": 3
+    "teamNumber": 4
+  },
+  {
+    "additionalCapabilities": "Shield+1 durability",
+    "HP": 3,
+    "maxActions": 7,
+    "name": "Peasant Defender",
+    "numInDeck": 1,
+    "price": 3,
+    "side": 0,
+    "space": {
+      "extras": 2,
+      "hands": 2
     },
-    {
-        "HP": 4,
-        "maxActions": 8,
-        "name": "Knight Defender",
-        "numInDeck": 1,
-        "price": 5,
-        "side": 0,
-        "space": {
-            "extras": 2,
-            "hands": 2
-        },
-        "teamNumber": 1
-    }
+    "teamNumber": 3
+  },
+  {
+    "additionalCapabilities": "Shield+1 durability",
+    "HP": 4,
+    "maxActions": 8,
+    "name": "Knight Defender",
+    "numInDeck": 1,
+    "price": 5,
+    "side": 0,
+    "space": {
+      "extras": 2,
+      "hands": 2
+    },
+    "teamNumber": 1
+  }
 ]

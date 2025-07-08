@@ -150,6 +150,7 @@ std::vector<std::function<std::string(const Pawn&)>> initializePawnFunctions()
 	newFunctions.push_back([](const Pawn& pawn) { return std::to_string(pawn.getSpace().extras); });
 	newFunctions.push_back([](const Pawn& pawn) { return std::to_string(pawn.getHP()); });
 	newFunctions.push_back([](const Pawn& pawn) { return std::to_string(pawn.getPrice()); });
+	newFunctions.push_back([](const Pawn& pawn) { return pawn.getAdditionalCapabilities(); });
 	return newFunctions;
 }
 

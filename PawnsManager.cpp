@@ -18,6 +18,7 @@ bool PawnsManager::savePawnsToJson(const std::vector<Pawn*>& equipment, const st
             space["extras"] = person->getSpace().extras;
             itemData["space"] = space;
             itemData["price"] = person->getPrice();
+            itemData["additionalCapabilities"] = person->getAdditionalCapabilities();
             itemData["numInDeck"] = person->getNumInDeck();
 
             equipmentData.push_back(itemData);
@@ -43,19 +44,21 @@ std::vector<Pawn*> PawnsManager::loadPawnsFromJson(const std::string& filename)
         inputFile >> jsonData;
         inputFile.close();
 
-        for (const auto& item : jsonData) {
-            std::string name = item["name"];
-            int teamNumber = item["teamNumber"];
-            int side = item["side"];
-            int maxActions = item["maxActions"];
-            int HP = item["HP"];
+        for (const auto& person : jsonData) {
+            std::string name = person["name"];
+            int teamNumber = person["teamNumber"];
+            int side = person["side"];
+            int maxActions = person["maxActions"];
+            int HP = person["HP"];
             Pawn::SpaceInventory space;
-            space.hands = item["space"]["hands"];
-            space.extras = item["space"]["extras"];
-            int price = item["price"];
-            int numInDeck = item["numInDeck"];
+            space.hands = person["space"]["hands"];
+            space.extras = person["space"]["extras"];
+            int price = person["price"];
+            std::string additionalCapabilities = person["additionalCapabilities"];
+            int numInDeck = person["numInDeck"];
 
-            Pawn* pawn = new Pawn(name, teamNumber, side, maxActions, HP, space, price, numInDeck);
+            Pawn* pawn = new Pawn(name, teamNumber, side, maxActions, HP, space, price, 
+                additionalCapabilities, numInDeck);
             pawnList.push_back(pawn);
         }
     }

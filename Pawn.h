@@ -24,7 +24,8 @@ public:
     };
 
     Pawn(const std::string& name, int teamNumber, int side, int maxActions, 
-        int healthPoints, SpaceInventory space, int price, const int numInDeck=1);
+        int healthPoints, SpaceInventory space, int price, 
+        const std::string& additionalCapabilities, const int numInDeck = 1);
     ~Pawn();
 
     // Getter methods
@@ -50,6 +51,7 @@ public:
 	int getWallDestroyCost() const;
 	bool getIsCurrentPawn() const;
 	std::vector<Equipment*> getHighlightedEquipment() const;
+    std::string getAdditionalCapabilities() const;
 
     // Setter methods
     void setName(const std::string& name);
@@ -117,6 +119,7 @@ private:
 	int maxActions; // The maximum number of actions a pawn can take in a turn without any items
 	int calculatedMaxActions; // The maximum number of actions a pawn can take in a turn
     int HP;
+    std::string additionalCapabilities;
     SpaceInventory space;
     SpaceInventory remainingSpace;
     int price;

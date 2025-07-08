@@ -41,7 +41,7 @@ private:
 	void createCombinedSprite();
 	virtual void drawValues() = 0;
 	void drawHeaders();
-	void drawPicture();
+	virtual void drawPicture(sf::Vector2f initialPos = sf::Vector2f(0.f,0.f));
 	void moveBack();
 	sf::Vector2f position;
 	int sumOfCellWidths;
@@ -70,6 +70,7 @@ public:
 
 private:
 	void drawValues() override;
+	void drawPicture(sf::Vector2f initialPos = sf::Vector2f(0.f, 0.f)) override;
     Pawn* warrior;
 	std::vector<std::function<std::string(const Pawn&)>> functions;
 };

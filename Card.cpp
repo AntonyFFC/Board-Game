@@ -156,9 +156,8 @@ void Card::drawHeaders()
 	moveBack();
 }
 
-void Card::drawPicture()
+void Card::drawPicture(sf::Vector2f initialPos)
 {
-	sf::Vector2f initialPos(0, 0);
 	pictureSprite.setScale(scaleFactor, scaleFactor);
 	//this is so that I set the x coordinate of the center but the y coordinate of the top edge
 	sf::Vector2f finalPos(initialPos.x + (sumOfCellWidths)/2 - pictureSprite.getGlobalBounds().width / 2.0f,
@@ -219,6 +218,15 @@ void WarriorCard::drawValues()
 		moveSpriteMap(cellWidths[i], 0, iconSprites);
 	}
 	moveBack();
+
+	//This is the description below specs
+	text.setString(functions[6](*static_cast<const Pawn*>(warrior)));
+	renderTexture.draw(text);
+}
+
+void WarriorCard::drawPicture(sf::Vector2f initialPos)
+{
+	Card::drawPicture(sf::Vector2f(0.f, 20.f));
 }
 
 EquipmentCard::EquipmentCard(Equipment* item)
