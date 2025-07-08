@@ -118,6 +118,22 @@ void Pawn::createSprite()
     }
 }
 
+void Pawn::createTeamShield(float size, float x, float y)
+{
+    teamShield.setPointCount(5);
+
+    float shieldWidth = size * 0.6f;
+    float shieldHeight = size * 0.9f;
+
+    teamShield.setPoint(0, sf::Vector2f(x, y)); // Top-left
+    teamShield.setPoint(1, sf::Vector2f(x + shieldWidth, y)); // Top-right
+    teamShield.setPoint(2, sf::Vector2f(x + shieldWidth, y + shieldHeight * 0.6f)); // Mid-right
+    teamShield.setPoint(3, sf::Vector2f(x + shieldWidth / 2, y + shieldHeight)); // Bottom-center
+    teamShield.setPoint(4, sf::Vector2f(x, y + shieldHeight * 0.6f)); // Mid-left
+
+    teamShield.setFillColor(getTeamColor(this->getTeamNumber()));
+}
+
 sf::Sprite Pawn::getSprite() {
     return *combinedSprite;
 }
@@ -544,6 +560,12 @@ void Pawn::drawStats(sf::RenderTarget& target)
     attributesText.setFillColor(sf::Color::White);
     attributesText.setString(getName());
     target.draw(attributesText);
+
+    sf::FloatRect nameBounds = attributesText.getGlobalBounds();
+    float shieldX = nameBounds.left + 1.02*nameBounds.width;
+    float shieldY = nameBounds.top + 0.05 * nameBounds.height;
+    createTeamShield(size, shieldX, shieldY);
+    target.draw(teamShield);
 
     attributesText.move(0, size);
     attributesText.setFillColor(sf::Color::Blue);

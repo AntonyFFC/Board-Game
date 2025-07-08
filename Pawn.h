@@ -100,6 +100,7 @@ private:
     void handsExtrasToSet(std::unordered_set<std::string>& set);
     std::unordered_set<std::string> getSet();
     void createSprite();
+    void createTeamShield(float size, float x, float y);
     static std::map<std::string, sf::Sprite> initializeSpriteMap();
     void drawStats(sf::RenderTarget& target);
     std::vector<bool> whatArmour();
@@ -123,6 +124,7 @@ private:
     float scaleFactor;
     float rotationAngle;
     mutable sf::Sprite *combinedSprite;
+    sf::ConvexShape teamShield;
     sf::Texture* combinedTexture;
     float xPos;
     float yPos;
