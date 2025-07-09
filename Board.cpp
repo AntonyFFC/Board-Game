@@ -207,6 +207,11 @@ std::vector < std::tuple<int, int, int>> Board::getInView(Pawn* inPawn, int dist
             if (hexDict[lineHex]->isBlockingForPawn(inPawn))
             {
                 skipOuterLoop = true;
+                if (lineHex == coordinates && !isTupleInVector(results, lineHex) 
+                    && isTupleInVector(inRange, lineHex) && hexDict[lineHex]->isPawn())
+                {
+                    results.push_back(lineHex);
+                }
                 break;
             }
         }
