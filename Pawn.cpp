@@ -645,6 +645,7 @@ bool Pawn::hasShield() const
 			return true;
 		}
 	}
+    return false;
 }
 
 bool Pawn::isMounted() const
