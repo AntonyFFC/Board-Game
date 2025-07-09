@@ -86,6 +86,7 @@ private:
 	void drawPawns(bool isShift);
 	void resetTurn();
 	void closeTables();
+	bool isPawnSelected() const;
 
 	Board* board;
 	TradeTable* tradeTable;
