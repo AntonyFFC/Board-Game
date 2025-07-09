@@ -45,11 +45,11 @@ private:
 	sf::Sprite backgroundSprite;
 	sf::Texture backgroundTexture;
 	std::string equipmentHeaders[8];
-	std::string pawnHeaders[6];
+	std::string pawnHeaders[7];
 	std::vector<std::function<std::string(const Equipment&)>> equipmentFunctions;
 	std::vector<std::function<std::string(const Pawn&)>> pawnFunctions;
 	int equipmentCellWidths[8];
-	int pawnCellWidths[6];
+	int pawnCellWidths[7];
 	int sumOfEqCellWidths;
 	int sumOfPnCellWidths;
 	int cellHeight;

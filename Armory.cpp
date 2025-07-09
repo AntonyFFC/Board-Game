@@ -12,8 +12,8 @@ int getSumOfArray(T(&arr)[N]) {
 Armory::Armory(sf::RenderWindow* window)
 	:window(window), equipmentHeaders{ "Name","left-right-arrow-icon-white","circle-line-icon-white","bomb-blast-icon-white",
 "history-icon-white","cube-icon-white","dollar-icon-white","Other" }, pawnHeaders{ "Name","history-icon-white",
-"hand-line-icon-white","plus-round-line-icon-white","heart-line-icon-white","dollar-icon-white" },
-equipmentCellWidths{ 150,60,60,50,50,50,50,500 }, pawnCellWidths{ 250, 50, 50,50, 50, 50 }
+"hand-line-icon-white","plus-round-line-icon-white","heart-line-icon-white","dollar-icon-white", "Other"},
+equipmentCellWidths{ 150,60,60,50,50,50,50,500 }, pawnCellWidths{ 250, 50, 50,50, 50, 50, 250 }
 {
 	equipmentRenderTexture.create(window->getSize().x, window->getSize().y);
 	pawnsRenderTexture.create(window->getSize().x, window->getSize().y);
@@ -188,7 +188,7 @@ void Armory::drawEquipmentHeaders()
 
 void Armory::drawPawnsHeaders()
 {
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 7; i++)
 	{
 		cell.setSize(sf::Vector2f(pawnCellWidths[i], cellHeight));
 		pawnsRenderTexture.draw(cell);
@@ -252,7 +252,7 @@ void Armory::drawPawns()
 	for (Pawn* pawn : pawnsList)
 	{
 		cell.setFillColor(getTeamColor(pawn->getTeamNumber()));
-		for (int i = 0; i < 6; i++)
+		for (int i = 0; i < 7; i++)
 		{
 			cell.setSize(sf::Vector2f(pawnCellWidths[i], cellHeight));
 			pawnsRenderTexture.draw(cell);
