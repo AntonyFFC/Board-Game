@@ -842,11 +842,11 @@ void Pawn::calculateInitialActions()
         {
             this->calculatedMaxActions -= item->getAttackActions();
         }
-		if (isMounted() && getSecondName() == "Horseman")
-		{
-			this->calculatedMaxActions += 1;
-		}
 	}
+    if (isMounted() && getSecondName() == "Horseman")
+    {
+        this->calculatedMaxActions += 1;
+    }
 	this->remainingActions -= (peviousMaxActions - this->calculatedMaxActions);
 }
 
