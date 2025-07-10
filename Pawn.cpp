@@ -463,7 +463,12 @@ void Pawn::reduceHP(int amount) {
 	int previousHP = HP;
     HP -= amount;
 
-    floatingTexts.push_back(new TextDamage("-" + std::to_string(amount), getSprite().getPosition()));
+    floatingTexts.push_back(new TextDamage("-" + std::to_string(amount), 
+        getSprite().getPosition(), sf::Color::Red));
+
+    if (combinedSprite)
+        combinedSprite->setColor(sf::Color(255, 100, 100));
+    damageTintTimer = 0.5f;
 
     if (!isAlive())
         dead();
@@ -631,6 +636,8 @@ void Pawn::rangedAttack(int value, int missMax) // for example if is 3 then 1,2,
     if (randomNumber <= missMax)
     {
         std::cout << "miss\n";
+        floatingTexts.push_back(new TextDamage(std::to_string(0),
+            getSprite().getPosition(), sf::Color::White));
     }
     else
     {
@@ -716,8 +723,10 @@ void Pawn::updateAnimations(float dt)
 {
     if (floatingTexts.empty()) return;
 
+    float move = 0.f;
     for (auto& text : floatingTexts) {
-        text->update(dt);
+        text->update(dt, move);
+        move += 10.0f;
     }
 
     auto it = floatingTexts.begin();
@@ -728,6 +737,13 @@ void Pawn::updateAnimations(float dt)
         }
         else {
             ++it;
+        }
+    }
+
+    if (damageTintTimer > 0.0f) {
+        damageTintTimer -= dt;
+        if (damageTintTimer <= 0.0f && combinedSprite) {
+            combinedSprite->setColor(sf::Color::White); // Reset to normal
         }
     }
 }
@@ -819,6 +835,14 @@ void Pawn::useArmour(const std::string& type, std::vector<bool>& armours, int va
 {
     Equipment* armour = findArmour(type);
     int rest = armour->reduceDurability(value);
+
+    floatingTexts.push_back(new TextDamage("-" + std::to_string(value-rest),
+        getSprite().getPosition(), sf::Color(157, 163, 171)));
+
+    if (combinedSprite)
+        combinedSprite->setColor(sf::Color(129, 142, 161));
+    damageTintTimer = 0.5f;
+
     if (armour->getAttackValue() <= 0)
     {
         removeEquipment(armour);
@@ -827,16 +851,26 @@ void Pawn::useArmour(const std::string& type, std::vector<bool>& armours, int va
         {
             Equipment* covering = findArmour("Covering");
             int rest2 = covering->reduceDurability(rest);
+
+            floatingTexts.push_back(new TextDamage("-" + std::to_string(rest - rest2),
+                getSprite().getPosition(), sf::Color(157, 163, 171)));
+
+            if (combinedSprite)
+                combinedSprite->setColor(sf::Color(129, 142, 161));
+            damageTintTimer = 0.5f;
+
             if (covering->getAttackValue() <= 0)
             {
                 removeEquipment(covering);
                 delete covering;
-                reduceHP(rest2);
+                if (rest2)
+                    reduceHP(rest2);
             }
         }
         else
         {
-            reduceHP(rest);
+            if (rest)
+                reduceHP(rest);
         }
     }
 }

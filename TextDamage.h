@@ -4,9 +4,9 @@
 class TextDamage
 {
 public:
-    TextDamage(const std::string& text, sf::Vector2f position, float duration = 1.0f);
+    TextDamage(const std::string& text, sf::Vector2f position, sf::Color colour, float duration = 2.0f);
 
-    void update(float dt);
+    void update(float dt, float move = 0);
     void draw(sf::RenderTarget& target) const;
     bool isStillSeen() const;
 
@@ -15,5 +15,6 @@ private:
     float lifetime;
     float elapsed;
     bool isSeen;
+	sf::Color color;
 };
 

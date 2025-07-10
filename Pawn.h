@@ -141,4 +141,5 @@ private:
 	bool isCurrentPawn; // Is this pawn the current used pawn in the game
     Button dropButton;
     std::vector<TextDamage*> floatingTexts;
+    float damageTintTimer = 0.0f;
 };

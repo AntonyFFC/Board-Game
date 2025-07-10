@@ -1,20 +1,20 @@
 #include "TextDamage.h"
 #include "TableUtils.h"
 
-TextDamage::TextDamage(const std::string& text, sf::Vector2f position, float duration)
-    : lifetime(duration), elapsed(0.f), isSeen(true)
+TextDamage::TextDamage(const std::string& text, sf::Vector2f position, sf::Color colour, float duration)
+	: lifetime(duration), elapsed(0.f), isSeen(true), color(colour)
 {
-    floatText = initializeText("Damage", &globalFont2, 20, sf::Color::Red);
+    floatText = initializeText(text, &globalFont2, 30, colour);
     floatText.setPosition(position);
 }
 
-void TextDamage::update(float dt)
+void TextDamage::update(float dt, float move)
 {
     if (!isSeen) return;
 
     elapsed += dt;
 
-    floatText.move(0, -30.0f * dt);
+    floatText.move(0 + move, -30.0f * dt);
     float alpha = 255.f * (1.f - (elapsed / lifetime));
     if (alpha < 0.f) alpha = 0.f;
 
