@@ -22,18 +22,31 @@ Gui::~Gui()
 
 void Gui::start() {
     warriorPrep->start();
+    sf::Clock clock;
+    sf::Clock animationRedrawClock;
+    const float redrawInterval = 1.0f / 20.0f;
 
     while (window->isOpen())
     {
+        float dt = clock.restart().asSeconds();
         sf::Event event;
         while (window->pollEvent(event)) {
             keyPressed(event);
+        }
+        pawns->updateAnimations(dt);
+
+        if (changesOccurred || pawns->hasActiveAnimations() &&
+            animationRedrawClock.getElapsedTime().asSeconds() >= redrawInterval) {
+
+            display();
+
+            animationRedrawClock.restart();
         }
     }
 }
 
 void Gui::keyPressed(const sf::Event& event) {
-    bool changesOccurred = false;
+	changesOccurred = false;
     if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::LShift) {
         isShiftKeyPressed = true;
         pawns->handleShiftOn();
@@ -72,7 +85,6 @@ void Gui::keyPressed(const sf::Event& event) {
     {
         window->close();
     }
-    if (changesOccurred) display();
 }
 
 void Gui::addPawns(std::vector<Pawn*> pawns, int playerIndx)

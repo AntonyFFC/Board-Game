@@ -1,5 +1,4 @@
 #pragma once
-
 #include <string>
 #include <vector>
 #include "Equipment.h"
@@ -11,7 +10,7 @@
 #include "Table.h"
 #include "Button.h"
 #include "EquipmentPile.h"
-
+#include "TextDamage.h"
 
 class Equipment;
 class Table;
@@ -94,6 +93,8 @@ public:
     bool unClickDropButton(sf::Vector2i mousePosition);
 	void toggleHighlightEquipmentTable(sf::Vector2i mousePosition);
 	bool areAnyHighlighted() const;
+	void updateAnimations(float dt);
+	bool hasActiveAnimation() const;
 
     static const std::map<std::string, int> order;
     static std::map<std::string, sf::Sprite> spriteMap;
@@ -105,6 +106,7 @@ private:
     void createTeamShield(float size, float x, float y);
     static std::map<std::string, sf::Sprite> initializeSpriteMap();
     void drawStats(sf::RenderTarget& target);
+	void drawFloatingTexts(sf::RenderTarget& target);
     std::vector<bool> whatArmour();
     Equipment* findArmour(const std::string& type);
     void useArmour(const std::string& type, std::vector<bool>& armours, int value);
@@ -138,4 +140,5 @@ private:
     bool isInGame;
 	bool isCurrentPawn; // Is this pawn the current used pawn in the game
     Button dropButton;
+    std::vector<TextDamage*> floatingTexts;
 };

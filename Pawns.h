@@ -48,6 +48,8 @@ public:
 	void setChoosing(bool boolean);
 	void endTurn();
 	void draw(bool isShift);
+	void updateAnimations(float dt);
+	bool hasActiveAnimations() const;
 
 private:
 	void pawnFirstClick(int pawnNum);

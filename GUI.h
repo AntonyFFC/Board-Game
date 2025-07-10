@@ -34,4 +34,5 @@ private:
     bool isShiftKeyPressed = false;
     sf::Sprite backgroundSprite;
     sf::Texture backgroundTexture;
+    bool changesOccurred = false;
 };

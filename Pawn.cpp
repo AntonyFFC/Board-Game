@@ -25,6 +25,7 @@ Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions,
 	dropButton.setTextSize(15);
     dropButton.setSizeToText();
 	dropButton.setBackgroundColor(sf::Color::Red);
+    floatingTexts.reserve(4);
 }
 
 Pawn::~Pawn() {
@@ -43,6 +44,11 @@ Pawn::~Pawn() {
     equipment.clear();
     delete combinedSprite;
     delete combinedTexture;
+
+    for (auto* text : floatingTexts) {
+        delete text;
+    }
+    floatingTexts.clear();
 }
 
 void Pawn::handsExtrasToSet(std::unordered_set<std::string>& set)
@@ -456,6 +462,9 @@ void Pawn::reduceMaxActions(int amount)
 void Pawn::reduceHP(int amount) {
 	int previousHP = HP;
     HP -= amount;
+
+    floatingTexts.push_back(new TextDamage("-" + std::to_string(amount), getSprite().getPosition()));
+
     if (!isAlive())
         dead();
     else if (previousHP > 2)
@@ -529,6 +538,7 @@ void Pawn::draw(sf::RenderTarget& target, bool isShift)
             setUpTable(dynamic_cast<sf::RenderWindow*>(&target));
         }
     }
+	drawFloatingTexts(target);
 }
 
 void Pawn::drawTable(sf::RenderWindow* window)
@@ -601,6 +611,15 @@ void Pawn::drawStats(sf::RenderTarget& target)
         attributesText.setString(hpString);
         target.draw(attributesText);
     }
+}
+
+void Pawn::drawFloatingTexts(sf::RenderTarget& target)
+{
+    if (hasActiveAnimation()) {
+        for (const auto& text : floatingTexts) {
+            text->draw(target);
+        }
+	}
 }
 
 void Pawn::rangedAttack(int value, int missMax) // for example if is 3 then 1,2,3 misses
@@ -691,6 +710,31 @@ bool Pawn::areAnyHighlighted() const
 		return equipmentTable->getHighlightedItems().size() > 0;
 	}
 	return false;
+}
+
+void Pawn::updateAnimations(float dt)
+{
+    if (floatingTexts.empty()) return;
+
+    for (auto& text : floatingTexts) {
+        text->update(dt);
+    }
+
+    auto it = floatingTexts.begin();
+    while (it != floatingTexts.end()) {
+        if (!(*it)->isStillSeen()) {
+            delete* it;
+            it = floatingTexts.erase(it);
+        }
+        else {
+            ++it;
+        }
+    }
+}
+
+bool Pawn::hasActiveAnimation() const
+{
+    return !floatingTexts.empty();
 }
 
 void Pawn::dropItems(EquipmentPile* pile)

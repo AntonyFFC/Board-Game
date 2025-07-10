@@ -444,6 +444,22 @@ void Pawns::draw(bool isShift)
     }
 }
 
+void Pawns::updateAnimations(float dt)
+{
+    for (Pawn* pawn : pawnDict) {
+        pawn->updateAnimations(dt);
+    }
+}
+
+bool Pawns::hasActiveAnimations() const
+{
+    return std::any_of(
+        pawnDict.begin(),
+        pawnDict.end(),
+        [](const Pawn* pawn) { return pawn->hasActiveAnimation(); }
+    );
+}
+
 void Pawns::drawPawns(bool isShift)
 {
     for (EquipmentPile* pile : pileDict) {
@@ -738,7 +754,7 @@ bool Pawns::isPawnSelected() const
 
 void Pawns::endTurn()
 {
-    if (!isPawnSelected())
+    if (isPawnSelected())
     {
         pawnDict[whichPawn]->setRemainingActions(pawnDict[whichPawn]->getMaxActions());
     }
