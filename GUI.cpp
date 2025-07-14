@@ -31,22 +31,22 @@ void Gui::start() {
         float dt = clock.restart().asSeconds();
         sf::Event event;
         while (window->pollEvent(event)) {
+            changesOccurred = false;
             keyPressed(event);
+            if (changesOccurred) display();
         }
+
         pawns->updateAnimations(dt);
 
-        if (changesOccurred || pawns->hasActiveAnimations() &&
-            animationRedrawClock.getElapsedTime().asSeconds() >= redrawInterval) {
-
+        if (animationRedrawClock.getElapsedTime().asSeconds() >= redrawInterval
+            && pawns->hasActiveAnimations()) {
             display();
-
             animationRedrawClock.restart();
         }
     }
 }
 
 void Gui::keyPressed(const sf::Event& event) {
-	changesOccurred = false;
     if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::LShift) {
         isShiftKeyPressed = true;
         pawns->handleShiftOn();
