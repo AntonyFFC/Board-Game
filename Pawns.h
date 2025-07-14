@@ -80,8 +80,9 @@ private:
 	int numberOfPawn(std::tuple<int, int, int> coords, bool body = false);
 	void handleRightClickOnTrade(const std::tuple<int, int, int>& pawnCoords, bool isBody);
 	int numberOfPile(const std::tuple<int, int, int>& pileCoords) const;
+	void handleRightClickOnPawn(Pawn* pawn);
+	void handleRightClickOnCurrentPawn();
 	bool handleNeighborRightClick(sf::Vector2i mousePosition, const std::tuple<int, int, int>& pawnCoords);
-	void handlePawnEquipmentRightClick(sf::Vector2i mousePosition);
 	bool placeWall(int pawnNumber, std::tuple<int, int, int> coords);
 	bool destroyWall(int pawnNumber, std::tuple<int, int, int> coords);
 	void drawTurn();

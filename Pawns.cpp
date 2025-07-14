@@ -182,43 +182,54 @@ void Pawns::handleClickRelease(sf::Vector2i mousePosition)
 
 void Pawns::handleClickRight(sf::Vector2i mousePosition)
 {
-    if (previousHex == empty || !isPawnSelected()) // i think these are the same things
+    for (Pawn* pawn : pawnDict)
     {
-        for (auto& pair : board->hexDict) {
-            if (!board->hexDict[pair.first]->isClicked(mousePosition))
-            {
-                continue;
-            }
-            pawnFirstRight(pair.first);
+        if (pawn->isClicked(mousePosition))
+        {
+            handleRightClickOnPawn(pawn);
+            return;
         }
-        handlePawnEquipmentRightClick(mousePosition);
+    }
+
+    if (isPawnSelected() && pawnDict[whichPawn]->isAlive())
+    {
+		handleNeighborRightClick(mousePosition, pawnDict[whichPawn]->getHexCoords());
+    }
+}
+
+void Pawns::handleRightClickOnPawn(Pawn* pawn)
+{
+    if (previousHex != empty || isPawnSelected())
+    {
+        if (whichPawn == numberOfPawn(pawn->getHexCoords()))
+        {
+            handleRightClickOnCurrentPawn();
+            return;
+		}
+
+        pawn->toggleIsEquipmentShown();
         return;
     }
 
+	pawnFirstRight(pawn->getHexCoords());
+}
+
+void Pawns::handleRightClickOnCurrentPawn()
+{
     std::tuple<int, int, int> pawnCoords = pawnDict[whichPawn]->getHexCoords();
-    if (board->hexDict[pawnCoords]->isClicked(mousePosition) )
+    if (board->hexDict[pawnCoords]->hasBody())
     {
-        if (board->hexDict[pawnCoords]->hasBody())
-        {
-            handleRightClickOnTrade(pawnCoords, true);
-            return;
-        }
-        else if (board->hexDict[pawnCoords]->hasEquipmentPile())
-        {
-            handleRightClickOnTrade(pawnCoords, false);
-            return;
-        }
-
-		pawnDict[whichPawn]->toggleIsEquipmentShown(true);
+        handleRightClickOnTrade(pawnCoords, true);
+        return;
+    }
+    else if (board->hexDict[pawnCoords]->hasEquipmentPile())
+    {
+        handleRightClickOnTrade(pawnCoords, false);
         return;
     }
 
-    if (handleNeighborRightClick(mousePosition, pawnCoords))
-    {
-        return;
-    }
-
-    handlePawnEquipmentRightClick(mousePosition);
+    pawnDict[whichPawn]->toggleIsEquipmentShown(true);
+    return;
 }
 
 bool Pawns::pawnFirstRight(std::tuple<int, int, int> pawnCoords)
@@ -235,13 +246,11 @@ bool Pawns::pawnFirstRight(std::tuple<int, int, int> pawnCoords)
         previousHex = pawnCoords;
         previousWarrior[whosTurn] = whichPawn;
         pawnFirstClick(whichPawn);
+        pawnDict[clickedPawn]->toggleIsEquipmentShown(true);
         return true;
     }
-    else {
-        //board->clearHighlight();
-        //previousHex = empty;
-        return false;
-    }
+    pawnDict[clickedPawn]->toggleIsEquipmentShown();
+    return false;
 }
 
 void Pawns::handleRightClickOnTrade(const std::tuple<int, int, int>& coords, bool isBody)
@@ -251,7 +260,7 @@ void Pawns::handleRightClickOnTrade(const std::tuple<int, int, int>& coords, boo
         return;
     }
 
-    board->clearHighlight();
+    //board->clearHighlight();
     pawnDict[whichPawn]->reduceActions(1);
     setTrading(true);
 
@@ -296,14 +305,14 @@ bool Pawns::handleNeighborRightClick(sf::Vector2i mousePosition, const std::tupl
                 //previousHex = empty;
             }
         }
-        else if (board->hexDict[coords]->isPawn())
+        /*else if (board->hexDict[coords]->isPawn())
         {
             pawnDict[numberOfPawn(coords)]->toggleIsEquipmentShown();
-        }
-        else if (board->hexDict[coords]->hasBody())
+        }*/
+        /*else if (board->hexDict[coords]->hasBody())
         {
             pawnDict[numberOfPawn(coords, true)]->toggleIsEquipmentShown();
-        }
+        }*/
         else if (!placeWall(whichPawn, coords))
         {
             //board->clearHighlight();
@@ -312,18 +321,6 @@ bool Pawns::handleNeighborRightClick(sf::Vector2i mousePosition, const std::tupl
         return true;
     }
     return false;
-}
-
-void Pawns::handlePawnEquipmentRightClick(sf::Vector2i mousePosition)
-{
-    for (Pawn* pawn : pawnDict)
-    {
-        if (pawn->isClicked(mousePosition))
-        {
-            pawn->toggleIsEquipmentShown();
-            return;
-        }
-    }
 }
 
 bool Pawns::placeWall(int pawnNumber, std::tuple<int, int, int> coords)
