@@ -9,6 +9,7 @@
 
 int main()
 {
+    std::cout << "Game is starting up..." << std::endl;
     /*std::vector<Equipment*> equipmentList;
     Equipment* e1 = new Equipment("helmet", { 0,0 }, {1, "extras"}, 3, 0, "Armour", 2, "Helmet", 2);
     equipmentList.push_back(e1);

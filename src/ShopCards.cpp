@@ -3,8 +3,8 @@
 ShopCards::ShopCards()
 {
 	currentPage = 0;
-	equipmentList = EquipmentManager::loadEquipmentFromJson("equipment");
-	pawnsList = PawnsManager::loadPawnsFromJson("pawns");
+	equipmentList = EquipmentManager::loadEquipmentFromJson("assets/equipment");
+	pawnsList = PawnsManager::loadPawnsFromJson("assets/pawns");
 	implicateNumInDeck();
 
 	sortEquipment(equipmentList);

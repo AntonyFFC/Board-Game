@@ -20,8 +20,8 @@ equipmentCellWidths{ 150,60,60,50,50,50,50,500 }, pawnCellWidths{ 250, 50, 50,50
 	fontSize = 20;
 	position = sf::Vector2f(20, 60);
 	initializeFont();
-	equipmentList = EquipmentManager::loadEquipmentFromJson("equipment");
-	pawnsList = PawnsManager::loadPawnsFromJson("pawns");
+	equipmentList = EquipmentManager::loadEquipmentFromJson("assets/equipment");
+	pawnsList = PawnsManager::loadPawnsFromJson("assets/pawns");
 	iconSprites = initializeSpriteMap(iconTextures);
 	equipmentFunctions = initializeFunctions();
 	pawnFunctions = initializePawnFunctions();

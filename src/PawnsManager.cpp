@@ -63,7 +63,8 @@ std::vector<Pawn*> PawnsManager::loadPawnsFromJson(const std::string& filename)
         }
     }
     else {
-        // Handle error
+        std::string fullPath = filename + ".json";
+        throw std::runtime_error("PawnsManager ERROR: Could not open file -> " + fullPath);
     }
 
     return pawnList;
