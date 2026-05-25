@@ -79,7 +79,7 @@ void ShopCards::makeCards(std::vector<Equipment*> availableItems, std::vector<Pa
 	}
 }
 
-void ShopCards::updateDecks(sf::RenderTarget* window)
+void ShopCards::prepareDecks(sf::RenderTarget* window)
 {
 	std::vector<Equipment*> availableItems;
 	std::vector<Pawn*> availableWarriors;
@@ -105,6 +105,74 @@ void ShopCards::updateDecks(sf::RenderTarget* window)
 	availableItems.insert(availableItems.end(), weaponsList.begin(), weaponsList.begin() + 3);
 	availableItems.insert(availableItems.end(), accesoriesList.begin(), accesoriesList.begin() + 2);
 	makeCards(availableItems, availableWarriors);
+	setPositions(window);
+}
+
+void ShopCards::fillEmptySlots(sf::RenderTarget *window)
+{
+
+	auto countItemsOfType = [this](const std::string& type) {
+		int count = 0;
+		for (EquipmentCard* card : itemsCards)
+		{
+			if (card->getItem()->getType() == type) count++;
+		}
+		return count;
+	};
+
+	auto refillItems = [this](std::vector<Equipment*>& pool, int displayed, int target) {
+		while (displayed < target && (int)pool.size() > displayed)
+		{
+			itemsCards.push_back(new EquipmentCard(pool[displayed]));
+			displayed++;
+		}
+	};
+
+	refillItems(armourList, countItemsOfType("Armour"), 2);
+	refillItems(weaponsList, countItemsOfType("Weapon"), 3);
+	refillItems(accesoriesList, countItemsOfType("Accesory"), 2);
+
+	auto itemTypeRank = [](const std::string& type) {
+		if (type == "Armour") return 0;
+		if (type == "Weapon") return 1;
+		if (type == "Accesory") return 2;
+		return 3;
+	};
+	std::stable_sort(itemsCards.begin(), itemsCards.end(),
+		[&itemTypeRank](EquipmentCard* a, EquipmentCard* b) {
+			return itemTypeRank(a->getItem()->getType())
+				 < itemTypeRank(b->getItem()->getType());
+		});
+
+	auto isCheap = [](Pawn* warrior) {
+		return warrior->getPrice() < 4 || warrior->getName() == "Townsman Defender";
+	};
+
+	int cheapDisplayed = 0;
+	int expensiveDisplayed = 0;
+	for (WarriorCard* card : warriorsCards)
+	{
+		if (isCheap(card->getWarrior())) cheapDisplayed++;
+		else expensiveDisplayed++;
+	}
+
+	auto refillWarriors = [this](std::vector<Pawn*>& pool, int displayed, int target) {
+		while (displayed < target && (int)pool.size() > displayed)
+		{
+			warriorsCards.push_back(new WarriorCard(pool[displayed]));
+			displayed++;
+		}
+	};
+
+	refillWarriors(expensivePawnsList, expensiveDisplayed, 2);
+	refillWarriors(cheapPawnsList, cheapDisplayed, 3);
+
+	// Required layout: 2 expensive warriors first, then 3 cheap.
+	std::stable_sort(warriorsCards.begin(), warriorsCards.end(),
+		[&isCheap](WarriorCard* a, WarriorCard* b) {
+			return !isCheap(a->getWarrior()) && isCheap(b->getWarrior());
+		});
+
 	setPositions(window);
 }
 
