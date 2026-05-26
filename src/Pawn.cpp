@@ -97,7 +97,10 @@ void Pawn::createSprite()
         std::unordered_set<std::string> stuff = getSet();
         for (std::string name : stuff)
         {
-            sortedSprites[order.at(name)] = spriteMap[name];
+            const std::string spriteKey = flippedItems.count(name)
+                ? name + " flipped"
+                : name;
+            sortedSprites[order.at(name)] = spriteMap[spriteKey];
         }
 
         sf::RenderTexture* renderTexture = new sf::RenderTexture;
@@ -368,7 +371,7 @@ bool Pawn::addEquipment(Equipment* item) {
             {
                 if (remainingSpace.hands < space.hands)
                 {
-                    flipSprite(item->getName());
+                    flippedItems.insert(item->getName());
                 }
                 equipment.push_back(item);
 				item->setOwner(this);
@@ -404,7 +407,9 @@ bool Pawn::removeEquipment(int index) {
         {
             remainingSpace.extras += equipment[index]->getSpaceOccupied().numSpaces;
         }
+        std::string removedName = equipment[index]->getName();
         equipment.erase(equipment.begin() + index);
+        clearFlipIfNoLonger(removedName);
         calculateInitialActions();
         createSprite();
         return true;
@@ -425,7 +430,9 @@ bool Pawn::removeEquipment(Equipment* item) {
             {
                 remainingSpace.extras += object->getSpaceOccupied().numSpaces;
             }
+            std::string removedName = object->getName();
             equipment.erase(std::remove(equipment.begin(), equipment.end(), object), equipment.end());
+            clearFlipIfNoLonger(removedName);
             calculateInitialActions();
             createSprite();
             return true;
@@ -890,15 +897,14 @@ Equipment* Pawn::findArmour(const std::string& type)
     throw std::runtime_error("Now such armour");
 }
 
-void Pawn::flipSprite(std::string name)
+void Pawn::clearFlipIfNoLonger(const std::string& name)
 {
-    sf::Sprite sprite = spriteMap[name];
-    sf::Sprite flippedSprite(sprite);
-    sf::IntRect textureRect = sprite.getTextureRect();
-    textureRect.left += textureRect.width;
-    textureRect.width = -textureRect.width;
-    flippedSprite.setTextureRect(textureRect);
-    spriteMap[name] = flippedSprite;
+    if (!flippedItems.count(name)) return;
+    for (Equipment* e : equipment)
+    {
+        if (e->getName() == name) return;
+    }
+    flippedItems.erase(name);
 }
 
 void Pawn::setUpPosition()
