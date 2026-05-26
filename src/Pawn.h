@@ -110,7 +110,7 @@ private:
     std::vector<bool> whatArmour();
     Equipment* findArmour(const std::string& type);
     void useArmour(const std::string& type, std::vector<bool>& armours, int value);
-    void flipSprite(std::string name);
+    void clearFlipIfNoLonger(const std::string& name);
     void setUpPosition();
 	void calculateInitialActions();
 
@@ -126,6 +126,7 @@ private:
     SpaceInventory remainingSpace;
     int price;
     std::vector<Equipment*> equipment;
+    std::unordered_set<std::string> flippedItems;
     float scaleFactor;
     float rotationAngle;
     mutable sf::Sprite *combinedSprite;

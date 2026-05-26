@@ -39,7 +39,7 @@ Shop::~Shop()
 
 void Shop::start()
 {
-	shopCards->updateDecks(window);
+	shopCards->prepareDecks(window);
 	displayShop();
 	while (window->isOpen())
 	{
@@ -126,7 +126,7 @@ void Shop::nextTurn()
 	}
 	std::string text = "Round: " + std::to_string(currentRound);
 	roundText.setString(text);
-	shopCards->updateDecks(window);
+	shopCards->fillEmptySlots(window);
 	updateGoldText();
 }
 

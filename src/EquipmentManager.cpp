@@ -117,7 +117,8 @@ std::vector<Equipment*> EquipmentManager::loadEquipmentFromJson(const std::strin
         }
     }
     else {
-        // error
+        std::string fullPath = filename + ".json";
+        throw std::runtime_error("EquipmentManager ERROR: Could not open file -> " + fullPath);
     }
 
     return equipmentList;

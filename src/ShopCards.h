@@ -17,7 +17,8 @@ public:
     void draw(sf::RenderTarget* window);
     void setPositions(sf::RenderTarget* window);
     void makeCards(std::vector<Equipment*> availableItems, std::vector<Pawn*> availableWarriors);
-    void updateDecks(sf::RenderTarget* window);
+    void prepareDecks(sf::RenderTarget* window);
+    void fillEmptySlots(sf::RenderTarget* window);
     int whichCardClicked(sf::Vector2i mousePosition); //returns -1 if none were clicked
     int getPriceOfCard(int cardNum);
     void clickCard(int cardNum);

@@ -31,7 +31,7 @@ public:
 
 private:
     sf::RenderWindow* window;
-    EquipmentCard* lastItem;
+    EquipmentCard* lastItem = nullptr;
     Gui* interface1;
     ShopCards* shopCards;
 
