@@ -131,6 +131,10 @@ void Pawns::handlePawnClickInteraction()
 void Pawns::pawnSecond(int pawnNum)
 {
     int attackedNum = numberOfPawn(current);
+    if (pawnDict[attackedNum]->getSide() == whosTurn)
+    {
+        return;
+    }
     std::vector<std::tuple<int, int, int>> inView = getViewOfPawn(pawnNum);
     auto it = std::find(inView.begin(), inView.end(), current);
     if (it != inView.end())
