@@ -26,6 +26,8 @@ Shop::Shop(sf::RenderWindow* window)
 		window->getSize().y - 70), sf::Vector2f(200, 50), "-}");
 	nextPlayer = Button(sf::Vector2f(window->getSize().x / 2 + 150,
 		window->getSize().y - 70), sf::Vector2f(200, 50), "next player");
+	peekButton = Button(sf::Vector2f(window->getSize().x / 2 - 350,
+		window->getSize().y - 70), sf::Vector2f(200, 50), "peek opponent");
 	wallIcon.setPosition(20, window->getSize().y / 2);
 	interface1 = new Gui(window);
 	shopCards = new ShopCards();
@@ -139,10 +141,12 @@ void Shop::displayShop()
 	window->draw(goldText);
 	window->draw(roundText);
 	shopCards->draw(window);
-	shopStorage[currentPlayerIndex].draw(window);
-	shopPawns[currentPlayerIndex].draw(window);
+	shopStorage[viewedPlayerIndex()].draw(window);
+	shopPawns[viewedPlayerIndex()].draw(window);
 	drawChangeButton();
 	drawNextPlayerButton();
+	peekButton.setText(isPeeking ? "back to my shop" : "peek opponent");
+	peekButton.draw(*window);
 	wallIcon.draw(*window);
 	window->display();
 }
@@ -170,7 +174,7 @@ void Shop::drawNextPlayerButton()
 
 void Shop::drawTurn()
 {
-	if (currentPlayerIndex)
+	if (viewedPlayerIndex())
 	{
 		window->draw(blueTurnText);
 		return;
@@ -222,29 +226,35 @@ void Shop::keyPressed(const sf::Event& event)
 void Shop::whatClicked(sf::Vector2i mousePosition)
 {
 	int cardNum = shopCards->whichCardClicked(mousePosition);
-	int pawnNum = shopPawns[currentPlayerIndex].whichPawnClicked(mousePosition);
-	int storageCardNum = shopStorage[currentPlayerIndex].whichItemClicked(mousePosition);
-	if (cardNum != -1)
+	int pawnNum = shopPawns[viewedPlayerIndex()].whichPawnClicked(mousePosition);
+	int storageCardNum = shopStorage[viewedPlayerIndex()].whichItemClicked(mousePosition);
+	if (peekButton.isClicked(mousePosition))
 	{
-		shopCards->clickCard(cardNum);
+		isPeeking = !isPeeking;
+		shopPawns[0].hideAllTables();
+		shopPawns[1].hideAllTables();
 	}
 	else if (changeButton.isClicked(mousePosition))
 	{
 		shopCards->flipPage();
 	}
-	else if (nextPlayer.isClicked(mousePosition) && !remainingGold)
+	else if (cardNum != -1 && !isPeeking)
+	{
+		shopCards->clickCard(cardNum);
+	}
+	else if (nextPlayer.isClicked(mousePosition) && !remainingGold && !isPeeking)
 	{
 		nextTurn();
 	}
-	else if (wallIcon.isClicked(mousePosition))
+	else if (wallIcon.isClicked(mousePosition) && !isPeeking)
 	{
 		wallIcon.setIsBeingClicked(true);
 	}
 	else if (pawnNum != -1)
 	{
-		if (lastItem == nullptr)
+		if (lastItem == nullptr || isPeeking)
 		{
-			shopPawns[currentPlayerIndex].togglePawnEquipmentTable(pawnNum);
+			shopPawns[viewedPlayerIndex()].togglePawnEquipmentTable(pawnNum);
 		}
 		else
 		{
@@ -255,11 +265,11 @@ void Shop::whatClicked(sf::Vector2i mousePosition)
 			lastItem = nullptr;
 		}
 	}
-	else if (storageCardNum != -1)
+	else if (storageCardNum != -1 && !isPeeking)
 	{
 		lastItem = shopStorage[currentPlayerIndex].takeItem(storageCardNum);
 	}
-	else if (shopStorage[currentPlayerIndex].isClicked(mousePosition) && lastItem != nullptr)
+	else if (shopStorage[currentPlayerIndex].isClicked(mousePosition) && lastItem != nullptr && !isPeeking)
 	{
 		shopStorage[currentPlayerIndex].addCard(lastItem);
 		lastItem = nullptr;
@@ -268,6 +278,8 @@ void Shop::whatClicked(sf::Vector2i mousePosition)
 
 void Shop::whatOffClicked(sf::Vector2i mousePosition)
 {
+	if (isPeeking) return;
+
 	int cardNum = shopCards->whichCardClicked(mousePosition);
 	if (cardNum != -1)
 	{
@@ -289,6 +301,11 @@ void Shop::unClickAll()
 {
 	wallIcon.setIsBeingClicked(false);
 	shopCards->unClickAll();
+}
+
+int Shop::viewedPlayerIndex() const
+{
+	return isPeeking ? (currentPlayerIndex + 1) % 2 : currentPlayerIndex;
 }
 
 void Shop::startGame()

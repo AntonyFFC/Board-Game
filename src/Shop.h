@@ -51,6 +51,8 @@ private:
     IconWall wallIcon;
     Button changeButton;
     Button nextPlayer;
+    Button peekButton;
+    bool isPeeking = false;
     ShopPawns shopPawns[2];
     ShopStorage shopStorage[2];
 
@@ -79,5 +81,7 @@ private:
     void unClickAll();
 
     void startGame();
+
+    int viewedPlayerIndex() const;
 
 };
