@@ -111,6 +111,15 @@ private:
     Equipment* findArmour(const std::string& type);
     void useArmour(const std::string& type, std::vector<bool>& armours, int value);
     void clearFlipIfNoLonger(const std::string& name);
+    void addFloatingText(const std::string& text, const sf::Color& color,
+        float duration = 2.0f, float delay = 0.0f);
+    void showActionPenalty(int amount);
+    int getHpActionPenalty() const;
+    void drawNameAndShield(sf::RenderTarget& target, sf::Vector2f namePos, float size);
+    void drawMaxActionsLine(sf::RenderTarget& target, sf::Vector2f namePos, float size);
+    void drawCapabilities(sf::RenderTarget& target, sf::Vector2f namePos, float size);
+    void drawHpHearts(sf::RenderTarget& target, sf::Vector2f namePos, float size,
+        float hpXOffset, float hpYOffset, float outlineThickness);
     void setUpPosition();
 	void calculateInitialActions();
 
@@ -142,5 +151,12 @@ private:
 	bool isCurrentPawn; // Is this pawn the current used pawn in the game
     Button dropButton;
     std::vector<TextDamage*> floatingTexts;
+    struct PendingFloatingText {
+        std::string text;
+        sf::Color color;
+        float duration;
+        float delay;
+    };
+    std::vector<PendingFloatingText> pendingFloatingTexts;
     float damageTintTimer = 0.0f;
 };

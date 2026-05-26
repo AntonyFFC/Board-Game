@@ -470,8 +470,7 @@ void Pawn::reduceHP(int amount) {
 	int previousHP = HP;
     HP -= amount;
 
-    floatingTexts.push_back(new TextDamage("-" + std::to_string(amount), 
-        getSprite().getPosition(), sf::Color::Red));
+    addFloatingText("-" + std::to_string(amount), sf::Color::Red);
 
     if (combinedSprite)
         combinedSprite->setColor(sf::Color(255, 100, 100));
@@ -481,17 +480,43 @@ void Pawn::reduceHP(int amount) {
         dead();
     else if (previousHP > 2)
     {
+		int reduction = 0;
 		if (HP == 2)
-			reduceMaxActions(1);
+			reduction = 1;
 		else if (HP == 1)
-		    reduceMaxActions(2);
+			reduction = 2;
+		if (reduction > 0)
+		{
+			reduceMaxActions(reduction);
+			showActionPenalty(reduction);
+		}
 		calculateInitialActions();
     }
     else if (previousHP == 2 && HP == 1)
     {
         reduceMaxActions(1);
+        showActionPenalty(1);
         calculateInitialActions();
     }
+}
+
+void Pawn::showActionPenalty(int amount)
+{
+    addFloatingText("-" + std::to_string(amount),
+        sf::Color::Blue, 4.0f, 1.0f);
+}
+
+void Pawn::addFloatingText(const std::string& text, const sf::Color& color,
+    float duration, float delay)
+{
+    if (delay > 0.0f)
+    {
+        pendingFloatingTexts.push_back({text, color, duration, delay});
+        return;
+    }
+    sf::Vector2f pos = getSprite().getPosition();
+    pos.x += 10.0f * static_cast<float>(floatingTexts.size());
+    floatingTexts.push_back(new TextDamage(text, pos, color, duration));
 }
 
 bool Pawn::isAlive() const {
@@ -563,65 +588,100 @@ void Pawn::drawTable(sf::RenderWindow* window)
 
 void Pawn::drawStats(sf::RenderTarget& target)
 {
-    sf::Text attributesText;
-    sf::FloatRect spriteBounds = getSprite().getGlobalBounds();
+    const sf::FloatRect spriteBounds = getSprite().getGlobalBounds();
 
-    float size = 40.0f;
-    float nameXPos = spriteBounds.left;
-    float nameYPos = spriteBounds.top + spriteBounds.height / 6;
-    float hpXpos = 38.0f;
-    float hpYpos = spriteBounds.height / 2.8f;
-    float hpOutlineThickness = 4.0f;
-    if (isInGame)
-    {
-        size = 15.0f;
-        nameXPos = spriteBounds.left + spriteBounds.width / 5;
-        nameYPos = spriteBounds.top - spriteBounds.height / 4;
-        hpXpos = 17.0f;
-        hpYpos = spriteBounds.height - 7;
-        hpOutlineThickness = 0.3f;
-    }
-    attributesText.setFont(globalFont);
-    attributesText.setCharacterSize(size);
+    const float size = isInGame ? 15.0f : 40.0f;
+    const sf::Vector2f namePos = isInGame
+        ? sf::Vector2f(spriteBounds.left + spriteBounds.width / 5,
+                       spriteBounds.top - spriteBounds.height / 4)
+        : sf::Vector2f(spriteBounds.left,
+                       spriteBounds.top + spriteBounds.height / 6);
+    const float hpXOffset = isInGame ? 17.0f : 38.0f;
+    const float hpYOffset = isInGame ? (spriteBounds.height - 7.0f)
+                                     : (spriteBounds.height / 2.8f);
+    const float hpOutlineThickness = isInGame ? 0.3f : 4.0f;
 
-    // Position the attributes text relative to the pawn's sprite
-    attributesText.setPosition(nameXPos, nameYPos);
-    attributesText.setFillColor(sf::Color::White);
-    attributesText.setString(getName());
-    target.draw(attributesText);
+    drawNameAndShield(target, namePos, size);
+    drawMaxActionsLine(target, namePos, size);
+    if (!isInGame) drawCapabilities(target, namePos, size);
+    drawHpHearts(target, namePos, size, hpXOffset, hpYOffset, hpOutlineThickness);
+}
 
-    sf::FloatRect nameBounds = attributesText.getGlobalBounds();
-    float shieldX = nameBounds.left + 1.02 * nameBounds.width;
-    float shieldY = nameBounds.top + 0.05 * nameBounds.height;
+int Pawn::getHpActionPenalty() const
+{
+    if (HP == 2) return 1;
+    if (HP == 1) return 2;
+    return 0;
+}
+
+void Pawn::drawNameAndShield(sf::RenderTarget& target, sf::Vector2f namePos, float size)
+{
+    sf::Text text;
+    text.setFont(globalFont);
+    text.setCharacterSize(size);
+    text.setPosition(namePos);
+    text.setFillColor(sf::Color::White);
+    text.setString(getName());
+    target.draw(text);
+
+    sf::FloatRect nameBounds = text.getGlobalBounds();
+    float shieldX = nameBounds.left + 1.02f * nameBounds.width;
+    float shieldY = nameBounds.top + 0.05f * nameBounds.height;
     createTeamShield(size, shieldX, shieldY);
     target.draw(teamShield);
+}
 
-    attributesText.setPosition(nameXPos, nameYPos + size);
-    attributesText.setFillColor(sf::Color::Blue);
-    attributesText.setString(std::to_string(getMaxActions()));
-    target.draw(attributesText);
+void Pawn::drawMaxActionsLine(sf::RenderTarget& target, sf::Vector2f namePos, float size)
+{
+    sf::Text text;
+    text.setFont(globalFont);
+    text.setCharacterSize(size);
+    text.setPosition(namePos.x, namePos.y + size);
+    text.setFillColor(sf::Color::Blue);
+    text.setString(std::to_string(getMaxActions()));
+    target.draw(text);
 
-    if (!isInGame)
+    int penalty = getHpActionPenalty();
+    if (penalty > 0)
     {
-        attributesText.setCharacterSize(size / 2);
-        attributesText.setPosition(nameXPos + size, nameYPos + size);
-        attributesText.setFillColor(sf::Color::White);
-        attributesText.setString(getAdditionalCapabilities());
-        target.draw(attributesText);
+        float numberWidth = text.getGlobalBounds().width;
+        text.setPosition(namePos.x + numberWidth + size * 0.2f, namePos.y + size);
+        text.setFillColor(sf::Color::Red);
+        text.setString("(-" + std::to_string(penalty) + ")");
+        target.draw(text);
     }
+}
 
-    attributesText.setPosition(nameXPos - hpXpos, nameYPos + size +hpYpos);
-    attributesText.setFillColor(sf::Color::Red);
-    attributesText.setOutlineColor(sf::Color::Red);
-    attributesText.setOutlineThickness(2*size*1/15);
-    attributesText.setLineSpacing(hpOutlineThickness);
-    attributesText.setCharacterSize(size * 2);
-    std::string hpString = "";
+void Pawn::drawCapabilities(sf::RenderTarget& target, sf::Vector2f namePos, float size)
+{
+    sf::Text text;
+    text.setFont(globalFont);
+    text.setCharacterSize(size / 2);
+    text.setPosition(namePos.x + size, namePos.y + size);
+    text.setFillColor(sf::Color::White);
+    text.setString(getAdditionalCapabilities());
+    target.draw(text);
+}
+
+void Pawn::drawHpHearts(sf::RenderTarget& target, sf::Vector2f namePos, float size,
+    float hpXOffset, float hpYOffset, float outlineThickness)
+{
+    sf::Text text;
+    text.setFont(globalFont);
+    text.setCharacterSize(size * 2);
+    text.setPosition(namePos.x - hpXOffset, namePos.y + size + hpYOffset);
+    text.setFillColor(sf::Color::Red);
+    text.setOutlineColor(sf::Color::Red);
+    text.setOutlineThickness(2.0f * size / 15.0f);
+    text.setLineSpacing(outlineThickness);
+
+    std::string hpString;
     hpString = 176;
-    for (int i = 0; i < getHP(); ++i) {
-        attributesText.move(0, -12*size*1/15);
-        attributesText.setString(hpString);
-        target.draw(attributesText);
+    for (int i = 0; i < getHP(); ++i)
+    {
+        text.move(0.0f, -12.0f * size / 15.0f);
+        text.setString(hpString);
+        target.draw(text);
     }
 }
 
@@ -643,8 +703,7 @@ void Pawn::rangedAttack(int value, int missMax) // for example if is 3 then 1,2,
     if (randomNumber <= missMax)
     {
         std::cout << "miss\n";
-        floatingTexts.push_back(new TextDamage(std::to_string(0),
-            getSprite().getPosition(), sf::Color::White));
+        addFloatingText(std::to_string(0), sf::Color::White);
     }
     else
     {
@@ -728,12 +787,23 @@ bool Pawn::areAnyHighlighted() const
 
 void Pawn::updateAnimations(float dt)
 {
+    auto pit = pendingFloatingTexts.begin();
+    while (pit != pendingFloatingTexts.end()) {
+        pit->delay -= dt;
+        if (pit->delay <= 0.0f) {
+            PendingFloatingText promoted = *pit;
+            pit = pendingFloatingTexts.erase(pit);
+            addFloatingText(promoted.text, promoted.color, promoted.duration);
+        }
+        else {
+            ++pit;
+        }
+    }
+
     if (floatingTexts.empty()) return;
 
-    float move = 0.f;
     for (auto& text : floatingTexts) {
-        text->update(dt, move);
-        move += 10.0f;
+        text->update(dt);
     }
 
     auto it = floatingTexts.begin();
@@ -843,8 +913,7 @@ void Pawn::useArmour(const std::string& type, std::vector<bool>& armours, int va
     Equipment* armour = findArmour(type);
     int rest = armour->reduceDurability(value);
 
-    floatingTexts.push_back(new TextDamage("-" + std::to_string(value-rest),
-        getSprite().getPosition(), sf::Color(157, 163, 171)));
+    addFloatingText("-" + std::to_string(value-rest), sf::Color(157, 163, 171));
 
     if (combinedSprite)
         combinedSprite->setColor(sf::Color(129, 142, 161));
@@ -859,8 +928,7 @@ void Pawn::useArmour(const std::string& type, std::vector<bool>& armours, int va
             Equipment* covering = findArmour("Covering");
             int rest2 = covering->reduceDurability(rest);
 
-            floatingTexts.push_back(new TextDamage("-" + std::to_string(rest - rest2),
-                getSprite().getPosition(), sf::Color(157, 163, 171)));
+            addFloatingText("-" + std::to_string(rest - rest2), sf::Color(157, 163, 171));
 
             if (combinedSprite)
                 combinedSprite->setColor(sf::Color(129, 142, 161));

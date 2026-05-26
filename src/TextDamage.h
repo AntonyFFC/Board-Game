@@ -6,7 +6,7 @@ class TextDamage
 public:
     TextDamage(const std::string& text, sf::Vector2f position, sf::Color colour, float duration = 2.0f);
 
-    void update(float dt, float move = 0);
+    void update(float dt);
     void draw(sf::RenderTarget& target) const;
     bool isStillSeen() const;
 

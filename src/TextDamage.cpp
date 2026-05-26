@@ -8,13 +8,13 @@ TextDamage::TextDamage(const std::string& text, sf::Vector2f position, sf::Color
     floatText.setPosition(position);
 }
 
-void TextDamage::update(float dt, float move)
+void TextDamage::update(float dt)
 {
     if (!isSeen) return;
 
     elapsed += dt;
 
-    floatText.move(0 + move, -30.0f * dt);
+    floatText.move(0.0f, -30.0f * dt);
     float alpha = 255.f * (1.f - (elapsed / lifetime));
     if (alpha < 0.f) alpha = 0.f;
 
