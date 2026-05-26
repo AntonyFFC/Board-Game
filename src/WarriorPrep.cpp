@@ -81,7 +81,7 @@ void WarriorPrep::handleClick(sf::Vector2i mousePosition)
 	std::vector<std::tuple<int, int, int>> startCoordinates = StartCoordinates::getCoordinatesOf(currentPlayer);
 	for (std::tuple<int, int, int> coordinates : startCoordinates)
 	{
-		if (grid->hexDict[coordinates]->isClicked(mousePosition))
+		if (grid->hexDict[coordinates]->isClicked(mousePosition) && !grid->hexDict[coordinates]->isPawn())
 		{
 			putPawn(coordinates);
 			break;
