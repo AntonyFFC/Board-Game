@@ -431,6 +431,22 @@ void Pawns::setChoosing(bool boolean) {
     isChoosing_ = boolean;
 }
 
+bool Pawns::updateHover(sf::Vector2i mousePosition)
+{
+    for (Pawn* pawn : pawnDict) {
+        pawn->setHovered(false);
+    }
+
+    for (auto it = pawnDict.rbegin(); it != pawnDict.rend(); ++it) {
+        Pawn* pawn = *it;
+        if (pawn->isAlive() && pawn->isClicked(mousePosition)) {
+            pawn->setHovered(true);
+            return true;
+        }
+    }
+    return false;
+}
+
 void Pawns::draw(bool isShift)
 {
     drawTurn();

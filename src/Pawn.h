@@ -85,6 +85,8 @@ public:
     void attack(int value);
     void rangedAttack(int value, int missMax);
     bool isClicked(sf::Vector2i mousePosition) const;
+    void setHovered(bool hovered);
+    bool isHovered() const;
 	bool hasItem(const std::string& name) const;
 	bool hasShield() const;
 	bool isMounted() const;
@@ -120,6 +122,7 @@ private:
     void drawCapabilities(sf::RenderTarget& target, sf::Vector2f namePos, float size);
     void drawHpHearts(sf::RenderTarget& target, sf::Vector2f namePos, float size,
         float hpXOffset, float hpYOffset, float outlineThickness);
+    void drawHoverOutline(sf::RenderTarget& target) const;
     void setUpPosition();
 	void calculateInitialActions();
 
@@ -149,6 +152,7 @@ private:
     bool isEquipmentShown;
     bool isInGame;
 	bool isCurrentPawn; // Is this pawn the current used pawn in the game
+    bool hovered = false;
     Button dropButton;
     std::vector<TextDamage*> floatingTexts;
     struct PendingFloatingText {

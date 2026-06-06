@@ -10,6 +10,7 @@ public:
     ~ShopPawns();
 
     void draw(sf::RenderTarget* window);
+    bool updateHover(sf::Vector2i mousePosition);
     int whichPawnClicked(sf::Vector2i mousePosition);
     void addPawn(Pawn* pawn);
     bool addEquipmentToPawn(int pawnIndex, Equipment* equipment);

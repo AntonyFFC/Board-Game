@@ -143,7 +143,8 @@ void Shop::displayShop()
 	const sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
 	const bool buttonHovered = Button::updateAll(mousePosition, nullptr);
 	const bool cardHovered = shopCards->updateHover(mousePosition, !isPeeking);
-	Button::applyCursor(window, buttonHovered || cardHovered);
+	const bool pawnHovered = shopPawns[viewedPlayerIndex()].updateHover(mousePosition);
+	Button::applyCursor(window, buttonHovered || cardHovered || pawnHovered);
 
 	window->clear(sf::Color(71, 31, 16));
 	drawBackground();

@@ -103,11 +103,15 @@ void Gui::addWalls(int numWalls, int playerIndx)
 
 void Gui::display()
 {
+    const sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
+    const bool buttonHovered = Button::updateAll(mousePosition, nullptr);
+    const bool pawnHovered = pawns->updateHover(mousePosition);
+
     window->clear(sf::Color(66, 82, 107));
     window->draw(backgroundSprite);
     grid->drawBoard(*window);
     pawns->draw(isShiftKeyPressed);
 	endTurnButton.draw(*window);
-    Button::updateAll(sf::Mouse::getPosition(*window), window);
+    Button::applyCursor(window, buttonHovered || pawnHovered);
     window->display();
 }

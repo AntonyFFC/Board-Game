@@ -48,6 +48,7 @@ public:
 	void setChoosing(bool boolean);
 	void endTurn();
 	void draw(bool isShift);
+	bool updateHover(sf::Vector2i mousePosition);
 	void updateAnimations(float dt);
 	bool hasActiveAnimations() const;
 

@@ -1,5 +1,6 @@
 ﻿#include "Pawn.h"
 #include "Equipment.h"
+#include <algorithm>
 #include <random>
 #include <iostream>
 
@@ -552,9 +553,55 @@ void Pawn::dead()
     setUpPosition();
 }
 
+namespace {
+    const sf::Color kPawnHoverTint{255, 248, 220};
+    constexpr float kBodyVisualWidth = 1243.f;
+    constexpr float kBodyVisualHeight = 1034.f;
+    constexpr float kBodyOutlinePadding = 1.02f;
+}
+
+void Pawn::setHovered(bool hovered)
+{
+    this->hovered = hovered;
+}
+
+bool Pawn::isHovered() const
+{
+    return hovered;
+}
+
+void Pawn::drawHoverOutline(sf::RenderTarget& target) const
+{
+    if (!combinedSprite) {
+        return;
+    }
+
+    const sf::Vector2f scale = combinedSprite->getScale();
+    const float radiusX = (kBodyVisualWidth * 0.5f) * std::abs(scale.x) * kBodyOutlinePadding;
+    const float radiusY = (kBodyVisualHeight * 0.5f) * std::abs(scale.y) * kBodyOutlinePadding;
+
+    constexpr float unitRadius = 1.f;
+    sf::CircleShape ring(unitRadius, 48);
+    ring.setOrigin(unitRadius, unitRadius);
+    ring.setScale(radiusX, radiusY);
+    ring.setRotation(combinedSprite->getRotation());
+    ring.setPosition(combinedSprite->getPosition());
+    ring.setFillColor(sf::Color::Transparent);
+    ring.setOutlineColor(sf::Color(255, 220, 100, 220));
+    ring.setOutlineThickness(2.0f / std::min(radiusX, radiusY));
+    target.draw(ring);
+}
+
 void Pawn::draw(sf::RenderTarget& target, bool isShift)
 {
-    target.draw(getSprite());
+    sf::Sprite display = *combinedSprite;
+    if (hovered) {
+        display.setColor(kPawnHoverTint);
+    }
+    target.draw(display);
+    if (hovered) {
+        drawHoverOutline(target);
+    }
     if (isShift) {
         drawStats(target);
     }

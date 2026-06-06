@@ -7,6 +7,19 @@ ShopPawns::~ShopPawns() {
     // Perform cleanup if necessary
 }
 
+bool ShopPawns::updateHover(sf::Vector2i mousePosition)
+{
+    bool anyHovered = false;
+    for (Pawn* pawn : pawns) {
+        const bool isUnderMouse = pawn->isClicked(mousePosition);
+        pawn->setHovered(isUnderMouse);
+        if (isUnderMouse) {
+            anyHovered = true;
+        }
+    }
+    return anyHovered;
+}
+
 void ShopPawns::draw(sf::RenderTarget* window)
 {
     sf::Vector2f pos(window->getSize().x *0.65, 130);
