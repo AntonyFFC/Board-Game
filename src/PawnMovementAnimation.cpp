@@ -1,5 +1,6 @@
 #include "PawnMovementAnimation.h"
 
+#include <algorithm>
 #include <cmath>
 
 void PawnMovementAnimation::start(const std::vector<sf::Vector2f>& waypoints, float speed)
@@ -58,6 +59,27 @@ void PawnMovementAnimation::update(float dt)
 bool PawnMovementAnimation::isActive() const
 {
     return active;
+}
+
+float PawnMovementAnimation::getFacingAngle() const
+{
+    if (points.size() < 2) {
+        return 0.0f;
+    }
+
+    int segment = segmentIndex;
+    if (!active) {
+        segment = static_cast<int>(points.size()) - 2;
+    }
+    segment = std::max(0, std::min(segment, static_cast<int>(points.size()) - 2));
+
+    const sf::Vector2f segmentVector = points[segment + 1] - points[segment];
+    if (std::hypot(segmentVector.x, segmentVector.y) < 0.001f) {
+        return 0.0f;
+    }
+
+    constexpr float kRadToDeg = 180.0f / 3.14159265f;
+    return std::atan2(segmentVector.y, segmentVector.x) * kRadToDeg + kSpriteForwardOffset;
 }
 
 sf::Vector2f PawnMovementAnimation::getPosition() const

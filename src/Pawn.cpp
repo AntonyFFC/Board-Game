@@ -839,6 +839,10 @@ void Pawn::startMovement(const std::vector<sf::Vector2f>& waypoints)
         movementAnimation = std::make_unique<PawnMovementAnimation>();
     }
     movementAnimation->start(waypoints);
+    rotationAngle = movementAnimation->getFacingAngle();
+    if (combinedSprite) {
+        combinedSprite->setRotation(rotationAngle);
+    }
 }
 
 bool Pawn::isMoving() const
@@ -858,6 +862,10 @@ void Pawn::updateAnimations(float dt)
 {
     if (movementAnimation && movementAnimation->isActive()) {
         movementAnimation->update(dt);
+        rotationAngle = movementAnimation->getFacingAngle();
+        if (combinedSprite) {
+            combinedSprite->setRotation(rotationAngle);
+        }
     }
 
     auto pit = pendingFloatingTexts.begin();
