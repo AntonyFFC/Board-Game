@@ -168,6 +168,7 @@ std::vector < std::tuple<int, int, int>> Board::getReachable(Pawn* inPawn)
 {
 	std::tuple<int, int, int> start = inPawn->getHexCoords();
 	int movement = inPawn->getRemainingActions();
+    movementParents.clear();
     std::vector < std::tuple<int, int, int>> visited;
     std::vector<std::vector < std::tuple<int, int, int>>> fringes;
     fringes.push_back(std::vector< std::tuple<int, int, int>>());
@@ -186,11 +187,48 @@ std::vector < std::tuple<int, int, int>> Board::getReachable(Pawn* inPawn)
                     visited.push_back(neighbour);
                     fringes[k].push_back(neighbour);
                     hexDict[neighbour]->setPawnDist(k);
+                    movementParents[neighbour] = coordinates;
                 }
             }
         }
     }
     return visited;
+}
+
+std::vector<std::tuple<int, int, int>> Board::getMovementPath(
+    std::tuple<int, int, int> start,
+    std::tuple<int, int, int> end)
+{
+    if (!hexDict.count(start) || !hexDict.count(end)) {
+        return {};
+    }
+    if (start == end) {
+        return { start };
+    }
+    if (!movementParents.count(end)) {
+        return {};
+    }
+
+    std::vector<std::tuple<int, int, int>> pathReversed;
+    std::tuple<int, int, int> current = end;
+    int safety = 0;
+
+    while (current != start && safety++ < 1000) {
+        pathReversed.push_back(current);
+        auto parentIt = movementParents.find(current);
+        if (parentIt == movementParents.end()) {
+            return {};
+        }
+        current = parentIt->second;
+    }
+
+    if (current != start) {
+        return {};
+    }
+
+    pathReversed.push_back(start);
+    std::reverse(pathReversed.begin(), pathReversed.end());
+    return pathReversed;
 }
 
 std::vector < std::tuple<int, int, int>> Board::getInView(Pawn* inPawn, int dist, int minDist)
@@ -356,6 +394,7 @@ void Board::clearHighlight()
         hexDict[hex]->clearHighlight(0);
     }
     highlighted[0].clear();
+    movementParents.clear();
 }
 
 void Board::setWall(std::tuple<int, int, int> coords)

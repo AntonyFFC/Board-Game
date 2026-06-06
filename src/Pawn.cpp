@@ -1,6 +1,7 @@
 ﻿#include "Pawn.h"
 #include "Equipment.h"
 #include <algorithm>
+#include <memory>
 #include <random>
 #include <iostream>
 
@@ -832,8 +833,33 @@ bool Pawn::areAnyHighlighted() const
 	return false;
 }
 
+void Pawn::startMovement(const std::vector<sf::Vector2f>& waypoints)
+{
+    if (!movementAnimation) {
+        movementAnimation = std::make_unique<PawnMovementAnimation>();
+    }
+    movementAnimation->start(waypoints);
+}
+
+bool Pawn::isMoving() const
+{
+    return movementAnimation && movementAnimation->isActive();
+}
+
+sf::Vector2f Pawn::getMovementPosition() const
+{
+    if (movementAnimation) {
+        return movementAnimation->getPosition();
+    }
+    return sf::Vector2f(xPos, yPos);
+}
+
 void Pawn::updateAnimations(float dt)
 {
+    if (movementAnimation && movementAnimation->isActive()) {
+        movementAnimation->update(dt);
+    }
+
     auto pit = pendingFloatingTexts.begin();
     while (pit != pendingFloatingTexts.end()) {
         pit->delay -= dt;
@@ -874,7 +900,7 @@ void Pawn::updateAnimations(float dt)
 
 bool Pawn::hasActiveAnimation() const
 {
-    return !floatingTexts.empty();
+    return isMoving() || !floatingTexts.empty();
 }
 
 void Pawn::dropItems(EquipmentPile* pile)

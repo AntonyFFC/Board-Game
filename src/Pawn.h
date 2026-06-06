@@ -11,6 +11,8 @@
 #include "Button.h"
 #include "EquipmentPile.h"
 #include "TextDamage.h"
+#include "PawnMovementAnimation.h"
+#include <memory>
 
 class Equipment;
 class Table;
@@ -97,6 +99,9 @@ public:
 	bool areAnyHighlighted() const;
 	void updateAnimations(float dt);
 	bool hasActiveAnimation() const;
+	void startMovement(const std::vector<sf::Vector2f>& waypoints);
+	bool isMoving() const;
+	sf::Vector2f getMovementPosition() const;
 
     static const std::map<std::string, int> order;
     static std::map<std::string, sf::Sprite> spriteMap;
@@ -163,4 +168,5 @@ private:
     };
     std::vector<PendingFloatingText> pendingFloatingTexts;
     float damageTintTimer = 0.0f;
+    std::unique_ptr<PawnMovementAnimation> movementAnimation;
 };

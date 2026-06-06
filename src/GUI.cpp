@@ -36,9 +36,15 @@ void Gui::start() {
             if (changesOccurred) display();
         }
 
+        pawns->processDeferredWork();
         pawns->updateAnimations(dt);
 
-        if (animationRedrawClock.getElapsedTime().asSeconds() >= redrawInterval
+        if (pawns->needsContinuousRedraw()) {
+            display();
+            pawns->finalizePendingMoveIfReady();
+            animationRedrawClock.restart();
+        }
+        else if (animationRedrawClock.getElapsedTime().asSeconds() >= redrawInterval
             && pawns->hasActiveAnimations()) {
             display();
             animationRedrawClock.restart();

@@ -12,6 +12,7 @@
 #include "Table.h"
 #include "Walls.h"
 #include "EquipmentPile.h"
+#include <optional>
 
 class Pawns
 {
@@ -51,6 +52,9 @@ public:
 	bool updateHover(sf::Vector2i mousePosition);
 	void updateAnimations(float dt);
 	bool hasActiveAnimations() const;
+	bool needsContinuousRedraw() const;
+	void finalizePendingMoveIfReady();
+	void processDeferredWork();
 
 private:
 	void pawnFirstClick(int pawnNum);
@@ -92,6 +96,19 @@ private:
 	void closeTables();
 	bool isPawnSelected() const;
 	bool isMovementHex(const Hex* hex) const;
+	bool isMovementInProgress() const;
+	void finishPendingMove();
+	sf::Vector2f getPawnDrawPosition(Pawn* pawn) const;
+	void refreshMovementHighlights();
+	std::vector<sf::Vector2f> buildMovementWaypoints(
+		const std::vector<std::tuple<int, int, int>>& path) const;
+
+	struct PendingMove {
+		int pawnNum;
+		std::tuple<int, int, int> from;
+		std::tuple<int, int, int> to;
+		int cost;
+	};
 
 	Board* board;
 	TradeTable* tradeTable;
@@ -111,5 +128,7 @@ private:
 	std::tuple<int, int, int> current; //current clicked hex
 	int previousWarrior[2];
 	int numberOfPawns[2];
+	std::optional<PendingMove> pendingMove;
+	bool deferredHighlightRefresh = false;
 };
 

@@ -61,6 +61,10 @@ int Pawns::numberOfPawn(std::tuple<int, int, int> coords, bool body)
 
 void Pawns::handleClick(sf::Vector2i mousePosition)
 {
+    if (isMovementInProgress()) {
+        return;
+    }
+
     if (isTrading())
     {
         trading(mousePosition);
@@ -186,6 +190,10 @@ void Pawns::handleClickRelease(sf::Vector2i mousePosition)
 
 void Pawns::handleClickRight(sf::Vector2i mousePosition)
 {
+    if (isMovementInProgress()) {
+        return;
+    }
+
     for (Pawn* pawn : pawnDict)
     {
         if (pawn->isClicked(mousePosition))
@@ -484,6 +492,26 @@ void Pawns::updateAnimations(float dt)
     }
 }
 
+void Pawns::processDeferredWork()
+{
+    if (deferredHighlightRefresh) {
+        refreshMovementHighlights();
+        deferredHighlightRefresh = false;
+    }
+}
+
+void Pawns::finalizePendingMoveIfReady()
+{
+    if (pendingMove && !pawnDict[pendingMove->pawnNum]->isMoving()) {
+        finishPendingMove();
+    }
+}
+
+bool Pawns::needsContinuousRedraw() const
+{
+    return isMovementInProgress() || hasActiveAnimations();
+}
+
 bool Pawns::hasActiveAnimations() const
 {
     return std::any_of(
@@ -502,9 +530,8 @@ void Pawns::drawPawns(bool isShift)
     }
     for (auto it = pawnDict.rbegin(); it != pawnDict.rend(); ++it) {
         auto& pawn = *it;
-        int x = board->hexDict[pawn->getHexCoords()]->getOrigin().x;
-        int y = board->hexDict[pawn->getHexCoords()]->getOrigin().y;
-        pawn->setPosition(x, y);
+        const sf::Vector2f pos = getPawnDrawPosition(pawn);
+        pawn->setPosition(pos.x, pos.y);
         pawn->draw(*target, isShift);
     }
     for (Pawn* pawn : pawnDict) {
@@ -611,14 +638,75 @@ bool Pawns::canDropItem(int pawnNum, sf::Vector2i mousePosition) const
         pawnDict[pawnNum]->getRemainingActions() && pawnDict[pawnNum]->areAnyHighlighted();
 }
 
+bool Pawns::isMovementInProgress() const
+{
+    return pendingMove.has_value()
+        || deferredHighlightRefresh
+        || std::any_of(pawnDict.begin(), pawnDict.end(),
+            [](const Pawn* pawn) { return pawn->isMoving(); });
+}
+
+sf::Vector2f Pawns::getPawnDrawPosition(Pawn* pawn) const
+{
+    if (pawn->isMoving()) {
+        return pawn->getMovementPosition();
+    }
+    if (pendingMove && pawnDict[pendingMove->pawnNum] == pawn) {
+        const sf::Vector2f origin = board->hexDict.at(pendingMove->to)->getOrigin();
+        return sf::Vector2f(origin.x, origin.y);
+    }
+    const sf::Vector2f origin = board->hexDict.at(pawn->getHexCoords())->getOrigin();
+    return sf::Vector2f(origin.x, origin.y);
+}
+
+std::vector<sf::Vector2f> Pawns::buildMovementWaypoints(
+    const std::vector<std::tuple<int, int, int>>& path) const
+{
+    std::vector<sf::Vector2f> waypoints;
+    waypoints.reserve(path.size());
+    for (const std::tuple<int, int, int>& coords : path) {
+        const sf::Vector2f origin = board->hexDict.at(coords)->getOrigin();
+        waypoints.emplace_back(origin.x, origin.y);
+    }
+    return waypoints;
+}
+
+void Pawns::finishPendingMove()
+{
+    if (!pendingMove) {
+        return;
+    }
+
+    Pawn* pawn = pawnDict[pendingMove->pawnNum];
+    pawn->reduceActions(pendingMove->cost);
+    board->hexDict[pendingMove->from]->setPawn(false);
+    board->hexDict[pendingMove->to]->setPawn(true, pawn);
+    pawn->setHexCoords(pendingMove->to);
+    previousHex = pendingMove->to;
+    pendingMove.reset();
+    deferredHighlightRefresh = true;
+}
+
+void Pawns::refreshMovementHighlights()
+{
+    board->clearHighlight();
+    pawnFirstClick(whichPawn);
+}
+
 void Pawns::pawnMoved(int pawnNum)
 {
     Pawn* pawn = pawnDict[pawnNum];
-    pawn->reduceActions(board->hexDict[current]->getPawnDist());
-    board->hexDict[previousHex]->setPawn(false);
-    board->hexDict[current]->setPawn(true, pawn);
-    previousHex = current;
-    resetTurn();
+    const int cost = board->hexDict[current]->getPawnDist();
+    std::vector<std::tuple<int, int, int>> path =
+        board->getMovementPath(previousHex, current);
+
+    if (path.size() < 2) {
+        path = { previousHex, current };
+    }
+
+    board->clearHighlight();
+    pendingMove = PendingMove{ pawnNum, previousHex, current, cost };
+    pawn->startMovement(buildMovementWaypoints(path));
 }
 
 void Pawns::attack(int pawnNum, int attackedNum, Equipment* weapon)
