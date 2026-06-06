@@ -134,7 +134,11 @@ void Shop::nextTurn()
 
 void Shop::displayShop()
 {
-	Button::updateAll(sf::Mouse::getPosition(*window), window);
+	const sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
+	const bool buttonHovered = Button::updateAll(mousePosition, nullptr);
+	const bool cardHovered = shopCards->updateHover(mousePosition, !isPeeking);
+	Button::applyCursor(window, buttonHovered || cardHovered);
+
 	window->clear(sf::Color(71, 31, 16));
 	drawBackground();
 	window->draw(titleText);

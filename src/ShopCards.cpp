@@ -33,16 +33,55 @@ void ShopCards::draw(sf::RenderTarget* window)
 	{
 		for (auto& itemCard : itemsCards)
 		{
-			window->draw(itemCard->getFullSprite());
+			itemCard->drawToTarget(*window);
 		}
 	}
 	else
 	{
 		for (auto& warriorCard : warriorsCards)
 		{
-			window->draw(warriorCard->getFullSprite());
+			warriorCard->drawToTarget(*window);
 		}
 	}
+}
+
+bool ShopCards::updateHover(sf::Vector2i mousePosition, bool enabled)
+{
+	for (EquipmentCard* card : itemsCards) {
+		card->setHovered(false);
+	}
+	for (WarriorCard* card : warriorsCards) {
+		card->setHovered(false);
+	}
+
+	if (!enabled) {
+		return false;
+	}
+
+	bool anyHovered = false;
+	if (currentPage)
+	{
+		for (EquipmentCard* card : itemsCards)
+		{
+			if (card->isClicked(mousePosition))
+			{
+				card->setHovered(true);
+				anyHovered = true;
+			}
+		}
+	}
+	else
+	{
+		for (WarriorCard* card : warriorsCards)
+		{
+			if (card->isClicked(mousePosition))
+			{
+				card->setHovered(true);
+				anyHovered = true;
+			}
+		}
+	}
+	return anyHovered;
 }
 
 void ShopCards::setPositions(sf::RenderTarget* window)

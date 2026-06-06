@@ -32,7 +32,8 @@ public:
     void draw(sf::RenderTexture& window);
     void draw(sf::RenderWindow& window);
 
-    static void updateAll(sf::Vector2i mousePosition, sf::RenderWindow* window = nullptr);
+    static bool updateAll(sf::Vector2i mousePosition, sf::RenderWindow* window = nullptr);
+    static void applyCursor(sf::RenderWindow* window, bool hand);
     static void resetCursor(sf::RenderWindow* window);
 
 private:

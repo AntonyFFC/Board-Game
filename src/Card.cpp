@@ -1,4 +1,15 @@
 #include "Card.h"
+#include <algorithm>
+
+namespace {
+    const sf::Color kParchmentBg{210, 188, 148};
+    const sf::Color kHeaderFill{88, 42, 36};
+    const sf::Color kBrassBorder{196, 154, 72};
+    const sf::Color kCellBorder{150, 112, 52};
+    const sf::Color kDescriptionBg{58, 38, 26};
+    const sf::Color kSelectionTint{255, 210, 90, 140};
+    const sf::Color kHoverTint{255, 248, 220};
+}
 
 template <typename Container>
 int getSumOfVector(const Container& vec) {
@@ -25,8 +36,9 @@ Card::Card(const std::vector<int>& widths, const std::vector<std::string>& heade
 	text = initializeText("card", &globalFont2, fontSize, sf::Color::White);
 	cell = initializeCells();
 	sumOfCellWidths = getSumOfVector(cellWidths);
-	highlightColor = sf::Color(255, 0, 0, 128);
+	highlightColor = kSelectionTint;
 	isBeingClicked = false;
+	hovered = false;
 }
 
 Card::~Card()
@@ -67,6 +79,46 @@ void Card::setPosition(sf::Vector2f pos)
 	highlightSprite.setPosition(position);
 }
 
+void Card::setHovered(bool hovered)
+{
+	this->hovered = hovered;
+}
+
+bool Card::isHovered() const
+{
+	return hovered;
+}
+
+void Card::drawToTarget(sf::RenderTarget& target) const
+{
+	if (isBeingClicked) {
+		target.draw(combinedSprite);
+		return;
+	}
+
+	sf::Sprite display = cardSprite;
+	if (hovered) {
+		display.setColor(kHoverTint);
+	}
+	target.draw(display);
+
+	if (hovered) {
+		drawHoverOutline(target);
+	}
+}
+
+void Card::drawHoverOutline(sf::RenderTarget& target) const
+{
+	const sf::FloatRect bounds = cardSprite.getGlobalBounds();
+	sf::RectangleShape outline;
+	outline.setPosition(bounds.left - 3.0f, bounds.top - 3.0f);
+	outline.setSize(sf::Vector2f(bounds.width + 6.0f, bounds.height + 6.0f));
+	outline.setFillColor(sf::Color::Transparent);
+	outline.setOutlineColor(sf::Color(255, 220, 120));
+	outline.setOutlineThickness(3.0f);
+	target.draw(outline);
+}
+
 void Card::click(bool boolean)
 {
 	isBeingClicked = boolean;
@@ -97,8 +149,9 @@ bool Card::isBeingClkd() const
 
 void Card::createSprite()
 {
-	renderTexture.clear(sf::Color(158, 158, 157));
+	renderTexture.clear(kParchmentBg);
 	createTexture();
+	drawCardFrame();
 	renderTexture.display();
 	cardSprite = sf::Sprite(renderTexture.getTexture());
 	cardSprite.setPosition(position);
@@ -111,6 +164,29 @@ void Card::createTexture()
 	drawHeaders();
 	drawValues();
 	drawPicture();
+}
+
+void Card::drawDescriptionBackground(float yOffset)
+{
+	const float height = static_cast<float>(renderTexture.getSize().y) - yOffset;
+	sf::RectangleShape bg;
+	bg.setPosition(0.0f, yOffset);
+	bg.setSize(sf::Vector2f(static_cast<float>(sumOfCellWidths), height));
+	bg.setFillColor(kDescriptionBg);
+	bg.setOutlineColor(kCellBorder);
+	bg.setOutlineThickness(1.0f);
+	renderTexture.draw(bg);
+}
+
+void Card::drawCardFrame()
+{
+	const sf::Vector2u size = renderTexture.getSize();
+	sf::RectangleShape frame;
+	frame.setSize(sf::Vector2f(static_cast<float>(size.x), static_cast<float>(size.y)));
+	frame.setFillColor(sf::Color::Transparent);
+	frame.setOutlineColor(kBrassBorder);
+	frame.setOutlineThickness(4.0f);
+	renderTexture.draw(frame);
 }
 
 void Card::createCombinedSprite()
@@ -135,7 +211,9 @@ void Card::drawHeaders()
 	setPosSpriteMap(initialPos.x + 3, initialPos.y + 3, iconSprites);
 	setScalSpriteMap(0.06, iconSprites);
 	text.setPosition(initialPos.x + 5, initialPos.y + 3);
-	cell.setFillColor(sf::Color(156, 84, 84));
+	cell.setFillColor(kHeaderFill);
+	cell.setOutlineColor(kBrassBorder);
+	cell.setOutlineThickness(1.0f);
 	for (int i = 0; i < headers.size(); i++)
 	{
 		cell.setSize(sf::Vector2f(cellWidths[i], cellHeight));
@@ -205,6 +283,8 @@ Pawn* WarriorCard::getWarrior() const
 void WarriorCard::drawValues()
 {
 	cell.setFillColor(getTeamColor(warrior->getTeamNumber()));
+	cell.setOutlineColor(kCellBorder);
+	cell.setOutlineThickness(1.0f);
 	for (int i = 0; i < 6; i++)
 	{
 		cell.setSize(sf::Vector2f(cellWidths[i], cellHeight));
@@ -219,7 +299,8 @@ void WarriorCard::drawValues()
 	}
 	moveBack();
 
-	//This is the description below specs
+	drawDescriptionBackground(2.0f * cellHeight);
+	text.setPosition(8.0f, 2.0f * cellHeight + 6.0f);
 	text.setString(functions[6](*static_cast<const Pawn*>(warrior)));
 	renderTexture.draw(text);
 }
@@ -254,6 +335,8 @@ Equipment* EquipmentCard::getItem() const
 void EquipmentCard::drawValues()
 {
 	cell.setFillColor(getTypeColor(item));
+	cell.setOutlineColor(kCellBorder);
+	cell.setOutlineThickness(1.0f);
 	for (int i = 0; i < 7; i++)
 	{
 		cell.setSize(sf::Vector2f(cellWidths[i], cellHeight));
@@ -276,7 +359,8 @@ void EquipmentCard::drawValues()
 		moveSpriteMap(cellWidths[i], 0, iconSprites);
 	}
 	moveBack();
-	//This is the description below specs
+	drawDescriptionBackground(2.0f * cellHeight);
+	text.setPosition(8.0f, 2.0f * cellHeight + 6.0f);
 	text.setString(functions[7](*static_cast<const Equipment*>(item)));
 	renderTexture.draw(text);
 }

@@ -155,7 +155,7 @@ void Button::applyVisualState()
     buttonShape.setOutlineThickness(outlineThickness);
 }
 
-void Button::updateAll(sf::Vector2i mousePosition, sf::RenderWindow* window)
+bool Button::updateAll(sf::Vector2i mousePosition, sf::RenderWindow* window)
 {
     bool anyHovered = false;
     for (Button* button : allButtons) {
@@ -169,24 +169,13 @@ void Button::updateAll(sf::Vector2i mousePosition, sf::RenderWindow* window)
         }
     }
 
-    if (!window) {
-        return;
+    if (window) {
+        applyCursor(window, anyHovered);
     }
-
-#if defined(SFML_VERSION_MAJOR) && (SFML_VERSION_MAJOR > 2 || (SFML_VERSION_MAJOR == 2 && SFML_VERSION_MINOR >= 5))
-    if (!cursorsLoaded) {
-        cursorsLoaded = handCursor.loadFromSystem(sf::Cursor::Hand)
-            && arrowCursor.loadFromSystem(sf::Cursor::Arrow);
-    }
-    if (cursorsLoaded) {
-        window->setMouseCursor(anyHovered ? handCursor : arrowCursor);
-    }
-#else
-    (void)anyHovered;
-#endif
+    return anyHovered;
 }
 
-void Button::resetCursor(sf::RenderWindow* window)
+void Button::applyCursor(sf::RenderWindow* window, bool hand)
 {
     if (!window) {
         return;
@@ -198,9 +187,16 @@ void Button::resetCursor(sf::RenderWindow* window)
             && arrowCursor.loadFromSystem(sf::Cursor::Arrow);
     }
     if (cursorsLoaded) {
-        window->setMouseCursor(arrowCursor);
+        window->setMouseCursor(hand ? handCursor : arrowCursor);
     }
+#else
+    (void)hand;
 #endif
+}
+
+void Button::resetCursor(sf::RenderWindow* window)
+{
+    applyCursor(window, false);
 }
 
 bool Button::click(sf::Vector2i mousePosition)

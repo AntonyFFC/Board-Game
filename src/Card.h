@@ -20,8 +20,11 @@ public:
 	sf::Sprite getFullSprite();
 	sf::Sprite getSprite();
 	sf::Sprite getHighSprite();
+	void drawToTarget(sf::RenderTarget& target) const;
 
 	void setPosition(sf::Vector2f pos);
+	void setHovered(bool hovered);
+	bool isHovered() const;
 	void click(bool boolean);
 	void movePosition(sf::Vector2f pos);
 	void setScale(float scl);
@@ -42,6 +45,9 @@ private:
 	virtual void drawValues() = 0;
 	void drawHeaders();
 	virtual void drawPicture(sf::Vector2f initialPos = sf::Vector2f(0.f,0.f));
+	void drawDescriptionBackground(float yOffset);
+	void drawCardFrame();
+	void drawHoverOutline(sf::RenderTarget& target) const;
 	void moveBack();
 	sf::Vector2f position;
 	int sumOfCellWidths;
@@ -58,6 +64,7 @@ private:
 	std::vector<int> cellWidths;
 	std::vector<std::string> headers;
 	bool isBeingClicked;
+	bool hovered;
 };
 
 class WarriorCard : public Card {

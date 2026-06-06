@@ -15,6 +15,7 @@ public:
     ~ShopCards();
 
     void draw(sf::RenderTarget* window);
+    bool updateHover(sf::Vector2i mousePosition, bool enabled = true);
     void setPositions(sf::RenderTarget* window);
     void makeCards(std::vector<Equipment*> availableItems, std::vector<Pawn*> availableWarriors);
     void prepareDecks(sf::RenderTarget* window);
