@@ -51,6 +51,7 @@ public:
 
 	virtual void setHighlight(int col, int inWhosPawn);
 	void clearHighlight(int col);
+	void setHovered(bool hovered);
 	void draw(sf::RenderTarget& target);
 	void setScl(float inS = 0.8);	
 	Pawn* pawn;
@@ -80,6 +81,7 @@ private:
 	bool hasBody_ = false;
 	bool hasEquipmentPile_ = false;
 	bool highlights[3];
+	bool hovered = false;
 	bool isBlocking_ = false;
 	sf::Color fill;
 	sf::Color out;

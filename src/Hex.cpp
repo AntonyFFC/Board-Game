@@ -248,6 +248,11 @@ void Hex::clearHighlight(int col)
 	highlights[col] = false;
 }
 
+void Hex::setHovered(bool inHovered)
+{
+	hovered = inHovered;
+}
+
 bool Hex::isClicked(sf::Vector2i mousePosition) const {
     const float hexRadius = getRadius();
     sf::Vector2f hexOrigin = getOrigin();
@@ -322,7 +327,15 @@ sf::ConvexShape Grass::getShape() {
             currentFill = adjustColor(currentFill, 30);
         }
     }
+
+    if (hovered && isHigh(0))
+    {
+        currentFill = adjustColor(currentFill, 45);
+        currentOut = adjustColor(currentOut, 35);
+    }
+
     setColour(currentFill, currentOut);
+    shape.setOutlineThickness(hovered && isHigh(0) ? 4.0f : 2.5f);
     return shape;
 }
 

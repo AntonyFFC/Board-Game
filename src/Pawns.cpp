@@ -431,16 +431,32 @@ void Pawns::setChoosing(bool boolean) {
     isChoosing_ = boolean;
 }
 
+bool Pawns::isMovementHex(const Hex* hex) const
+{
+    return hex->isHigh(0);
+}
+
 bool Pawns::updateHover(sf::Vector2i mousePosition)
 {
     for (Pawn* pawn : pawnDict) {
         pawn->setHovered(false);
+    }
+    for (const auto& pair : board->hexDict) {
+        pair.second->setHovered(false);
     }
 
     for (auto it = pawnDict.rbegin(); it != pawnDict.rend(); ++it) {
         Pawn* pawn = *it;
         if (pawn->isAlive() && pawn->isClicked(mousePosition)) {
             pawn->setHovered(true);
+            return true;
+        }
+    }
+
+    for (const auto& pair : board->hexDict) {
+        Hex* hex = pair.second;
+        if (isMovementHex(hex) && hex->isClicked(mousePosition)) {
+            hex->setHovered(true);
             return true;
         }
     }

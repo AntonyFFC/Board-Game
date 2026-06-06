@@ -91,6 +91,7 @@ private:
 	void resetTurn();
 	void closeTables();
 	bool isPawnSelected() const;
+	bool isMovementHex(const Hex* hex) const;
 
 	Board* board;
 	TradeTable* tradeTable;

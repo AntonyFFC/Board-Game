@@ -105,13 +105,13 @@ void Gui::display()
 {
     const sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
     const bool buttonHovered = Button::updateAll(mousePosition, nullptr);
-    const bool pawnHovered = pawns->updateHover(mousePosition);
+    const bool boardHovered = pawns->updateHover(mousePosition);
 
     window->clear(sf::Color(66, 82, 107));
     window->draw(backgroundSprite);
     grid->drawBoard(*window);
     pawns->draw(isShiftKeyPressed);
 	endTurnButton.draw(*window);
-    Button::applyCursor(window, buttonHovered || pawnHovered);
+    Button::applyCursor(window, buttonHovered || boardHovered);
     window->display();
 }
