@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <memory>
 #include "Globals.h"
 #include "GUI.h"
 #include "Armory.h"
@@ -27,7 +28,7 @@ private:
     void initializeButtons();
 
     std::vector<std::string> buttonLabels;
-    std::vector<Button> buttons;
+    std::vector<std::unique_ptr<Button>> buttons;
     int screenWidth;
     int screenHeight;
     float totalHeight;

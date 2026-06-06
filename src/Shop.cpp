@@ -1,7 +1,13 @@
 #include "Shop.h"
 
 Shop::Shop(sf::RenderWindow* window)
-	:window(window)
+	: window(window),
+	changeButton(sf::Vector2f(window->getSize().x / 2 - 100,
+		window->getSize().y - 70), sf::Vector2f(200, 50), "-}"),
+	nextPlayer(sf::Vector2f(window->getSize().x / 2 + 150,
+		window->getSize().y - 70), sf::Vector2f(200, 50), "next player"),
+	peekButton(sf::Vector2f(window->getSize().x / 2 - 350,
+		window->getSize().y - 70), sf::Vector2f(200, 50), "peek opponent")
 {
 	initializeFont();
 	fontSize = 20;
@@ -22,12 +28,6 @@ Shop::Shop(sf::RenderWindow* window)
 	backgroundSprite1.setPosition(0, 0);
 	backgroundSprite2 = loadBackgroundSprite(&backgroundTexture2, "shop2");
 	backgroundSprite2.setPosition(0, 0);
-	changeButton = Button(sf::Vector2f(window->getSize().x / 2 - 100,
-		window->getSize().y - 70), sf::Vector2f(200, 50), "-}");
-	nextPlayer = Button(sf::Vector2f(window->getSize().x / 2 + 150,
-		window->getSize().y - 70), sf::Vector2f(200, 50), "next player");
-	peekButton = Button(sf::Vector2f(window->getSize().x / 2 - 350,
-		window->getSize().y - 70), sf::Vector2f(200, 50), "peek opponent");
 	wallIcon.setPosition(20, window->getSize().y / 2);
 	interface1 = new Gui(window);
 	shopCards = new ShopCards();
@@ -134,6 +134,7 @@ void Shop::nextTurn()
 
 void Shop::displayShop()
 {
+	Button::updateAll(sf::Mouse::getPosition(*window), window);
 	window->clear(sf::Color(71, 31, 16));
 	drawBackground();
 	window->draw(titleText);
@@ -215,6 +216,10 @@ void Shop::keyPressed(const sf::Event& event)
 		{
 			shopCards->flipPage();
 		}
+		displayShop();
+	}
+	else if (event.type == sf::Event::MouseMoved)
+	{
 		displayShop();
 	}
 	else if (event.type == sf::Event::Closed)

@@ -1,13 +1,13 @@
 #include "GUI.h"
 
 Gui::Gui(sf::RenderWindow* window)
-	: window(window)
+	: window(window),
+    endTurnButton(sf::Vector2f(window->getSize().x / 2 + 150,
+        window->getSize().y - 70), sf::Vector2f(200, 50), "end turn")
 {
     initializeFont();
 	grid = new Board(13, 19, 0.8f);
     pawns = new Pawns(grid, window);
-    endTurnButton = Button(sf::Vector2f(window->getSize().x / 2 + 150,
-        window->getSize().y - 70), sf::Vector2f(200, 50), "end turn");
     warriorPrep = new WarriorPrep(window, grid, pawns);
     backgroundSprite = loadBackgroundSprite(&backgroundTexture,"board");
     backgroundSprite.setPosition(0, 0);
@@ -81,6 +81,10 @@ void Gui::keyPressed(const sf::Event& event) {
             changesOccurred = true;
         }
     }
+    else if (event.type == sf::Event::MouseMoved)
+    {
+        changesOccurred = true;
+    }
     if (event.type == sf::Event::Closed)
     {
         window->close();
@@ -104,5 +108,6 @@ void Gui::display()
     grid->drawBoard(*window);
     pawns->draw(isShiftKeyPressed);
 	endTurnButton.draw(*window);
+    Button::updateAll(sf::Mouse::getPosition(*window), window);
     window->display();
 }

@@ -39,6 +39,7 @@ void Menu::start() {
 }
 
 void Menu::draw() {
+    Button::updateAll(sf::Mouse::getPosition(*window), window);
     sf::Text titleText("Skirmish", globalFont2, 50);
     titleText.setPosition(window->getSize().x / 2.0f - titleText.getGlobalBounds().width / 2.0f, 50);
     titleText.setFillColor(sf::Color::White);
@@ -47,13 +48,13 @@ void Menu::draw() {
     for (size_t i = 0; i < buttons.size(); i++) {
 
         if (i == getSelectedItem()) {
-            buttons[i].setBackgroundColor(sf::Color(115, 115, 115)); // Highlight the selectedIndex button
+            buttons[i]->setBackgroundColor(sf::Color(118, 76, 46));
         }
         else {
-            buttons[i].setBackgroundColor(sf::Color::Transparent);
+            buttons[i]->setBackgroundColor(sf::Color::Transparent);
         }
         
-        buttons[i].draw(*window);
+        buttons[i]->draw(*window);
     }
 }
 
@@ -62,7 +63,7 @@ void Menu::handleInput(sf::Event event) {
         sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
 
         for (size_t i = 0; i < buttons.size(); i++) {
-            if (buttons[i].isClicked(mousePos)) {
+            if (buttons[i]->isClicked(mousePos)) {
                 selectedIndex = i;
                 display();
                 return;
@@ -73,13 +74,16 @@ void Menu::handleInput(sf::Event event) {
         sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
 
         for (size_t i = 0; i < buttonLabels.size(); ++i) {
-            if (buttons[i].isClicked(mousePos)) {
+            if (buttons[i]->isClicked(mousePos)) {
                 selectedIndex = i;
                 callSelected(getSelectedItem());
                 display();
                 return;
             }
         }
+    }
+    else if (event.type == sf::Event::MouseMoved) {
+        display();
     }
     else if (event.type == sf::Event::KeyPressed) {
         if (event.key.code == sf::Keyboard::Up) {
@@ -142,6 +146,6 @@ void Menu::initializeButtons()
     {
         sf::Vector2f position(window->getSize().x / 2.0f - 125, startY + i * 70);
         sf::Vector2f dimensions(250, 50);
-        buttons.push_back(Button(position, dimensions, buttonLabels[i]));
+        buttons.push_back(std::make_unique<Button>(position, dimensions, buttonLabels[i]));
     }
 }

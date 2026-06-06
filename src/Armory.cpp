@@ -10,10 +10,14 @@ int getSumOfArray(T(&arr)[N]) {
 }
 
 Armory::Armory(sf::RenderWindow* window)
-	:window(window), equipmentHeaders{ "Name","left-right-arrow-icon-white","circle-line-icon-white","bomb-blast-icon-white",
+	: window(window), equipmentHeaders{ "Name","left-right-arrow-icon-white","circle-line-icon-white","bomb-blast-icon-white",
 "history-icon-white","cube-icon-white","dollar-icon-white","Other" }, pawnHeaders{ "Name","history-icon-white",
 "hand-line-icon-white","plus-round-line-icon-white","heart-line-icon-white","dollar-icon-white", "Other"},
-equipmentCellWidths{ 150,60,60,50,50,50,50,500 }, pawnCellWidths{ 250, 50, 50,50, 50, 50, 250 }
+equipmentCellWidths{ 150,60,60,50,50,50,50,500 }, pawnCellWidths{ 250, 50, 50,50, 50, 50, 250 },
+backButton(sf::Vector2f(window->getSize().x - 220, 20),
+	sf::Vector2f(200, 50), "Back"),
+changeButton(sf::Vector2f(window->getSize().x / 2 - 100,
+	window->getSize().y - 70), sf::Vector2f(200, 50), "-}")
 {
 	equipmentRenderTexture.create(window->getSize().x, window->getSize().y);
 	pawnsRenderTexture.create(window->getSize().x, window->getSize().y);
@@ -34,10 +38,6 @@ equipmentCellWidths{ 150,60,60,50,50,50,50,500 }, pawnCellWidths{ 250, 50, 50,50
 	text = initializeText("Nothing", &globalFont2, fontSize, sf::Color::White);
 	titleText = initializeText("Armory", &globalFont2, fontSize * 1.5, sf::Color::White);
 	isPawnsShown = false;
-	backButton = Button(sf::Vector2f(window->getSize().x - 220, 20), 
-		sf::Vector2f(200, 50), "Back");
-	changeButton = Button(sf::Vector2f(window->getSize().x / 2 - 100, 
-		window->getSize().y - 70), sf::Vector2f(200, 50), "-}");
 }
 
 Armory::~Armory()
@@ -86,6 +86,10 @@ void Armory::keyPressed(const sf::Event& event) {
 			flipPage();
 		}
 	}
+	else if (event.type == sf::Event::MouseMoved)
+	{
+		display();
+	}
 	else if (event.type == sf::Event::Closed)
 	{
 		window->close();
@@ -99,16 +103,21 @@ void Armory::exit()
 
 void Armory::display()
 {
+	Button::updateAll(sf::Mouse::getPosition(*window), window);
 	window->clear(sf::Color(71, 31, 16));
 	window->draw(backgroundSprite);
 	if (isPawnsShown)
 	{
 		window->draw(pawnsTableSprite);
+		changeButton.setText("{-");
 	}
 	else
 	{
 		window->draw(equipmentTableSprite);
+		changeButton.setText("-}");
 	}
+	backButton.draw(*window);
+	changeButton.draw(*window);
 	window->display();
 }
 
@@ -117,8 +126,6 @@ void Armory::createEquipmentTexture()
 	drawTitleText('e');
 	drawHeaders('e');
 	drawEquipment();
-	drawBackButton('e');
-	drawChangeButton('e');
 }
 
 void Armory::createPawnsTexture()
@@ -126,8 +133,6 @@ void Armory::createPawnsTexture()
 	drawTitleText('p');
 	drawHeaders('p');
 	drawPawns();
-	drawBackButton('p');
-	drawChangeButton('p');
 }
 
 void Armory::drawHeaders(char which)

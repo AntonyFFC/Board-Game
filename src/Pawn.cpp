@@ -9,7 +9,8 @@ Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions,
 	: name(name), teamNumber(teamNumber), side(side), remainingActions(maxActions), 
     maxActions(maxActions), calculatedMaxActions(maxActions), HP(healthPoints), 
     space(space), price(price), equipment(), combinedSprite(),
-    additionalCapabilities(additionalCapabilities), numInDeck(numInDeck)
+    additionalCapabilities(additionalCapabilities), numInDeck(numInDeck),
+    dropButton(sf::Vector2f(0, 0), sf::Vector2f(150, 25), "drop selected equipment (1AP)")
 {
     scaleFactor = 0.05f;
     rotationAngle = 90.0f;
@@ -21,7 +22,6 @@ Pawn::Pawn(const std::string& name, int teamNumber, int side, int maxActions,
     createSprite();
     xPos = 0;
     yPos = 0;
-    dropButton = Button(sf::Vector2f(0,0), sf::Vector2f(150, 25), "drop selected equipment (1AP)");
 	dropButton.setTextSize(15);
     dropButton.setSizeToText();
 	dropButton.setBackgroundColor(sf::Color::Red);
