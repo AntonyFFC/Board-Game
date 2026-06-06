@@ -24,6 +24,8 @@ Shop::Shop(sf::RenderWindow* window)
 	goldText.setPosition(window->getSize().x-100, 10);
 	roundText = initializeText("Round: " + std::to_string(currentRound), &globalFont2, fontSize * 1.5, sf::Color::White);
 	roundText.setPosition(window->getSize().x - 250, 10);
+	heldItemHintText = initializeText("Click a pawn to equip, or storage to keep",
+		&globalFont2, fontSize, sf::Color(244, 228, 196, 210));
 	backgroundSprite1 = loadBackgroundSprite(&backgroundTexture1, "shop1");
 	backgroundSprite1.setPosition(0, 0);
 	backgroundSprite2 = loadBackgroundSprite(&backgroundTexture2, "shop2");
@@ -63,6 +65,10 @@ bool Shop::buy(int cardNum)
 	addLastItemToStorage();
 
 	addCard(cardNum);
+	if (lastItem != nullptr)
+	{
+		lastItem->click(false);
+	}
 	shopCards->removeCard(cardNum);
 	reduceMoney(price);
 	updateGoldText();
@@ -153,7 +159,29 @@ void Shop::displayShop()
 	peekButton.setText(isPeeking ? "back to my shop" : "peek opponent");
 	peekButton.draw(*window);
 	wallIcon.draw(*window);
+	if (!isPeeking)
+	{
+		drawHeldItem(mousePosition);
+	}
 	window->display();
+}
+
+void Shop::drawHeldItem(sf::Vector2i mousePosition)
+{
+	if (lastItem == nullptr)
+	{
+		return;
+	}
+
+	lastItem->drawHeldPreview(*window, sf::Vector2f(
+		static_cast<float>(mousePosition.x),
+		static_cast<float>(mousePosition.y)));
+
+	const sf::FloatRect hintBounds = heldItemHintText.getLocalBounds();
+	heldItemHintText.setPosition(
+		window->getSize().x / 2.0f - (hintBounds.width / 2.0f + hintBounds.left),
+		window->getSize().y - 120.0f);
+	window->draw(heldItemHintText);
 }
 
 void Shop::drawChangeButton()

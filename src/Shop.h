@@ -48,6 +48,7 @@ private:
     sf::Text redTurnText;
     sf::Text goldText;
     sf::Text roundText;
+    sf::Text heldItemHintText;
     IconWall wallIcon;
     Button changeButton;
     Button nextPlayer;
@@ -69,6 +70,7 @@ private:
     void drawNextPlayerButton();
     void drawTurn();
     void drawBackground();
+    void drawHeldItem(sf::Vector2i mousePosition);
 
     // Private helper functions for managing the shop
     void resetShop();

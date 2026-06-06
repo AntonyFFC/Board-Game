@@ -21,6 +21,7 @@ public:
 	sf::Sprite getSprite();
 	sf::Sprite getHighSprite();
 	void drawToTarget(sf::RenderTarget& target) const;
+	void drawHeldPreview(sf::RenderTarget& target, sf::Vector2f anchor) const;
 
 	void setPosition(sf::Vector2f pos);
 	void setHovered(bool hovered);

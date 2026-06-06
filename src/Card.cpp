@@ -119,6 +119,29 @@ void Card::drawHoverOutline(sf::RenderTarget& target) const
 	target.draw(outline);
 }
 
+void Card::drawHeldPreview(sf::RenderTarget& target, sf::Vector2f anchor) const
+{
+	sf::Sprite preview = cardSprite;
+	const sf::Vector2f originalScale = preview.getScale();
+	const float heldScaleFactor = 0.6f;
+	preview.setScale(originalScale.x * heldScaleFactor, originalScale.y * heldScaleFactor);
+	preview.setColor(sf::Color(255, 255, 255, 190));
+
+	const sf::FloatRect localBounds = preview.getLocalBounds();
+	preview.setOrigin(localBounds.width / 2.0f, localBounds.height / 2.0f);
+	preview.setPosition(anchor.x + 28.0f, anchor.y + 28.0f);
+	target.draw(preview);
+
+	const sf::FloatRect bounds = preview.getGlobalBounds();
+	sf::RectangleShape outline;
+	outline.setPosition(bounds.left - 2.0f, bounds.top - 2.0f);
+	outline.setSize(sf::Vector2f(bounds.width + 4.0f, bounds.height + 4.0f));
+	outline.setFillColor(sf::Color::Transparent);
+	outline.setOutlineColor(sf::Color(255, 220, 100, 210));
+	outline.setOutlineThickness(2.0f);
+	target.draw(outline);
+}
+
 void Card::click(bool boolean)
 {
 	isBeingClicked = boolean;
