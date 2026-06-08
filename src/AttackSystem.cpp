@@ -13,9 +13,9 @@ namespace {
     constexpr float kArrowFlightDuration = 0.42f;
     constexpr float kArrowArcHeight = 36.0f;
     constexpr float kArrowScale = 0.06f;
-    constexpr float kRockFlightDuration = 0.32f;
+    constexpr float kRockFlightDuration = 0.50f;
     constexpr float kRockArcHeight = 22.0f;
-    constexpr float kRockScale = 0.07f;
+    constexpr float kRockScale = 0.04f;
     constexpr float kRadToDeg = 180.0f / 3.14159265f;
     constexpr float kSpriteForwardOffset = 90.0f;
 }
