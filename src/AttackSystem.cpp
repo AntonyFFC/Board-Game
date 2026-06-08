@@ -10,8 +10,12 @@
 namespace {
     constexpr float kLungeFraction = 0.05f;
     constexpr float kLungeSpeed = 680.0f;
-    constexpr float kProjectileSpeed = 450.0f;
-    constexpr float kProjectileScale = 0.07f;
+    constexpr float kArrowFlightDuration = 0.42f;
+    constexpr float kArrowArcHeight = 36.0f;
+    constexpr float kArrowScale = 0.06f;
+    constexpr float kRockFlightDuration = 0.32f;
+    constexpr float kRockArcHeight = 22.0f;
+    constexpr float kRockScale = 0.07f;
     constexpr float kRadToDeg = 180.0f / 3.14159265f;
     constexpr float kSpriteForwardOffset = 90.0f;
 }
@@ -142,9 +146,14 @@ void AttackSystem::spawnProjectile(sf::Vector2f startPos, sf::Vector2f targetPos
     if (!texturesLoaded || !activeRangedAttack) {
         return;
     }
+    const bool slingshot = isSlingshot(weaponName);
+    const float flightDuration = slingshot ? kRockFlightDuration : kArrowFlightDuration;
+    const float arcHeight = slingshot ? kRockArcHeight : kArrowArcHeight;
+    const float scale = slingshot ? kRockScale : kArrowScale;
+
     activeRangedAttack->projectile = std::make_unique<Projectile>(
         projectileTextureFor(weaponName), startPos, targetPos,
-        kProjectileSpeed, kProjectileScale);
+        flightDuration, scale, arcHeight);
 }
 
 void AttackSystem::resolveRangedImpact()

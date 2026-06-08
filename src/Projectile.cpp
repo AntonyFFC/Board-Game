@@ -4,41 +4,77 @@
 
 namespace {
     constexpr float kRadToDeg = 180.0f / 3.14159265f;
+    constexpr float kApexScaleBoost = 0.35f;
+    constexpr float kTangentDelta = 0.01f;
 }
 
 Projectile::Projectile(const sf::Texture& texture, sf::Vector2f start, sf::Vector2f target,
-    float speed, float scale)
-    : sprite(texture), startPos(start), targetPos(target), speed(speed)
+    float flightDuration, float baseScale, float maxArcHeight)
+    : sprite(texture), startPos(start), targetPos(target),
+    flightDuration(flightDuration), baseScale(baseScale), maxArcHeight(maxArcHeight)
 {
-    const sf::Vector2f delta = targetPos - startPos;
-    totalDistance = std::hypot(delta.x, delta.y);
-    if (totalDistance < 0.001f) {
+    if (flightDuration < 0.001f) {
         finished = true;
-        progress = 1.0f;
     }
 
     sprite.setOrigin(sprite.getLocalBounds().width / 2.0f,
         sprite.getLocalBounds().height / 2.0f);
-    sprite.setScale(scale, scale);
-    sprite.setPosition(startPos);
+    applyPose(0.0f);
+}
 
-    const float angle = std::atan2(delta.y, delta.x) * kRadToDeg;
-    sprite.setRotation(angle);
+float Projectile::ease(float t)
+{
+    t = std::max(0.0f, std::min(1.0f, t));
+    return t * t * (3.0f - 2.0f * t);
+}
+
+sf::Vector2f Projectile::positionAt(float easedT) const
+{
+    const sf::Vector2f ground = startPos + (targetPos - startPos) * easedT;
+    const float height = 4.0f * maxArcHeight * easedT * (1.0f - easedT);
+    return sf::Vector2f(ground.x, ground.y - height);
+}
+
+sf::Vector2f Projectile::tangentAt(float easedT) const
+{
+    const float t0 = std::max(0.0f, easedT - kTangentDelta);
+    const float t1 = std::min(1.0f, easedT + kTangentDelta);
+    const sf::Vector2f p0 = positionAt(t0);
+    const sf::Vector2f p1 = positionAt(t1);
+    return p1 - p0;
+}
+
+void Projectile::applyPose(float easedT)
+{
+    const sf::Vector2f pos = positionAt(easedT);
+    const float height = 4.0f * maxArcHeight * easedT * (1.0f - easedT);
+    const float heightFactor = maxArcHeight > 0.001f ? height / maxArcHeight : 0.0f;
+    const float currentScale = baseScale * (1.0f + kApexScaleBoost * heightFactor);
+
+    sprite.setPosition(pos);
+    sprite.setScale(currentScale, currentScale);
+
+    const sf::Vector2f tangent = tangentAt(easedT);
+    if (std::hypot(tangent.x, tangent.y) > 0.001f) {
+        sprite.setRotation(std::atan2(tangent.y, tangent.x) * kRadToDeg);
+    }
 }
 
 void Projectile::update(float dt)
 {
-    if (finished || totalDistance < 0.001f) {
+    if (finished || flightDuration < 0.001f) {
         return;
     }
 
-    progress += (speed * dt) / totalDistance;
-    if (progress >= 1.0f) {
-        progress = 1.0f;
+    elapsed += dt;
+    const float rawT = std::min(1.0f, elapsed / flightDuration);
+    const float easedT = ease(rawT);
+    applyPose(easedT);
+
+    if (rawT >= 1.0f) {
+        applyPose(1.0f);
         finished = true;
     }
-
-    sprite.setPosition(startPos + (targetPos - startPos) * progress);
 }
 
 bool Projectile::isFinished() const
