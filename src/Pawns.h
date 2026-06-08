@@ -12,10 +12,12 @@
 #include "Table.h"
 #include "Walls.h"
 #include "EquipmentPile.h"
+#include "AttackSystem.h"
 #include <optional>
 
 class Pawns
 {
+	friend class AttackSystem;
 public:
 	Pawns(Board* board, sf::RenderWindow* window);
 	~Pawns();
@@ -65,10 +67,6 @@ private:
 	bool canDropItem(int pawnNum, sf::Vector2i mousePosition) const;
 	void pawnMoved(int pawnNum);
 	void attack(int pawnNum, int attackedNum, Equipment* weapon);
-	bool hasEnoughActions(Pawn* attacker, Equipment* weapon) const;
-	int calculateAttackValue(Pawn* attacker, Equipment* weapon) const;
-	void handleRangedAttack(Pawn* attacker, Pawn* attacked, Equipment* weapon, int attackValue);
-	void handleMeleeAttack(Pawn* attacker, Pawn* attacked, Equipment* weapon, int attackValue);
 	void death(Pawn* attacked);
 	std::vector<Equipment*> getWeaponsInUse(int pawnNum, int attackedNum);
 	bool shouldClearHighlight(const std::tuple<int, int, int>& hex) const;
@@ -97,6 +95,7 @@ private:
 	bool isPawnSelected() const;
 	bool isMovementHex(const Hex* hex) const;
 	bool isMovementInProgress() const;
+	bool isAttackInProgress() const;
 	void finishPendingMove();
 	sf::Vector2f getPawnDrawPosition(Pawn* pawn) const;
 	void refreshMovementHighlights();
@@ -130,5 +129,6 @@ private:
 	int numberOfPawns[2];
 	std::optional<PendingMove> pendingMove;
 	bool deferredHighlightRefresh = false;
+	AttackSystem attackSystem;
 };
 

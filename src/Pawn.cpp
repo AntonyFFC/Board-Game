@@ -850,6 +850,35 @@ bool Pawn::isMoving() const
     return movementAnimation && movementAnimation->isActive();
 }
 
+void Pawn::startAttackLunge(const std::vector<sf::Vector2f>& waypoints, float speed)
+{
+    if (!attackLungeAnimation) {
+        attackLungeAnimation = std::make_unique<PawnMovementAnimation>();
+    }
+    attackLungeAnimation->start(waypoints, speed);
+}
+
+bool Pawn::isAttackLunging() const
+{
+    return attackLungeAnimation && attackLungeAnimation->isActive();
+}
+
+sf::Vector2f Pawn::getAttackLungePosition() const
+{
+    if (attackLungeAnimation) {
+        return attackLungeAnimation->getPosition();
+    }
+    return sf::Vector2f(xPos, yPos);
+}
+
+void Pawn::setAttackFacing(float angle)
+{
+    rotationAngle = angle;
+    if (combinedSprite) {
+        combinedSprite->setRotation(rotationAngle);
+    }
+}
+
 sf::Vector2f Pawn::getMovementPosition() const
 {
     if (movementAnimation) {
@@ -866,6 +895,9 @@ void Pawn::updateAnimations(float dt)
         if (combinedSprite) {
             combinedSprite->setRotation(rotationAngle);
         }
+    }
+    if (attackLungeAnimation && attackLungeAnimation->isActive()) {
+        attackLungeAnimation->update(dt);
     }
 
     auto pit = pendingFloatingTexts.begin();
@@ -908,7 +940,7 @@ void Pawn::updateAnimations(float dt)
 
 bool Pawn::hasActiveAnimation() const
 {
-    return isMoving() || !floatingTexts.empty();
+    return isMoving() || isAttackLunging() || !floatingTexts.empty();
 }
 
 void Pawn::dropItems(EquipmentPile* pile)

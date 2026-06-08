@@ -1,7 +1,7 @@
 #include "Pawns.h"
 
 Pawns::Pawns(Board* board,sf::RenderWindow* window)
-    :board(board),target(window)
+    :board(board),target(window),attackSystem(this)
 {
 	walls = new Walls(window);
     tradeTable = nullptr;
@@ -61,7 +61,7 @@ int Pawns::numberOfPawn(std::tuple<int, int, int> coords, bool body)
 
 void Pawns::handleClick(sf::Vector2i mousePosition)
 {
-    if (isMovementInProgress()) {
+    if (isMovementInProgress() || isAttackInProgress()) {
         return;
     }
 
@@ -190,7 +190,7 @@ void Pawns::handleClickRelease(sf::Vector2i mousePosition)
 
 void Pawns::handleClickRight(sf::Vector2i mousePosition)
 {
-    if (isMovementInProgress()) {
+    if (isMovementInProgress() || isAttackInProgress()) {
         return;
     }
 
@@ -475,6 +475,7 @@ void Pawns::draw(bool isShift)
 {
     drawTurn();
     drawPawns(isShift);
+    attackSystem.draw(*target);
     walls->draw();
     if (isTrading())
     {
@@ -490,6 +491,7 @@ void Pawns::updateAnimations(float dt)
     for (Pawn* pawn : pawnDict) {
         pawn->updateAnimations(dt);
     }
+    attackSystem.update(dt);
 }
 
 void Pawns::processDeferredWork()
@@ -509,7 +511,7 @@ void Pawns::finalizePendingMoveIfReady()
 
 bool Pawns::needsContinuousRedraw() const
 {
-    return isMovementInProgress() || hasActiveAnimations();
+    return isMovementInProgress() || isAttackInProgress() || hasActiveAnimations();
 }
 
 bool Pawns::hasActiveAnimations() const
@@ -646,8 +648,16 @@ bool Pawns::isMovementInProgress() const
             [](const Pawn* pawn) { return pawn->isMoving(); });
 }
 
+bool Pawns::isAttackInProgress() const
+{
+    return attackSystem.isActive();
+}
+
 sf::Vector2f Pawns::getPawnDrawPosition(Pawn* pawn) const
 {
+    if (pawn->isAttackLunging()) {
+        return pawn->getAttackLungePosition();
+    }
     if (pawn->isMoving()) {
         return pawn->getMovementPosition();
     }
@@ -711,62 +721,7 @@ void Pawns::pawnMoved(int pawnNum)
 
 void Pawns::attack(int pawnNum, int attackedNum, Equipment* weapon)
 {
-    Pawn* attacker = pawnDict[pawnNum];
-    if (!hasEnoughActions(attacker, weapon))
-    {
-        std::cout << "Not enough actions\n";
-        return;
-    }
-
-    Pawn* attacked = pawnDict[attackedNum];
-    int attackValue = calculateAttackValue(attacker, weapon);
-
-    if (weapon->isRanged())
-    {
-        handleRangedAttack(attacker, attacked, weapon, attackValue);
-    }
-    else
-    {
-        handleMeleeAttack(attacker, attacked, weapon, attackValue);
-    }
-
-    if (!attacked->isAlive())
-    {
-        death(attacked);
-    }
-
-    attacker->reduceActions(weapon->getAttackActions());
-    resetTurn();
-}
-
-bool Pawns::hasEnoughActions(Pawn* attacker, Equipment* weapon) const
-{
-    return weapon->getAttackActions() <= attacker->getRemainingActions();
-}
-
-int Pawns::calculateAttackValue(Pawn* attacker, Equipment* weapon) const
-{
-    int attackValue = weapon->getAttackValue();
-    if (attacker->hasItem("gauntlets"))
-    {
-        attackValue++;
-    }
-    return attackValue;
-}
-
-void Pawns::handleRangedAttack(Pawn* attacker, Pawn* attacked, Equipment* weapon, int attackValue)
-{
-    int missMax = attacker->getMissMax(weapon->getName());
-    attacked->rangedAttack(attackValue, missMax);
-}
-
-void Pawns::handleMeleeAttack(Pawn* attacker, Pawn* attacked, Equipment* weapon, int attackValue)
-{
-    attacked->attack(attackValue);
-    if (weapon->getName() == "dagger" || weapon->getName() == "long dagger")
-    {
-        attacker->removeEquipment(weapon);
-    }
+    attackSystem.attack(pawnNum, attackedNum, weapon);
 }
 
 void Pawns::death(Pawn* attacked)

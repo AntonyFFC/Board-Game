@@ -102,6 +102,10 @@ public:
 	void startMovement(const std::vector<sf::Vector2f>& waypoints);
 	bool isMoving() const;
 	sf::Vector2f getMovementPosition() const;
+	void startAttackLunge(const std::vector<sf::Vector2f>& waypoints, float speed = 680.0f);
+	bool isAttackLunging() const;
+	sf::Vector2f getAttackLungePosition() const;
+	void setAttackFacing(float angle);
 
     static const std::map<std::string, int> order;
     static std::map<std::string, sf::Sprite> spriteMap;
@@ -169,4 +173,5 @@ private:
     std::vector<PendingFloatingText> pendingFloatingTexts;
     float damageTintTimer = 0.0f;
     std::unique_ptr<PawnMovementAnimation> movementAnimation;
+    std::unique_ptr<PawnMovementAnimation> attackLungeAnimation;
 };
