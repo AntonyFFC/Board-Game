@@ -162,7 +162,12 @@ void Card::setScale(float scl)
 
 bool Card::isClicked(sf::Vector2i mousePosition) const
 {
-	return cardSprite.getGlobalBounds().contains(mousePosition.x, mousePosition.y);
+	return cardSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosition));
+}
+
+bool Card::isClicked(sf::Vector2f mousePosition) const
+{
+	return cardSprite.getGlobalBounds().contains(mousePosition);
 }
 
 bool Card::isBeingClkd() const

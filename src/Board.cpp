@@ -1,5 +1,6 @@
 #include "Board.h"
 #include <random>
+#include <limits>
 //#include <iostream>
 
 std::tuple<int, int, int> add(std::tuple<int, int, int> a, std::tuple<int, int, int> b)
@@ -86,6 +87,9 @@ Board::Board(int Rows, int Columns, float HSize)
     highlighted.push_back(std::vector<std::tuple<int, int, int>>());
 
     boardPreperation();
+    for (const auto& pair : hexDict) {
+        baseHexPositions_[pair.first] = pair.second->getPos();
+    }
 }
 
 Board::~Board()
@@ -329,6 +333,43 @@ void Board::drawBoard(sf::RenderTarget& target)
 {
     for (auto& pair : hexDict) {
         pair.second->draw(target);
+    }
+}
+
+void Board::layoutInArea(const sf::FloatRect& playArea)
+{
+    if (hexDict.empty() || baseHexPositions_.empty()) {
+        return;
+    }
+
+    float minX = std::numeric_limits<float>::max();
+    float minY = std::numeric_limits<float>::max();
+    float maxX = std::numeric_limits<float>::lowest();
+    float maxY = std::numeric_limits<float>::lowest();
+
+    for (const auto& pair : baseHexPositions_) {
+        const sf::Vector2f pos = pair.second;
+        const float radius = horizSpacing * hexSize * 0.5f;
+        minX = std::min(minX, pos.x - radius);
+        minY = std::min(minY, pos.y - radius);
+        maxX = std::max(maxX, pos.x + radius);
+        maxY = std::max(maxY, pos.y + radius);
+    }
+
+    const float boardWidth = maxX - minX;
+    const float boardHeight = maxY - minY;
+    if (boardWidth <= 0.f || boardHeight <= 0.f) {
+        return;
+    }
+
+    const float scale = std::min(playArea.width / boardWidth, playArea.height / boardHeight) * 0.95f;
+    const float offsetX = playArea.left + (playArea.width - boardWidth * scale) * 0.5f - minX * scale;
+    const float offsetY = playArea.top + (playArea.height - boardHeight * scale) * 0.5f - minY * scale;
+
+    for (auto& pair : hexDict) {
+        const sf::Vector2f basePos = baseHexPositions_.at(pair.first);
+        pair.second->setPos(basePos.x * scale + offsetX, basePos.y * scale + offsetY);
+        pair.second->setScl(hexSize * scale);
     }
 }
 

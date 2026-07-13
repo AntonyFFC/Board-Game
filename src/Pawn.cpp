@@ -761,7 +761,12 @@ void Pawn::rangedAttack(int value, int missMax) // for example if is 3 then 1,2,
 
 bool Pawn::isClicked(sf::Vector2i mousePosition) const
 {
-    return combinedSprite->getGlobalBounds().contains(mousePosition.x, mousePosition.y);
+    return combinedSprite->getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePosition));
+}
+
+bool Pawn::isClicked(sf::Vector2f mousePosition) const
+{
+    return combinedSprite->getGlobalBounds().contains(mousePosition);
 }
 
 bool Pawn::hasItem(const std::string& name) const

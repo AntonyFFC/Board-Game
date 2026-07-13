@@ -7,22 +7,25 @@
 #include "SpriteUtils.h"
 #include "Board.h"
 #include "Pawns.h"
+
 class WarriorPrep
 {
 public:
-	WarriorPrep(sf::RenderWindow* window, Board* grid, Pawns* pawns);
-	~WarriorPrep();
+	WarriorPrep(Board* grid, Pawns* pawns);
+	~WarriorPrep() = default;
 
-	void start();
+	void rebuildLayout(const sf::FloatRect& root, const sf::FloatRect& playArea);
+	void handleEvent(const sf::Event& event, sf::Vector2f logicalMouse);
+	void draw(sf::RenderTarget& target);
+
 	void addPawns(std::vector<Pawn*> pawns, int playerIndx);
+	bool isFinished() const { return preperationDone; }
+
 private:
-	void display();
-	void drawText();
-	void eventHandler(sf::Event event);
-	void handleClick(sf::Vector2i mousePosition);
+	void drawText(sf::RenderTarget& target);
+	void handleClick(sf::Vector2f logicalMouse);
 	void putPawn(std::tuple<int, int, int> coordinates);
-	
-	sf::RenderWindow* window;
+
 	std::vector<Pawn*> pawnDict[2];
 	sf::Text blueText;
 	sf::Text redText;
@@ -33,5 +36,5 @@ private:
 	Pawns* pawns;
 	int currentPlayer;
 	bool preperationDone;
+	sf::FloatRect promptArea_;
 };
-

@@ -9,16 +9,22 @@
 #include "SpriteUtils.h"
 #include "TableUtils.h"
 #include "Button.h"
+
 class Armory
 {
 public:
-	Armory(sf::RenderWindow* window);
+	Armory();
 	~Armory();
-	void start();
-	void exit();
-private:
-	void display();
 
+	void rebuildLayout(const sf::FloatRect& root);
+	void handleEvent(const sf::Event& event, sf::Vector2f logicalMouse);
+	void update(sf::Vector2f logicalMouse, sf::RenderWindow* cursorWindow);
+	void draw(sf::RenderTarget& target);
+
+	bool wantsExit() const { return wantsExit_; }
+	void resetExit() { wantsExit_ = false; }
+
+private:
 	void createEquipmentTexture();
 	void createPawnsTexture();
 	void drawHeaders(char which);
@@ -27,14 +33,10 @@ private:
 	void drawPawnsHeaders();
 	void drawEquipment();
 	void drawPawns();
-	void drawBackButton(char which);
-	void drawChangeButton(char which);
-	void keyPressed(const sf::Event& event);
-
 	void initializeEquipmentTable();
 	void initializePawnsTable();
 	void flipPage();
-	sf::RenderWindow* window;
+
 	std::vector<Equipment*> equipmentList;
 	std::vector<Pawn*> pawnsList;
 	sf::RectangleShape cell;
@@ -59,8 +61,11 @@ private:
 	sf::RenderTexture pawnsRenderTexture;
 	sf::Sprite equipmentTableSprite;
 	sf::Sprite pawnsTableSprite;
-	bool closed;
-	bool isPawnsShown;
+	bool wantsExit_ = false;
+	bool isPawnsShown = false;
+	bool tablesBuilt_ = false;
 	Button backButton;
 	Button changeButton;
+	sf::FloatRect root_;
+	sf::FloatRect tableArea_;
 };

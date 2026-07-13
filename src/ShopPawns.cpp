@@ -4,10 +4,14 @@ ShopPawns::ShopPawns() {
 }
 
 ShopPawns::~ShopPawns() {
-    // Perform cleanup if necessary
 }
 
-bool ShopPawns::updateHover(sf::Vector2i mousePosition)
+void ShopPawns::setColumn(const sf::FloatRect& column)
+{
+    column_ = column;
+}
+
+bool ShopPawns::updateHover(sf::Vector2f mousePosition)
 {
     bool anyHovered = false;
     for (Pawn* pawn : pawns) {
@@ -22,20 +26,20 @@ bool ShopPawns::updateHover(sf::Vector2i mousePosition)
 
 void ShopPawns::draw(sf::RenderTarget* window)
 {
-    sf::Vector2f pos(window->getSize().x *0.65, 130);
+    sf::Vector2f pos(column_.left + column_.width * 0.5f, column_.top);
     for (Pawn* pawn : pawns) {
         pawn->scale(0.2f);
         pawn->setRotationAngle(0.f);
         pawn->setPosition(pos.x, pos.y);
         pawn->draw(*window, false);
-        pos += sf::Vector2f(0, 0.7 * pawn->getSprite().getGlobalBounds().height);
+        pos += sf::Vector2f(0, 0.7f * pawn->getSprite().getGlobalBounds().height);
     }
     for (Pawn* pawn : pawns) {
         pawn->drawTable(dynamic_cast<sf::RenderWindow*>(window));
     }
 }
 
-int ShopPawns::whichPawnClicked(sf::Vector2i mousePosition) {
+int ShopPawns::whichPawnClicked(sf::Vector2f mousePosition) {
     int i = 0;
     for (const Pawn* pawn : pawns) {
         if (pawn->isClicked(mousePosition)) {
@@ -52,8 +56,7 @@ void ShopPawns::addPawn(Pawn* pawn)
 }
 
 bool ShopPawns::addEquipmentToPawn(int pawnIndex, Equipment* equipment) {
-    // Check if the pawnIndex is valid
-    if (pawnIndex >= 0 && pawnIndex < pawns.size()) {
+    if (pawnIndex >= 0 && pawnIndex < static_cast<int>(pawns.size())) {
         return pawns[pawnIndex]->addEquipment(equipment);
     }
     return false;
@@ -61,17 +64,16 @@ bool ShopPawns::addEquipmentToPawn(int pawnIndex, Equipment* equipment) {
 
 void ShopPawns::togglePawnEquipmentTable(int pawnIndex)
 {
-	if (pawnIndex >= 0 && pawnIndex < pawns.size()) {
+	if (pawnIndex >= 0 && pawnIndex < static_cast<int>(pawns.size())) {
 		pawns[pawnIndex]->toggleIsEquipmentShown();
 	}
 }
 
 void ShopPawns::setPawnEquipmentTable(int pawnIndex, bool value)
 {
-	if (pawnIndex >= 0 && pawnIndex < pawns.size()) {
+	if (pawnIndex >= 0 && pawnIndex < static_cast<int>(pawns.size())) {
 		pawns[pawnIndex]->setIsEquipmentShown(value);
 	}
-
 }
 
 std::vector<Pawn*> ShopPawns::getPawns()

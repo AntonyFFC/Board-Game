@@ -9,6 +9,13 @@ ShopStorage::ShopStorage()
     numberOfWalls = 0;
 }
 
+void ShopStorage::setPanel(const sf::FloatRect& panel)
+{
+    panel_ = panel;
+    rectangle.setSize({ panel.width, panel.height });
+    rectangle.setPosition(panel.left, panel.top);
+}
+
 void ShopStorage::draw(sf::RenderTarget* target)
 {
     drawRectangle(target);
@@ -16,7 +23,7 @@ void ShopStorage::draw(sf::RenderTarget* target)
     drawWalls(target);
 }
 
-int ShopStorage::whichItemClicked(sf::Vector2i mousePosition)
+int ShopStorage::whichItemClicked(sf::Vector2f mousePosition)
 {
     int i = 0;
     for (const EquipmentCard* item : storedItems) {
@@ -28,10 +35,9 @@ int ShopStorage::whichItemClicked(sf::Vector2i mousePosition)
     return -1;
 }
 
-bool ShopStorage::isClicked(sf::Vector2i mousePosition)
+bool ShopStorage::isClicked(sf::Vector2f mousePosition)
 {
-    sf::FloatRect bounds = rectangle.getGlobalBounds();
-    return bounds.contains(static_cast<sf::Vector2f>(mousePosition));
+    return rectangle.getGlobalBounds().contains(mousePosition);
 }
 
 void ShopStorage::addCard(EquipmentCard* itemCard)
@@ -58,37 +64,32 @@ int ShopStorage::getNumberOfWalls()
 
 void ShopStorage::drawRectangle(sf::RenderTarget* target)
 {
-    sf::Vector2u targetSize = target->getSize();
-    rectangle.setSize(sf::Vector2f(targetSize.x / 5, targetSize.y * 0.9));
-    rectangle.setPosition(sf::Vector2f(targetSize.x * 0.85, targetSize.y * 0.05));
     target->draw(rectangle);
 }
 
 void ShopStorage::drawCards(sf::RenderTarget* target)
 {
-    sf::Vector2u targetSize = target->getSize();
-    sf::Vector2f pos(targetSize.x, targetSize.y * 0.07);
+    sf::Vector2f pos(panel_.left + panel_.width * 0.5f, panel_.top + panel_.height * 0.03f);
     for (EquipmentCard* item : storedItems) {
         item->setPosition(sf::Vector2f(pos.x - item->getFullSprite().getGlobalBounds().width / 2, pos.y));
         target->draw(item->getFullSprite());
-        pos += sf::Vector2f(0, 0.8 * item->getFullSprite().getGlobalBounds().height);
+        pos += sf::Vector2f(0, 0.8f * item->getFullSprite().getGlobalBounds().height);
     }
 }
 
 void ShopStorage::drawWalls(sf::RenderTarget* target)
 {
-    sf::Vector2u targetSize = target->getSize();
-    sf::Vector2f pos(targetSize.x*0.8, targetSize.y * 0.07);
+    sf::Vector2f pos(panel_.left + panel_.width * 0.35f, panel_.top + panel_.height * 0.03f);
     for (int i = 0; i < numberOfWalls; i++) {
         circle.setPosition(pos);
         target->draw(circle);
-        pos += sf::Vector2f(0, radius*2.5);
+        pos += sf::Vector2f(0, radius * 2.5f);
     }
 }
 
 void ShopStorage::removeItem(int index)
 {
-    if (index >= 0 && index < storedItems.size()) {
+    if (index >= 0 && index < static_cast<int>(storedItems.size())) {
         storedItems.erase(storedItems.begin() + index);
     }
 }

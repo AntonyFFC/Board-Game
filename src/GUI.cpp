@@ -1,123 +1,86 @@
 #include "GUI.h"
 
-Gui::Gui(sf::RenderWindow* window)
+#include "ui/Layout.h"
+
+Gui::Gui(sf::RenderWindow* window, Board* grid, Pawns* pawns)
 	: window(window),
-    endTurnButton(sf::Vector2f(window->getSize().x / 2 + 150,
-        window->getSize().y - 70), sf::Vector2f(200, 50), "end turn")
+    grid(grid),
+    pawns_(pawns),
+    endTurnButton({}, { 200.f, 50.f }, "end turn")
 {
     initializeFont();
-	grid = new Board(13, 19, 0.8f);
-    pawns = new Pawns(grid, window);
-    warriorPrep = new WarriorPrep(window, grid, pawns);
-    backgroundSprite = loadBackgroundSprite(&backgroundTexture,"board");
-    backgroundSprite.setPosition(0, 0);
+    backgroundSprite = loadBackgroundSprite(&backgroundTexture, "board");
 }
 
-Gui::~Gui()
+Gui::~Gui() = default;
+
+void Gui::rebuildLayout(const sf::FloatRect& root)
 {
-    delete grid;
-    delete pawns;
-    delete warriorPrep;
+    root_ = root;
+    playArea_ = Layout::playArea(root, 80.f, 90.f, 40.f).toFloatRect();
+    hudBar_ = Layout::uiBar(root, false, 90.f).toFloatRect();
+
+    Layout::scaleSpriteToCover(backgroundSprite, root);
+    grid->layoutInArea(playArea_);
+
+    const float barCenterY = hudBar_.top + hudBar_.height * 0.5f;
+    endTurnButton.setPosition({
+        root.left + root.width * 0.5f + 150.f,
+        barCenterY - 25.f });
 }
 
-void Gui::start() {
-    warriorPrep->start();
-    sf::Clock clock;
-    sf::Clock animationRedrawClock;
-    const float redrawInterval = 1.0f / 20.0f;
-
-    while (window->isOpen())
-    {
-        float dt = clock.restart().asSeconds();
-        sf::Event event;
-        while (window->pollEvent(event)) {
-            changesOccurred = false;
-            keyPressed(event);
-            if (changesOccurred) display();
-        }
-
-        pawns->processDeferredWork();
-        pawns->updateAnimations(dt);
-
-        if (pawns->needsContinuousRedraw()) {
-            display();
-            pawns->finalizePendingMoveIfReady();
-            animationRedrawClock.restart();
-        }
-        else if (animationRedrawClock.getElapsedTime().asSeconds() >= redrawInterval
-            && pawns->hasActiveAnimations()) {
-            display();
-            animationRedrawClock.restart();
-        }
-    }
-}
-
-void Gui::keyPressed(const sf::Event& event) {
+void Gui::handleEvent(const sf::Event& event, sf::Vector2f logicalMouse)
+{
     if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::LShift) {
         isShiftKeyPressed = true;
-        pawns->handleShiftOn();
-        changesOccurred = true;
+        pawns_->handleShiftOn();
     }
     else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::LShift) {
         isShiftKeyPressed = false;
-        pawns->handleShiftOff();
-        changesOccurred = true;
+        pawns_->handleShiftOff();
     }
     else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
-        sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
-		if (!endTurnButton.click(mousePosition))
-            pawns->handleClick(mousePosition);
-        changesOccurred = true;
+		if (!endTurnButton.click(logicalMouse)) {
+            pawns_->handleClick(logicalMouse);
+        }
     }
     else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right) {
-        sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
-        pawns->handleClickRight(mousePosition);
-        changesOccurred = true;
+        pawns_->handleClickRight(logicalMouse);
     }
     else if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
-        if (endTurnButton.unclick()) // checks if the button was clicked earlier
-        {
-            pawns->endTurn();
-            changesOccurred = true;
+        if (endTurnButton.unclick()) {
+            pawns_->endTurn();
         }
-        else
-        {
-			sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
-			pawns->handleClickRelease(mousePosition);
-            changesOccurred = true;
+        else {
+			pawns_->handleClickRelease(logicalMouse);
         }
     }
-    else if (event.type == sf::Event::MouseMoved)
-    {
-        changesOccurred = true;
+}
+
+void Gui::update(float dt, sf::Vector2f logicalMouse, sf::RenderWindow* cursorWindow)
+{
+    pawns_->processDeferredWork();
+    pawns_->updateAnimations(dt);
+
+    const bool buttonHovered = Button::updateAll(logicalMouse, nullptr);
+    const bool boardHovered = pawns_->updateHover(logicalMouse);
+    Button::applyCursor(cursorWindow, buttonHovered || boardHovered);
+
+    if (pawns_->needsContinuousRedraw()) {
+        pawns_->finalizePendingMoveIfReady();
+        animationRedrawClock_.restart();
     }
-    if (event.type == sf::Event::Closed)
-    {
-        window->close();
+    else if (animationRedrawClock_.getElapsedTime().asSeconds() >= redrawInterval_
+        && pawns_->hasActiveAnimations()) {
+        animationRedrawClock_.restart();
     }
 }
 
-void Gui::addPawns(std::vector<Pawn*> pawns, int playerIndx)
+void Gui::draw(sf::RenderTarget& target, sf::Vector2f logicalMouse)
 {
-    warriorPrep->addPawns(pawns, playerIndx);
-}
-
-void Gui::addWalls(int numWalls, int playerIndx)
-{
-	pawns->addWalls(numWalls, playerIndx);
-}
-
-void Gui::display()
-{
-    const sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
-    const bool buttonHovered = Button::updateAll(mousePosition, nullptr);
-    const bool boardHovered = pawns->updateHover(mousePosition);
-
-    window->clear(sf::Color(66, 82, 107));
-    window->draw(backgroundSprite);
-    grid->drawBoard(*window);
-    pawns->draw(isShiftKeyPressed);
-	endTurnButton.draw(*window);
-    Button::applyCursor(window, buttonHovered || boardHovered);
-    window->display();
+    (void)logicalMouse;
+    target.draw(backgroundSprite);
+    grid->drawBoard(target);
+    pawns_->draw(isShiftKeyPressed);
+	endTurnButton.draw(dynamic_cast<sf::RenderWindow&>(target));
 }

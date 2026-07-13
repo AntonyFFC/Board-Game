@@ -15,6 +15,7 @@ public:
 	std::map<std::tuple<int, int, int>, std::vector<std::tuple<int, int, int>>> hexNeighboursDict; // stores all neighbours of each hex
 
 	void drawBoard(sf::RenderTarget& target);
+	void layoutInArea(const sf::FloatRect& playArea);
 	std::vector<std::tuple<int, int, int>> getMovementPath(
 		std::tuple<int, int, int> start,
 		std::tuple<int, int, int> end);
@@ -44,5 +45,6 @@ private:
 	float yOffset;
 	std::vector<std::vector< std::tuple<int, int, int>>> highlighted;
 	std::map<std::tuple<int, int, int>, std::tuple<int, int, int>> movementParents;
+	std::map<std::tuple<int, int, int>, sf::Vector2f> baseHexPositions_;
 	friend class Pawns;
 };

@@ -45,7 +45,7 @@ void ShopCards::draw(sf::RenderTarget* window)
 	}
 }
 
-bool ShopCards::updateHover(sf::Vector2i mousePosition, bool enabled)
+bool ShopCards::updateHover(sf::Vector2f mousePosition, bool enabled)
 {
 	for (EquipmentCard* card : itemsCards) {
 		card->setHovered(false);
@@ -84,22 +84,22 @@ bool ShopCards::updateHover(sf::Vector2i mousePosition, bool enabled)
 	return anyHovered;
 }
 
-void ShopCards::setPositions(sf::RenderTarget* window)
+void ShopCards::setPositions(const sf::FloatRect& root)
 {
-	sf::Vector2f pos(window->getSize().x / 4, 20);
-	for (auto& itemCard : itemsCards)
-	{
-		itemCard->setScale(0.8);
-		itemCard->setPosition(sf::Vector2f(pos.x - itemCard->getSprite().getGlobalBounds().width / 2, pos.y));
-		pos += sf::Vector2f(0, itemCard->getSprite().getGlobalBounds().height + 5);
-	}
-	pos = sf::Vector2f(window->getSize().x / 4, 20);
-	for (auto& warriorCard : warriorsCards)
-	{
-		warriorCard->setScale(0.75);
-		warriorCard->setPosition(sf::Vector2f(pos.x - warriorCard->getSprite().getGlobalBounds().width / 2, pos.y));
-		pos += sf::Vector2f(0, warriorCard->getSprite().getGlobalBounds().height + 5);
-	}
+    sf::Vector2f pos(root.left + root.width * 0.22f, root.top + root.height * 0.04f);
+    for (auto& itemCard : itemsCards)
+    {
+        itemCard->setScale(0.8);
+        itemCard->setPosition(sf::Vector2f(pos.x - itemCard->getSprite().getGlobalBounds().width / 2, pos.y));
+        pos += sf::Vector2f(0, itemCard->getSprite().getGlobalBounds().height + 5);
+    }
+    pos = sf::Vector2f(root.left + root.width * 0.22f, root.top + root.height * 0.04f);
+    for (auto& warriorCard : warriorsCards)
+    {
+        warriorCard->setScale(0.75);
+        warriorCard->setPosition(sf::Vector2f(pos.x - warriorCard->getSprite().getGlobalBounds().width / 2, pos.y));
+        pos += sf::Vector2f(0, warriorCard->getSprite().getGlobalBounds().height + 5);
+    }
 }
 
 void ShopCards::makeCards(std::vector<Equipment*> availableItems, std::vector<Pawn*> availableWarriors)
@@ -118,7 +118,7 @@ void ShopCards::makeCards(std::vector<Equipment*> availableItems, std::vector<Pa
 	}
 }
 
-void ShopCards::prepareDecks(sf::RenderTarget* window)
+void ShopCards::prepareDecks(const sf::FloatRect& root)
 {
 	std::vector<Equipment*> availableItems;
 	std::vector<Pawn*> availableWarriors;
@@ -144,10 +144,10 @@ void ShopCards::prepareDecks(sf::RenderTarget* window)
 	availableItems.insert(availableItems.end(), weaponsList.begin(), weaponsList.begin() + 3);
 	availableItems.insert(availableItems.end(), accesoriesList.begin(), accesoriesList.begin() + 2);
 	makeCards(availableItems, availableWarriors);
-	setPositions(window);
+	setPositions(root);
 }
 
-void ShopCards::fillEmptySlots(sf::RenderTarget *window)
+void ShopCards::fillEmptySlots(const sf::FloatRect& root)
 {
 
 	auto countItemsOfType = [this](const std::string& type) {
@@ -212,10 +212,10 @@ void ShopCards::fillEmptySlots(sf::RenderTarget *window)
 			return !isCheap(a->getWarrior()) && isCheap(b->getWarrior());
 		});
 
-	setPositions(window);
+	setPositions(root);
 }
 
-int ShopCards::whichCardClicked(sf::Vector2i mousePosition)
+int ShopCards::whichCardClicked(sf::Vector2f mousePosition)
 {
 	int i = 0;
 	if (currentPage)

@@ -9,9 +9,10 @@ public:
     ShopPawns();
     ~ShopPawns();
 
+    void setColumn(const sf::FloatRect& column);
     void draw(sf::RenderTarget* window);
-    bool updateHover(sf::Vector2i mousePosition);
-    int whichPawnClicked(sf::Vector2i mousePosition);
+    bool updateHover(sf::Vector2f mousePosition);
+    int whichPawnClicked(sf::Vector2f mousePosition);
     void addPawn(Pawn* pawn);
     bool addEquipmentToPawn(int pawnIndex, Equipment* equipment);
     void togglePawnEquipmentTable(int pawnIndex);
@@ -19,9 +20,7 @@ public:
     std::vector<Pawn*> getPawns();
 	void hideAllTables();
 
-    // Add more methods as needed
-
 private:
     std::vector<Pawn*> pawns;
+    sf::FloatRect column_;
 };
-

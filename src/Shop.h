@@ -1,44 +1,60 @@
 #pragma once
-#include <vector>
-#include <SFML/Graphics.hpp>
-#include <string>
-#include "Equipment.h"
-#include "Pawn.h"
-#include "Globals.h"
-#include "Card.h"
-#include "EquipmentManager.h"
-#include "PawnsManager.h"
-#include <algorithm>
+
+#include "app/GameLaunchData.h"
 #include "Button.h"
-#include <iostream>
+#include "Globals.h"
 #include "IconWall.h"
+#include "ShopCards.h"
 #include "ShopPawns.h"
 #include "ShopStorage.h"
-#include "GUI.h"
-#include "ShopCards.h"
+
+#include <SFML/Graphics.hpp>
+#include <string>
 
 class Shop {
 public:
-    friend class IconWall;
-
-    Shop(sf::RenderWindow* window);
+    Shop();
     ~Shop();
 
-    void start();
+    void prepare();
+    void rebuildLayout(const sf::FloatRect& root);
+    void handleEvent(const sf::Event& event, sf::Vector2f logicalMouse);
+    void update(sf::Vector2f logicalMouse, sf::RenderWindow* cursorWindow);
+    void draw(sf::RenderTarget& target, sf::Vector2f logicalMouse);
 
-    // Proceed to the next turn and update the shop
-    void nextTurn();
+    bool wantsStartGame() const { return wantsStartGame_; }
+    GameLaunchData collectLaunchData();
 
 private:
-    sf::RenderWindow* window;
-    EquipmentCard* lastItem = nullptr;
-    Gui* interface1;
-    ShopCards* shopCards;
+    void nextTurn();
+    bool buy(int cardNum);
+    bool buyWall();
+    void addCard(int cardNum);
+    void reduceMoney(int price);
+    void addLastItemToStorage();
+    void drawChangeButton(sf::RenderTarget& target);
+    void drawNextPlayerButton(sf::RenderTarget& target);
+    void drawTurn(sf::RenderTarget& target);
+    void drawBackground(sf::RenderTarget& target);
+    void drawHeldItem(sf::RenderTarget& target, sf::Vector2f logicalMouse);
+    void whatClicked(sf::Vector2f logicalMouse);
+    void whatOffClicked(sf::Vector2f logicalMouse);
+    void updateGoldText();
+    void unClickAll();
+    void beginGame();
+    int viewedPlayerIndex() const;
 
-    int currentRound;
-    int currentPlayerIndex;
-    int remainingGold;
-    int fontSize;
+    EquipmentCard* lastItem = nullptr;
+    ShopCards* shopCards = nullptr;
+
+    int currentRound = 1;
+    int currentPlayerIndex = 0;
+    int remainingGold = 6;
+    int fontSize = 20;
+    bool isPeeking = false;
+    bool wantsStartGame_ = false;
+    bool prepared_ = false;
+
     sf::Sprite backgroundSprite1;
     sf::Texture backgroundTexture1;
     sf::Sprite backgroundSprite2;
@@ -53,37 +69,9 @@ private:
     Button changeButton;
     Button nextPlayer;
     Button peekButton;
-    bool isPeeking = false;
     ShopPawns shopPawns[2];
     ShopStorage shopStorage[2];
 
-    // Player buys a card or item from the shop
-    bool buy(int cardNum);
-    bool buyWall();
-    void addCard(int cardNum);
-    void reduceMoney(int price);
-    void addLastItemToStorage();
-
-    // Display the available cards and items in the shop
-    void displayShop();
-    void drawChangeButton();
-    void drawNextPlayerButton();
-    void drawTurn();
-    void drawBackground();
-    void drawHeldItem(sf::Vector2i mousePosition);
-
-    // Private helper functions for managing the shop
-    void resetShop();
-
-    void keyPressed(const sf::Event& event);
-    void whatClicked(sf::Vector2i mousePosition);
-    void whatOffClicked(sf::Vector2i mousePosition);
-    void updateGoldText();
-
-    void unClickAll();
-
-    void startGame();
-
-    int viewedPlayerIndex() const;
-
+    sf::FloatRect root_;
+    sf::FloatRect bottomBar_;
 };

@@ -23,8 +23,11 @@ public:
 	~Pawns();
 
 	void handleClick(sf::Vector2i mousePosition);
+	void handleClick(sf::Vector2f mousePosition);
 	void handleClickRight(sf::Vector2i mousePosition);
+	void handleClickRight(sf::Vector2f mousePosition);
 	void handleClickRelease(sf::Vector2i mousePosition);
+	void handleClickRelease(sf::Vector2f mousePosition);
 	void addPawn(Pawn* inPawn);
 	void addWalls(int numWalls, int teamNum);
 	void handleShiftOn();
@@ -52,6 +55,7 @@ public:
 	void endTurn();
 	void draw(bool isShift);
 	bool updateHover(sf::Vector2i mousePosition);
+	bool updateHover(sf::Vector2f mousePosition);
 	void updateAnimations(float dt);
 	bool hasActiveAnimations() const;
 	bool needsContinuousRedraw() const;
