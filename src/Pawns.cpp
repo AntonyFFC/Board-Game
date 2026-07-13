@@ -840,3 +840,31 @@ void Pawns::endTurn()
     whichPawn = -1;
     flipTurn();
 }
+
+void Pawns::handleClick(sf::Vector2f mousePosition)
+{
+    handleClick(sf::Vector2i(
+        static_cast<int>(mousePosition.x),
+        static_cast<int>(mousePosition.y)));
+}
+
+void Pawns::handleClickRight(sf::Vector2f mousePosition)
+{
+    handleClickRight(sf::Vector2i(
+        static_cast<int>(mousePosition.x),
+        static_cast<int>(mousePosition.y)));
+}
+
+void Pawns::handleClickRelease(sf::Vector2f mousePosition)
+{
+    handleClickRelease(sf::Vector2i(
+        static_cast<int>(mousePosition.x),
+        static_cast<int>(mousePosition.y)));
+}
+
+bool Pawns::updateHover(sf::Vector2f mousePosition)
+{
+    return updateHover(sf::Vector2i(
+        static_cast<int>(mousePosition.x),
+        static_cast<int>(mousePosition.y)));
+}

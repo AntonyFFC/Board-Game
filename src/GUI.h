@@ -11,28 +11,29 @@
 #include <cmath>
 #include "Pawns.h"
 #include "SpriteUtils.h"
-#include "WarriorPrep.h"
 #include "Button.h"
 
 class Gui {
 public:
-    Gui(sf::RenderWindow* window);
+    Gui(sf::RenderWindow* window, Board* grid, Pawns* pawns);
     ~Gui();
 
-    void start();
-    void keyPressed(const sf::Event& event);
-    void addPawns(std::vector<Pawn*> pawns, int playerIndx);
-	void addWalls(int numWalls, int playerIndx);
-private:
-    void display();
+    void rebuildLayout(const sf::FloatRect& root);
+    void handleEvent(const sf::Event& event, sf::Vector2f logicalMouse);
+    void update(float dt, sf::Vector2f logicalMouse, sf::RenderWindow* cursorWindow);
+    void draw(sf::RenderTarget& target, sf::Vector2f logicalMouse);
 
+private:
     sf::RenderWindow* window;
     Board* grid;
-    Pawns* pawns;
-	Button endTurnButton;
-    WarriorPrep* warriorPrep;
+    Pawns* pawns_;
+    Button endTurnButton;
     bool isShiftKeyPressed = false;
     sf::Sprite backgroundSprite;
     sf::Texture backgroundTexture;
-    bool changesOccurred = false;
+    sf::FloatRect root_;
+    sf::FloatRect playArea_;
+    sf::FloatRect hudBar_;
+    sf::Clock animationRedrawClock_;
+    const float redrawInterval_ = 1.0f / 20.0f;
 };

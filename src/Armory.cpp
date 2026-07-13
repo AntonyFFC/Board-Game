@@ -1,5 +1,7 @@
 #include "Armory.h"
 
+#include "ui/Layout.h"
+
 template <typename T, size_t N>
 int getSumOfArray(T(&arr)[N]) {
 	int sum = 0;
@@ -9,18 +11,14 @@ int getSumOfArray(T(&arr)[N]) {
 	return sum;
 }
 
-Armory::Armory(sf::RenderWindow* window)
-	: window(window), equipmentHeaders{ "Name","left-right-arrow-icon-white","circle-line-icon-white","bomb-blast-icon-white",
+Armory::Armory()
+	: equipmentHeaders{ "Name","left-right-arrow-icon-white","circle-line-icon-white","bomb-blast-icon-white",
 "history-icon-white","cube-icon-white","dollar-icon-white","Other" }, pawnHeaders{ "Name","history-icon-white",
 "hand-line-icon-white","plus-round-line-icon-white","heart-line-icon-white","dollar-icon-white", "Other"},
 equipmentCellWidths{ 150,60,60,50,50,50,50,500 }, pawnCellWidths{ 250, 50, 50,50, 50, 50, 250 },
-backButton(sf::Vector2f(window->getSize().x - 220, 20),
-	sf::Vector2f(200, 50), "Back"),
-changeButton(sf::Vector2f(window->getSize().x / 2 - 100,
-	window->getSize().y - 70), sf::Vector2f(200, 50), "-}")
+backButton({}, { 200.f, 50.f }, "Back"),
+changeButton({}, { 200.f, 50.f }, "-}")
 {
-	equipmentRenderTexture.create(window->getSize().x, window->getSize().y);
-	pawnsRenderTexture.create(window->getSize().x, window->getSize().y);
 	fontSize = 20;
 	position = sf::Vector2f(20, 60);
 	initializeFont();
@@ -34,10 +32,8 @@ changeButton(sf::Vector2f(window->getSize().x / 2 - 100,
 	sumOfEqCellWidths = getSumOfArray(equipmentCellWidths);
 	sumOfPnCellWidths = getSumOfArray(pawnCellWidths);
 	backgroundSprite = loadBackgroundSprite(&backgroundTexture, "armory");
-	backgroundSprite.setPosition(0, 0);
 	text = initializeText("Nothing", &globalFont2, fontSize, sf::Color::White);
 	titleText = initializeText("Armory", &globalFont2, fontSize * 1.5, sf::Color::White);
-	isPawnsShown = false;
 }
 
 Armory::~Armory()
@@ -47,78 +43,77 @@ Armory::~Armory()
 	}
 }
 
-void Armory::start() {
-	closed = false;
-	initializeEquipmentTable();
-	initializePawnsTable();
-	display();
+void Armory::rebuildLayout(const sf::FloatRect& root)
+{
+	root_ = root;
+	tableArea_ = Layout::inset(root, root.width * 0.02f, root.height * 0.08f,
+		root.width * 0.02f, root.height * 0.12f).toFloatRect();
 
-	while (!closed && window->isOpen())
-	{
-		
-		sf::Event event;
-		while (!closed && window->pollEvent(event)) {
-			keyPressed(event); //this also calls display
-		}
+	Layout::scaleSpriteToCover(backgroundSprite, root);
+
+	const sf::FloatRect bottomBar = Layout::uiBar(root, false, 90.f).toFloatRect();
+	const float barCenterY = bottomBar.top + bottomBar.height * 0.5f;
+	changeButton.setPosition({
+		root.left + root.width * 0.5f - 100.f,
+		barCenterY - 25.f });
+	backButton.setPosition({
+		root.left + root.width - 220.f,
+		root.top + root.height * 0.02f });
+
+	const unsigned texW = static_cast<unsigned>(std::max(1.f, tableArea_.width));
+	const unsigned texH = static_cast<unsigned>(std::max(1.f, tableArea_.height));
+	equipmentRenderTexture.create(texW, texH);
+	pawnsRenderTexture.create(texW, texH);
+	position = sf::Vector2f(20.f, 60.f);
+
+	if (!tablesBuilt_) {
+		initializeEquipmentTable();
+		initializePawnsTable();
+		tablesBuilt_ = true;
 	}
+
+	equipmentTableSprite.setScale(
+		tableArea_.width / static_cast<float>(texW),
+		tableArea_.height / static_cast<float>(texH));
+	equipmentTableSprite.setPosition(tableArea_.left, tableArea_.top);
+	pawnsTableSprite.setScale(
+		tableArea_.width / static_cast<float>(texW),
+		tableArea_.height / static_cast<float>(texH));
+	pawnsTableSprite.setPosition(tableArea_.left, tableArea_.top);
 }
 
-void Armory::keyPressed(const sf::Event& event) {
+void Armory::handleEvent(const sf::Event& event, sf::Vector2f logicalMouse)
+{
 	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
-		sf::Vector2i mousePosition = sf::Mouse::getPosition(*window);
-		if (backButton.isClicked(mousePosition))
-		{
-			exit();
+		if (backButton.isClicked(logicalMouse)) {
+			wantsExit_ = true;
 		}
-		else if (changeButton.isClicked(mousePosition))
-		{
+		else if (changeButton.isClicked(logicalMouse)) {
 			flipPage();
 		}
 	}
-	else if (event.type == sf::Event::KeyPressed)
-	{
-		if (event.key.code == sf::Keyboard::Escape)
-		{
-			exit();
+	else if (event.type == sf::Event::KeyPressed) {
+		if (event.key.code == sf::Keyboard::Escape) {
+			wantsExit_ = true;
 		}
-		else if (event.key.code == sf::Keyboard::Right || event.key.code == sf::Keyboard::Left)
-		{
+		else if (event.key.code == sf::Keyboard::Right || event.key.code == sf::Keyboard::Left) {
 			flipPage();
 		}
 	}
-	else if (event.type == sf::Event::MouseMoved)
-	{
-		display();
-	}
-	else if (event.type == sf::Event::Closed)
-	{
-		window->close();
-	}
 }
 
-void Armory::exit()
+void Armory::update(sf::Vector2f logicalMouse, sf::RenderWindow* cursorWindow)
 {
-	closed = true;
+	Button::updateAll(logicalMouse, cursorWindow);
 }
 
-void Armory::display()
+void Armory::draw(sf::RenderTarget& target)
 {
-	Button::updateAll(sf::Mouse::getPosition(*window), window);
-	window->clear(sf::Color(71, 31, 16));
-	window->draw(backgroundSprite);
-	if (isPawnsShown)
-	{
-		window->draw(pawnsTableSprite);
-		changeButton.setText("{-");
-	}
-	else
-	{
-		window->draw(equipmentTableSprite);
-		changeButton.setText("-}");
-	}
-	backButton.draw(*window);
-	changeButton.draw(*window);
-	window->display();
+	target.draw(backgroundSprite);
+	target.draw(isPawnsShown ? pawnsTableSprite : equipmentTableSprite);
+	changeButton.setText(isPawnsShown ? "{-" : "-}");
+	changeButton.draw(dynamic_cast<sf::RenderWindow&>(target));
+	backButton.draw(dynamic_cast<sf::RenderWindow&>(target));
 }
 
 void Armory::createEquipmentTexture()
@@ -275,32 +270,6 @@ void Armory::drawPawns()
 	}
 }
 
-void Armory::drawBackButton(char which)
-{
-	if (which == 'e')
-	{
-		backButton.draw(equipmentRenderTexture);
-	}
-	else
-	{
-		backButton.draw(pawnsRenderTexture);
-	}
-}
-
-void Armory::drawChangeButton(char which)
-{
-	if (which == 'e')
-	{
-		changeButton.setText("-}");
-		changeButton.draw(equipmentRenderTexture);
-	}
-	else
-	{
-		changeButton.setText("{-");
-		changeButton.draw(pawnsRenderTexture);
-	}
-}
-
 void Armory::initializeEquipmentTable()
 {
 	equipmentRenderTexture.clear(sf::Color::Transparent);
@@ -320,5 +289,4 @@ void Armory::initializePawnsTable()
 void Armory::flipPage()
 {
 	isPawnsShown = !isPawnsShown;
-	display();
 }

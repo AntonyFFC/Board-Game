@@ -254,6 +254,12 @@ void Hex::setHovered(bool inHovered)
 }
 
 bool Hex::isClicked(sf::Vector2i mousePosition) const {
+    return isClicked(sf::Vector2f(
+        static_cast<float>(mousePosition.x),
+        static_cast<float>(mousePosition.y)));
+}
+
+bool Hex::isClicked(sf::Vector2f mousePosition) const {
     const float hexRadius = getRadius();
     sf::Vector2f hexOrigin = getOrigin();
     float distance = std::sqrt(

@@ -12,9 +12,11 @@ public:
     Button& operator=(const Button&) = delete;
 
 	bool click(sf::Vector2i mousePosition);
+	bool click(sf::Vector2f logicalPosition);
 	bool unclick();
     bool unclickAll();
     bool isClicked(sf::Vector2i mousePosition) const;
+    bool isClicked(sf::Vector2f logicalPosition) const;
     void setPosition(sf::Vector2f position);
     sf::Vector2f getPosition() const;
     void setSize(sf::Vector2f size);
@@ -33,6 +35,7 @@ public:
     void draw(sf::RenderWindow& window);
 
     static bool updateAll(sf::Vector2i mousePosition, sf::RenderWindow* window = nullptr);
+    static bool updateAll(sf::Vector2f logicalMouse, sf::RenderWindow* window = nullptr);
     static void applyCursor(sf::RenderWindow* window, bool hand);
     static void resetCursor(sf::RenderWindow* window);
 

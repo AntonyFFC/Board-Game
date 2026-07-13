@@ -15,12 +15,12 @@ public:
     ~ShopCards();
 
     void draw(sf::RenderTarget* window);
-    bool updateHover(sf::Vector2i mousePosition, bool enabled = true);
-    void setPositions(sf::RenderTarget* window);
+    bool updateHover(sf::Vector2f mousePosition, bool enabled = true);
+    void setPositions(const sf::FloatRect& root);
     void makeCards(std::vector<Equipment*> availableItems, std::vector<Pawn*> availableWarriors);
-    void prepareDecks(sf::RenderTarget* window);
-    void fillEmptySlots(sf::RenderTarget* window);
-    int whichCardClicked(sf::Vector2i mousePosition); //returns -1 if none were clicked
+    void prepareDecks(const sf::FloatRect& root);
+    void fillEmptySlots(const sf::FloatRect& root);
+    int whichCardClicked(sf::Vector2f mousePosition);
     int getPriceOfCard(int cardNum);
     void clickCard(int cardNum);
     void unClickAll();

@@ -87,6 +87,7 @@ public:
     void attack(int value);
     void rangedAttack(int value, int missMax);
     bool isClicked(sf::Vector2i mousePosition) const;
+    bool isClicked(sf::Vector2f mousePosition) const;
     void setHovered(bool hovered);
     bool isHovered() const;
 	bool hasItem(const std::string& name) const;

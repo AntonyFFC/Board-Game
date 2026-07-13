@@ -47,6 +47,7 @@ public:
 	bool isBlockingForPawn(Pawn* inPawn);
 	bool isHigh(int col) const;
 	bool isClicked(sf::Vector2i mousePosition) const;
+	bool isClicked(sf::Vector2f mousePosition) const;
 	bool hasEquipmentPile() const;
 
 	virtual void setHighlight(int col, int inWhosPawn);

@@ -28,8 +28,14 @@ void IconWall::draw(sf::RenderWindow& window)
 // Check if the icon is clicked
 bool IconWall::isClicked(sf::Vector2i mousePosition)
 {
-    sf::FloatRect iconBounds = iconShape.getGlobalBounds();
-    return iconBounds.contains(static_cast<sf::Vector2f>(mousePosition));
+    return isClicked(sf::Vector2f(
+        static_cast<float>(mousePosition.x),
+        static_cast<float>(mousePosition.y)));
+}
+
+bool IconWall::isClicked(sf::Vector2f mousePosition)
+{
+    return iconShape.getGlobalBounds().contains(mousePosition);
 }
 
 // Set the position of the icon

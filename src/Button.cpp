@@ -155,6 +155,26 @@ void Button::applyVisualState()
     buttonShape.setOutlineThickness(outlineThickness);
 }
 
+bool Button::updateAll(sf::Vector2f logicalMouse, sf::RenderWindow* window)
+{
+    bool anyHovered = false;
+    for (Button* button : allButtons) {
+        const bool hovered = button->isClicked(logicalMouse);
+        if (hovered != button->isHovered) {
+            button->isHovered = hovered;
+            button->applyVisualState();
+        }
+        if (hovered) {
+            anyHovered = true;
+        }
+    }
+
+    if (window) {
+        applyCursor(window, anyHovered);
+    }
+    return anyHovered;
+}
+
 bool Button::updateAll(sf::Vector2i mousePosition, sf::RenderWindow* window)
 {
     bool anyHovered = false;
@@ -199,6 +219,15 @@ void Button::resetCursor(sf::RenderWindow* window)
     applyCursor(window, false);
 }
 
+bool Button::click(sf::Vector2f logicalPosition)
+{
+    if (isClicked(logicalPosition)) {
+        setIsBeingClicked(true);
+        return true;
+    }
+    return false;
+}
+
 bool Button::click(sf::Vector2i mousePosition)
 {
     if (isClicked(mousePosition)) {
@@ -224,6 +253,11 @@ bool Button::unclickAll()
         button->setIsBeingClicked(false);
     }
     return wasBeingClicked;
+}
+
+bool Button::isClicked(sf::Vector2f logicalPosition) const
+{
+    return buttonShape.getGlobalBounds().contains(logicalPosition);
 }
 
 bool Button::isClicked(sf::Vector2i mousePosition) const

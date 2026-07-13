@@ -12,6 +12,7 @@ public:
 
     // Check if the icon is clicked
     bool isClicked(sf::Vector2i mousePosition);
+    bool isClicked(sf::Vector2f mousePosition);
 
     // Set the position of the icon
     void setPosition(float x, float y);

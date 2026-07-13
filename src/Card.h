@@ -30,6 +30,7 @@ public:
 	void movePosition(sf::Vector2f pos);
 	void setScale(float scl);
 	bool isClicked(sf::Vector2i mousePosition) const;
+	bool isClicked(sf::Vector2f mousePosition) const;
 	bool isBeingClkd() const;
 	virtual int getPrice() const = 0;
 
