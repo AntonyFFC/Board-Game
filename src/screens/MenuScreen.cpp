@@ -26,7 +26,7 @@ void MenuScreen::initializeAssets()
         return;
     }
     initializeFont();
-    backgroundSprite_ = loadBackgroundSprite(&backgroundTexture_, "main");
+    backgroundSprite_ = loadBackgroundSprite(&backgroundTexture_, "menu_v2");
     assetsReady_ = true;
 }
 
@@ -49,20 +49,21 @@ void MenuScreen::onResize(RenderContext& context)
 void MenuScreen::rebuildLayout(const sf::FloatRect& root)
 {
     backgroundLayer_ = Layout::fromNormalized(root, 0.f, 0.f, 1.f, 1.f);
-    uiLayer_ = Layout::inset(root, root.width * 0.05f, root.height * 0.04f,
-        root.width * 0.05f, root.height * 0.04f);
-    titlePanel_ = Layout::uiBar(uiLayer_.toFloatRect(), true, 120.f);
-    menuColumn_ = Layout::inset(uiLayer_.toFloatRect(), 0.f, 140.f, 0.f, 80.f);
+    // Darkened left panel in menu_v2 (~left 38%).
+    uiLayer_ = Layout::fromNormalized(root, 0.04f, 0.08f, 0.34f, 0.84f);
+    titlePanel_ = Layout::uiBar(uiLayer_.toFloatRect(), true, 100.f);
+    menuColumn_ = Layout::inset(uiLayer_.toFloatRect(), 0.f, 110.f, 0.f, 40.f);
 
-    Layout::scaleSpriteToCover(backgroundSprite_, backgroundLayer_.toFloatRect());
+    Layout::scaleSpriteToCover(backgroundSprite_, backgroundLayer_.toFloatRect(),
+        Anchor::CenterLeft);
 
-    const LayoutRect titleSlot = Layout::resolve(Anchor::TopCenter,
-        titlePanel_.toFloatRect(), { 600.f, 80.f });
-    titlePosition_ = sf::Vector2f(titleSlot.x, titleSlot.y + 10.f);
+    const LayoutRect titleSlot = Layout::resolve(Anchor::TopLeft,
+        titlePanel_.toFloatRect(), { titlePanel_.width, 80.f });
+    titlePosition_ = sf::Vector2f(titleSlot.x, titleSlot.y + 8.f);
 
     buttons_.clear();
     const auto slots = Layout::verticalStack(menuColumn_.toFloatRect(),
-        buttonLabels_.size(), kButtonHeight, kButtonSpacing);
+        buttonLabels_.size(), kButtonHeight, kButtonSpacing, Anchor::CenterLeft);
     for (size_t i = 0; i < buttonLabels_.size() && i < slots.size(); ++i) {
         const LayoutRect& slot = slots[i];
         buttons_.push_back(std::make_unique<Button>(
@@ -124,9 +125,7 @@ void MenuScreen::draw(sf::RenderTarget& target, RenderContext& context)
 
     sf::Text titleText("Skirmish", globalFont2, kTitleSize);
     titleText.setFillColor(sf::Color::White);
-    const sf::FloatRect titleBounds = titleText.getLocalBounds();
-    titleText.setOrigin(titleBounds.width * 0.5f, 0.f);
-    titleText.setPosition(titlePanel_.center().x, titlePosition_.y);
+    titleText.setPosition(titlePosition_);
     target.draw(titleText);
 
     for (size_t i = 0; i < buttons_.size(); ++i) {

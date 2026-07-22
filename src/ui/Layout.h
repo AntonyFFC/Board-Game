@@ -54,6 +54,7 @@ std::vector<LayoutRect> verticalStack(const sf::FloatRect& parent,
     Anchor horizontalAnchor = Anchor::Center);
 
 void scaleSpriteToCover(sf::Sprite& sprite, const sf::FloatRect& area);
+void scaleSpriteToCover(sf::Sprite& sprite, const sf::FloatRect& area, Anchor align);
 void scaleSpriteToFit(sf::Sprite& sprite, const sf::FloatRect& area);
 
 } // namespace Layout

@@ -118,7 +118,6 @@ std::vector<LayoutRect> verticalStack(const sf::FloatRect& parent,
     size_t count, float itemHeight, float spacing,
     Anchor horizontalAnchor)
 {
-    (void)horizontalAnchor;
     std::vector<LayoutRect> slots;
     if (count == 0) {
         return slots;
@@ -128,8 +127,19 @@ std::vector<LayoutRect> verticalStack(const sf::FloatRect& parent,
         + static_cast<float>(count - 1) * spacing;
     float y = parent.top + (parent.height - totalHeight) * 0.5f;
 
-    const float itemWidth = std::min(320.f, parent.width * 0.28f);
-    const float x = parent.left + (parent.width - itemWidth) * 0.5f;
+    const float itemWidth = std::min(320.f, parent.width * 0.85f);
+    float x = parent.left + (parent.width - itemWidth) * 0.5f;
+    if (horizontalAnchor == Anchor::TopLeft
+        || horizontalAnchor == Anchor::CenterLeft
+        || horizontalAnchor == Anchor::BottomLeft) {
+        x = parent.left;
+    }
+    else if (horizontalAnchor == Anchor::TopRight
+        || horizontalAnchor == Anchor::CenterRight
+        || horizontalAnchor == Anchor::BottomRight) {
+        x = parent.left + parent.width - itemWidth;
+    }
+
     for (size_t i = 0; i < count; ++i) {
         slots.push_back({ x, y, itemWidth, itemHeight });
         y += itemHeight + spacing;
@@ -139,6 +149,11 @@ std::vector<LayoutRect> verticalStack(const sf::FloatRect& parent,
 
 void scaleSpriteToCover(sf::Sprite& sprite, const sf::FloatRect& area)
 {
+    scaleSpriteToCover(sprite, area, Anchor::Center);
+}
+
+void scaleSpriteToCover(sf::Sprite& sprite, const sf::FloatRect& area, Anchor align)
+{
     const sf::FloatRect bounds = sprite.getLocalBounds();
     if (bounds.width <= 0.f || bounds.height <= 0.f) {
         return;
@@ -147,7 +162,27 @@ void scaleSpriteToCover(sf::Sprite& sprite, const sf::FloatRect& area)
     const float scaleY = area.height / bounds.height;
     const float scale = std::max(scaleX, scaleY);
     sprite.setScale(scale, scale);
-    sprite.setPosition(area.left, area.top);
+
+    const float scaledW = bounds.width * scale;
+    const float scaledH = bounds.height * scale;
+    float x = area.left + (area.width - scaledW) * 0.5f;
+    float y = area.top + (area.height - scaledH) * 0.5f;
+
+    if (align == Anchor::TopLeft || align == Anchor::CenterLeft || align == Anchor::BottomLeft) {
+        x = area.left;
+    }
+    else if (align == Anchor::TopRight || align == Anchor::CenterRight || align == Anchor::BottomRight) {
+        x = area.left + area.width - scaledW;
+    }
+
+    if (align == Anchor::TopLeft || align == Anchor::TopCenter || align == Anchor::TopRight) {
+        y = area.top;
+    }
+    else if (align == Anchor::BottomLeft || align == Anchor::BottomCenter || align == Anchor::BottomRight) {
+        y = area.top + area.height - scaledH;
+    }
+
+    sprite.setPosition(x, y);
 }
 
 void scaleSpriteToFit(sf::Sprite& sprite, const sf::FloatRect& area)
