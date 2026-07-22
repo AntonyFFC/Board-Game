@@ -75,6 +75,9 @@ void WarriorPrep::handleClick(sf::Vector2f logicalMouse)
 
 void WarriorPrep::putPawn(std::tuple<int, int, int> coordinates)
 {
+	if (pawnDict[currentPlayer].empty()) {
+		return;
+	}
 	Pawn* currentPawn = pawnDict[currentPlayer].back();
 	pawnDict[currentPlayer].pop_back();
 	currentPawn->scale(0.05f);

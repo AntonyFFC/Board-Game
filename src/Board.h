@@ -34,6 +34,7 @@ private:
 	void clearHighlight();
 	void setWall(std::tuple<int, int, int> coords);
 	void setGrass(std::tuple<int, int, int> coords);
+	void replaceHexPreservingPose(std::tuple<int, int, int> coords, Hex* replacement);
 
 	int numRows;
 	int numCols;

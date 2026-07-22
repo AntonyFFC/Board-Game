@@ -368,7 +368,7 @@ void Board::layoutInArea(const sf::FloatRect& playArea)
 
     for (auto& pair : hexDict) {
         const sf::Vector2f basePos = baseHexPositions_.at(pair.first);
-        pair.second->setPos(basePos.x * scale + offsetX, basePos.y * scale + offsetY);
+        pair.second->setPixelPosition(basePos.x * scale + offsetX, basePos.y * scale + offsetY);
         pair.second->setScl(hexSize * scale);
     }
 }
@@ -440,10 +440,39 @@ void Board::clearHighlight()
 
 void Board::setWall(std::tuple<int, int, int> coords)
 {
-    hexDict[coords] = new Wall(coords);
+    replaceHexPreservingPose(coords, new Wall(coords));
 }
 
 void Board::setGrass(std::tuple<int, int, int> coords)
 {
-    hexDict[coords] = new Grass(coords);
+    replaceHexPreservingPose(coords, new Grass(coords));
+}
+
+void Board::replaceHexPreservingPose(std::tuple<int, int, int> coords, Hex* replacement)
+{
+    float px = 0.f;
+    float py = 0.f;
+    float scl = hexSize;
+
+    auto it = hexDict.find(coords);
+    if (it != hexDict.end() && it->second != nullptr) {
+        Hex* old = it->second;
+        px = old->getPos().x;
+        py = old->getPos().y;
+        scl = old->getScale();
+        // Prevent Hex destructor from deleting shared pawn/body ownership.
+        old->setPawn(false);
+        old->setBody(false);
+        old->setEquipmentPile(false);
+        delete old;
+    }
+    else if (baseHexPositions_.count(coords)) {
+        // Fallback if somehow missing; still better than raw setCoords origin.
+        px = baseHexPositions_[coords].x;
+        py = baseHexPositions_[coords].y;
+    }
+
+    replacement->setPixelPosition(px, py);
+    replacement->setScl(scl);
+    hexDict[coords] = replacement;
 }

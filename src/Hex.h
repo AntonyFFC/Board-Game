@@ -25,6 +25,7 @@ public:
 	void setEquipmentPile(bool boolean, EquipmentPile* inPile = nullptr);
 	void setBlocking(bool boolean);
 	void setPos(float inx = 0, float iny = 0);
+	void setPixelPosition(float inx, float iny);
 	void setCoords(int inx = 0, int iny = 0, int inz = 0);
 	void setPawnDist(int dist);
 
@@ -33,6 +34,7 @@ public:
 	std::tuple<int, int, int> getCubeCoords();
 	virtual sf::ConvexShape getShape() = 0;
 	sf::Vector2f getPos() const;
+	float getScale() const;
 	int getPawnDist() const;
 
 	// bools

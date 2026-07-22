@@ -8,6 +8,9 @@ Hex::Hex(std::tuple<int, int, int> inCoords, float inxPos, float inyPos)
     cubeCoords = inCoords;
     xPos = inxPos;
     yPos = inyPos;
+    pawn = nullptr;
+    body = nullptr;
+    equipmentPile = nullptr;
     for (int i = 0; i < sizeof(highlights); i++)
     {
         highlights[i] = false;
@@ -62,6 +65,13 @@ void Hex::setPos(float inx, float iny)
     std::get<1>(cubeCoords) = std::round(((xOffset + midx * horizSpacing * scale - xPos) - (yOffset + midy * vertSpacing * scale - yPos) * sqrt(3)) / (2 * horizSpacing * scale));
     std::get<2>(cubeCoords) = std::round(((yOffset + midy * vertSpacing * scale - yPos) * sqrt(3) - (xPos - xOffset - midx * horizSpacing * scale)) / (2 * horizSpacing * scale));
 
+    shape.setPosition(xPos, yPos);
+}
+
+void Hex::setPixelPosition(float inx, float iny)
+{
+    xPos = inx;
+    yPos = iny;
     shape.setPosition(xPos, yPos);
 }
 
@@ -230,6 +240,10 @@ std::tuple<int, int, int> Hex::getCubeCoords() {
 
 sf::Vector2f Hex::getPos() const {
     return sf::Vector2f(xPos,yPos);
+}
+
+float Hex::getScale() const {
+    return scale;
 }
 
 int Hex::getPawnDist() const
